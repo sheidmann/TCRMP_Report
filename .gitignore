@@ -41,3 +41,4 @@ vignettes/*.pdf
 # Other files
 TCRMP_Report.Rproj
 .DS_Store
+data/
