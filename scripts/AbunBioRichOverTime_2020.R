@@ -216,3 +216,90 @@ bio.mesophotic <- ggplot(data = filter(biosum, REEF.COMPLEX == "Mesophotic"),
 bioplot <- plot_grid(bio.nearshore,bio.offshore,bio.mesophotic,ncol = 1,align = "v")
 save_plot("outputs/biomass_bytime_splitreef_2020.jpeg", bioplot, 
           base_aspect_ratio = 0.8, base_height = 11)
+
+##### Richness #####
+# Species per 100m2 (one transect)
+# Sum all species on each transect, and take the average and SEM for each site
+richsum <- dat %>%
+   filter(!is.na(Transect)) %>% # There is a damsel with no transect number
+   group_by(Year, Site, REEF.COMPLEX, Transect) %>%
+   summarize(richness = length(ScientificName), .groups = "drop_last") %>%
+   summarize(meanrich = mean(richness),
+             n = length(Transect),
+             sd = sd(richness), .groups = "drop") %>%
+   mutate(sem = sd / sqrt(n))
+richsum
+
+# Nearshore
+rich.nearshore <- ggplot(data = filter(richsum, REEF.COMPLEX == "Nearshore"),
+                         aes(x=Year,y=meanrich,group=Site))+
+   geom_line(size=1,color="black",aes(linetype=Site))+
+   geom_point(size=4.5,color="black",aes(shape=Site,fill=Site))+
+   geom_errorbar(aes(ymax=meanrich+sem, ymin=meanrich-sem), width=0.2) +
+   scale_linetype_manual(values = nearshore.linetype,
+                         labels=nearshore.sites, 
+                         name= "Nearshore")+
+   scale_fill_manual(values = nearshore.color,
+                     labels=nearshore.sites, 
+                     name="Nearshore")+
+   scale_shape_manual(values = nearshore.shape,
+                      labels=nearshore.sites,
+                      name="Nearshore")+
+   panel+
+   legend+
+   ylab(expression(bold(paste("Species/100",m^2))))+
+   scale_y_continuous(limits = c(0,44), breaks = seq(0,40,10)) +
+   theme(axis.title.y = element_text(size = 14,face="bold"),
+         axis.text.y = element_text(size=12,face="bold"),
+         axis.text.x = element_text(angle=60,size=12,vjust=0.6,face="bold"),
+         axis.title.x = element_blank())
+# Offshore
+rich.offshore <- ggplot(data = filter(richsum, REEF.COMPLEX == "Offshore"),
+                        aes(x=Year,y=meanrich,group=Site))+
+   geom_line(size=1,color="black",aes(linetype=Site))+
+   geom_point(size=4.5,color="black",aes(shape=Site,fill=Site))+
+   geom_errorbar(aes(ymax=meanrich+sem, ymin=meanrich-sem), width=0.2) +
+   scale_linetype_manual(values = offshore.linetype,
+                         labels=offshore.sites, 
+                         name= "Offshore")+
+   scale_fill_manual(values = offshore.color,
+                     labels=offshore.sites, 
+                     name="Offshore")+
+   scale_shape_manual(values = offshore.shape,
+                      labels=offshore.sites,
+                      name="Offshore")+
+   panel+
+   legend+
+   ylab(expression(bold(paste("Species/100",m^2))))+
+   scale_y_continuous(limits = c(0,44), breaks = seq(0,40,10)) +
+   theme(axis.title.y = element_text(size = 14,face="bold"),
+         axis.text.y = element_text(size=12,face="bold"),
+         axis.text.x = element_text(angle=60,size=12,vjust=0.6,face="bold"),
+         axis.title.x = element_blank())
+# Mesophotic
+rich.mesophotic <- ggplot(data = filter(richsum, REEF.COMPLEX == "Mesophotic"),
+                          aes(x=Year,y=meanrich,group=Site))+
+   geom_line(size=1,color="black",aes(linetype=Site))+
+   geom_point(size=4.5,color="black",aes(shape=Site,fill=Site))+
+   geom_errorbar(aes(ymax=meanrich+sem, ymin=meanrich-sem), width=0.2) +
+   scale_linetype_manual(values = mesophotic.linetype,
+                         labels=mesophotic.sites, 
+                         name= "Mesophotic")+
+   scale_fill_manual(values = mesophotic.color,
+                     labels=mesophotic.sites, 
+                     name="Mesophotic")+
+   scale_shape_manual(values = mesophotic.shape,
+                      labels=mesophotic.sites,
+                      name="Mesophotic")+
+   panel+
+   legend+
+   ylab(expression(bold(paste("Species/100",m^2))))+
+   scale_y_continuous(limits = c(0,44), breaks = seq(0,40,10)) +
+   theme(axis.title.y = element_text(size = 14,face="bold"),
+         axis.text.y = element_text(size=12,face="bold"),
+         axis.text.x = element_text(angle=60,size=12,vjust=0.6,face="bold"),
+         axis.title.x = element_blank())
+
+richplot <- plot_grid(rich.nearshore,rich.offshore,rich.mesophotic,ncol = 1,align = "v")
+save_plot("outputs/richness_bytime_splitreef_2020.jpeg", richplot, 
+          base_aspect_ratio = 0.8, base_height = 11)
