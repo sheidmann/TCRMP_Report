@@ -42,3 +42,4 @@ vignettes/*.pdf
 TCRMP_Report.Rproj
 .DS_Store
 data/
+outputs/
