@@ -90,8 +90,12 @@ We are `r perdone`% done with entry!
 Here is the number of surveys each person has entered:
 
 ```{r, echo = FALSE}
-done %>% group_by(Name) %>% summarize(n=length(Rep)) %>% 
-   arrange(desc(n))
+done %>% 
+   group_by(Name, `Type name`) %>% 
+   summarize(n=length(Rep), .groups="drop") %>% 
+   pivot_wider(names_from = `Type name`, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
 ```
 
 ## What is left?
@@ -111,8 +115,12 @@ todo <- notran %>%
 Here's how many each person has left:
 
 ```{r, echo=FALSE}
-todo %>% group_by(Name) %>% summarize(n=length(Rep)) %>% 
-   arrange(desc(n)) %>% kable()
+todo %>% 
+   group_by(Name, `Type name`) %>% 
+   summarize(n=length(Rep), .groups= "drop") %>% 
+   pivot_wider(names_from = `Type name`, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Name), na.rm = TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
 ```
 
 ## Check for duplicates

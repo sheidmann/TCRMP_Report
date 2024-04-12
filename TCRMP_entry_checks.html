@@ -79,24 +79,141 @@ ul.task-list li input[type="checkbox"] {
 <p>We are 72% done with entry!</p>
 <p>Here is the number of surveys each person has entered:</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 14 × 2
-   Name                     n
-   &lt;chr&gt;                &lt;int&gt;
- 1 KRAMPITZ_NICOLE        137
- 2 HEIDMANN_SARAH         131
- 3 QUETEL_JASON            77
- 4 KADISON_SHAUN           76
- 5 ARRINGTON_BRAD          66
- 6 DADE_LINDSAY            66
- 7 HOLLANDER_ERIN          63
- 8 SHELBY_ADELINE          29
- 9 MEILING_SONORA          19
-10 TIERNEY_COURTNEY        18
-11 SMITH_TYLER             14
-12 MAXIN_STEFANIE          13
-13 DURDALL_ALLIE            3
-14 ROMMELFANGER_KAITLIN     2</code></pre>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: right;">algae height</th>
+<th style="text-align: right;">fish rover</th>
+<th style="text-align: right;">fish transect</th>
+<th style="text-align: right;">coral health</th>
+<th style="text-align: right;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">KRAMPITZ_NICOLE</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">137</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HEIDMANN_SARAH</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">131</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">QUETEL_JASON</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KADISON_SHAUN</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARRINGTON_BRAD</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DADE_LINDSAY</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HOLLANDER_ERIN</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">63</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SHELBY_ADELINE</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MEILING_SONORA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TIERNEY_COURTNEY</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SMITH_TYLER</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MAXIN_STEFANIE</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DURDALL_ALLIE</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ROMMELFANGER_KAITLIN</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
@@ -109,44 +226,74 @@ ul.task-list li input[type="checkbox"] {
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
-<th style="text-align: right;">n</th>
+<th style="text-align: right;">algae heights</th>
+<th style="text-align: right;">coral health</th>
+<th style="text-align: right;">fish rover</th>
+<th style="text-align: right;">Total</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">SMITH_TYLER</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: right;">90</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">DADE_LINDSAY</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: right;">67</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">KADISON_SHAUN</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">19</td>
 <td style="text-align: right;">61</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">KRAMPITZ_NICOLE</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: right;">43</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">HARRIS_ELIZABETH</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: right;">20</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GRETTA_ABIGAIL</td>
 <td style="text-align: right;">18</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">18</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">POWELL_JAMES</td>
 <td style="text-align: right;">11</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">11</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">HOLLANDER_ERIN</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">SHELBY_ADELINE</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: right;">1</td>
 </tr>
 </tbody>
