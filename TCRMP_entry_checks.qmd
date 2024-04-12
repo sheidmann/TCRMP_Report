@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-04-11"
+date: "2024-04-12"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -66,37 +66,88 @@ chs <- chs_raw %>%
    mutate(ID = paste(`Site name`, Rep, Name,  `Date completed`,
                      # Method,
                      sep=","))
-```
 
-## How much has been entered?
-
-```{r, echo=FALSE}
+# all together now
 done <- fts %>% 
    mutate(`Fish transect`=NULL, `Type name`="fish transect") %>% 
    bind_rows(mutate(frs, `Fish rover`=NULL,`Type name`="fish rover"), 
              mutate(ahs,`Algae height`=NULL,`Type name`="algae height"),
-             mutate(chs,`Coral health`=NULL,`Type name`="coral health")) %>% 
-   select(Name, `Site name`, `Type name`, Rep) %>% 
-   arrange(Name, `Site name`, `Type name`, Rep)
-
-
-
-# % done?
-perdone = round(nrow(done)/nrow(logs_raw) *100)
+             mutate(chs,`Coral health`=NULL,`Type name`="coral health"))
 ```
 
-We are `r perdone`% done with entry!
+## How much has been entered?
+
+### 2023
+
+```{r, echo=FALSE}
+# % done w fieldwork (33 sites excluding GBF * 24 units per site)
+donefw23 <- logs_raw %>% 
+   filter(`Type name`=="fish rover" | `Type name`=="fish transect" |
+             `Date completed` < as.Date("2023-12-31")) %>% 
+   select(`Site name`, `Type name`, Rep) %>% 
+   unique()
+perdonefw23 <- round(nrow(donefw23) / (33*24) * 100)
+# % done w entry
+done23 <- done %>% 
+   filter(`Type name`=="fish rover" | `Type name`=="fish transect" |
+             `Date completed` < as.Date("2023-12-31")) %>% 
+   select(`Site name`, `Type name`, Rep) %>% 
+   unique()
+perdone23 <- round(nrow(done23) / nrow(donefw23) * 100)
+```
+
+We are `r perdonefw23`% done with fieldwork, and `r perdone23`% done with entry.
 
 Here is the number of surveys each person has entered:
 
 ```{r, echo = FALSE}
 done %>% 
+   filter(`Type name`=="fish rover" | `Type name`=="fish transect" |
+             `Date completed` < as.Date("2023-12-31")) %>% 
+   select(Name, `Site name`, `Type name`, Rep) %>% 
    group_by(Name, `Type name`) %>% 
    summarize(n=length(Rep), .groups="drop") %>% 
    pivot_wider(names_from = `Type name`, values_from = n) %>% 
    mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
    arrange(desc(Total)) %>% kable()
 ```
+
+### 2024 Post Bleaching
+
+```{r, echo = FALSE}
+# % done w fieldwork (33 sites excluding GBF * 6 units per site)
+donefw24 <- logs_raw %>% 
+   filter(`Type name`=="coral health" &
+             `Date completed` > as.Date("2023-12-31")) %>% 
+   select(`Site name`, `Type name`, Rep) %>% 
+   unique()
+perdonefw24 <- round(nrow(donefw24) / (33*6) * 100)
+# % done w entry
+done24 <- done %>% 
+   filter(`Type name`=="coral health" &
+             `Date completed` > as.Date("2023-12-31")) %>% 
+   select(`Site name`, `Type name`, Rep) %>% 
+   unique()
+perdone24 <- round(nrow(done24) / nrow(donefw24) * 100)
+```
+
+We are `r perdonefw24`% done with fieldwork, and `r perdone24`% done with entry.
+
+Here is the number of surveys each person has entered:
+
+```{r, echo = FALSE}
+done %>% 
+   filter((`Type name`=="algae height" | `Type name`=="coral health") &
+             `Date completed` < as.Date("2023-12-31")) %>% 
+   select(Name, `Site name`, `Type name`, Rep) %>% 
+   group_by(Name, `Type name`) %>% 
+   summarize(n=length(Rep), .groups="drop") %>% 
+   pivot_wider(names_from = `Type name`, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
+```
+
+### 
 
 ## What is left?
 
@@ -121,6 +172,57 @@ todo %>%
    pivot_wider(names_from = `Type name`, values_from = n) %>% 
    mutate(Total = rowSums(select(.,-Name), na.rm = TRUE)) %>% 
    arrange(desc(Total)) %>% kable()
+```
+
+## Check for mismatched entries
+
+Are there any fish transects that don't match a boatlog entry?
+
+```{r, echo = FALSE}
+fterror <- fts %>% 
+   filter(!(ID %in% ftlogs$ID))
+if(nrow(fterror)>0){
+   fterror %>% kable()
+} else {
+   print("No")
+}
+```
+
+Are there any fish rovers that don't match a boatlog entry?
+
+```{r, echo = FALSE}
+frerror <- frs %>% 
+   filter(!(ID %in% frlogs$ID))
+if(nrow(frerror)>0){
+   frerror %>% kable()
+} else {
+   print("No")
+}
+```
+
+Are there any algae heights that don't match a boatlog entry?
+
+```{r, echo = FALSE}
+aherror <- ahs %>% 
+   filter(!(ID %in% ahlogs$ID))
+if(nrow(aherror)>0){
+   aherror %>% kable()
+} else {
+   print("No")
+}
+
+```
+
+Are there any coral healths that don't match a boatlog entry?
+
+```{r, echo = FALSE}
+cherror <- chs %>% 
+   filter(!(ID %in% chlogs$ID))
+if(nrow(cherror)>0){
+   cherror %>% kable()
+} else {
+   print("No")
+}
 ```
 
 ## Check for duplicates
@@ -171,8 +273,10 @@ if(nrow(fr_dups)>0){
 
 Coral health and algae heights are allowed to be duplicated so multiple people can collect and enter data for each transect.
 
-# Full To Do List
+## Full To Do List
 
 ```{r, echo=FALSE}
-todo %>% kable()
+todo %>% 
+   arrange(`Date completed`) %>% 
+   kable()
 ```
