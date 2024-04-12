@@ -137,8 +137,8 @@ Here is the number of surveys each person has entered:
 
 ```{r, echo = FALSE}
 done %>% 
-   filter((`Type name`=="algae height" | `Type name`=="coral health") &
-             `Date completed` < as.Date("2023-12-31")) %>% 
+   filter(`Type name`=="coral health" &
+             `Date completed` > as.Date("2023-12-31")) %>% 
    select(Name, `Site name`, `Type name`, Rep) %>% 
    group_by(Name, `Type name`) %>% 
    summarize(n=length(Rep), .groups="drop") %>% 
