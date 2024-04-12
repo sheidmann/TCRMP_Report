@@ -1,0 +1,10 @@
+name: "TCRMP Entry Checks"
+navbar:
+  title: "TCRMP Entry Checks"
+  left:
+    - text: "Entry Progress"
+      href: TCRMP_entry_checks.html
+output_dir: "docs"
+output:
+  html_document:
+    theme: cosmo

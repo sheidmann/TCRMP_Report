@@ -1,0 +1,170 @@
+---
+title: "TCRMP Entry Checks"
+format: html
+editor: visual
+author: "Sarah Heidmann"
+date: "2024-04-11"
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse, quietly = TRUE)
+library(knitr)
+
+downdate <- "2024-04-12"
+dd <- gsub("-","",downdate)
+# Boatlogs
+logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
+ftlogs <- logs_raw %>%
+   filter(`Type name`=="fish transect") %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+frlogs <- logs_raw %>%
+   filter(`Type name`=="fish rover") %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+ahlogs <- logs_raw %>% 
+   filter(`Type name`=="algae heights") %>% 
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+chlogs <- logs_raw %>% 
+   filter(`Type name`=="coral health") %>% 
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+
+# Fish transects
+fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv"),
+                    col_types = cols(`Site name` = col_character(),
+                                    Name = col_character(),
+                                    `Oc cc`= col_character(),
+                                    `Common name` = col_character(),
+                                    `Scientific name`= col_character(),
+                                    `Date completed`=col_date(),
+                                     .default=col_double()))
+fts <- fts_raw %>%
+   select(`Fish transect`,`Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+
+# Fish rovers
+frs_raw <- read_csv(paste0("data/data",dd,"/FishRovers_all_",downdate,".csv"))
+frs <- frs_raw %>%
+   select(`Fish rover`,`Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+
+
+# Algae heights
+ahs_raw <- read_csv(paste0("data/data",dd,"/AlgaeHeights_all_",downdate,".csv"))
+ahs <- ahs_raw %>%
+   select(`Algae height`,`Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+
+# Coral healths
+chs_raw <- read_csv(paste0("data/data",dd,"/CoralHealth_all_",downdate,".csv"))
+chs <- chs_raw %>% 
+   select(`Coral health`,`Site name`, Name, `Date completed`, Rep, Method) %>% 
+   unique() %>% 
+   mutate(ID = paste(`Site name`, Rep, Name,  `Date completed`,
+                     # Method,
+                     sep=","))
+```
+
+## How much has been entered?
+
+```{r, echo=FALSE}
+done <- fts %>% 
+   mutate(`Fish transect`=NULL, `Type name`="fish transect") %>% 
+   bind_rows(mutate(frs, `Fish rover`=NULL,`Type name`="fish rover"), 
+             mutate(ahs,`Algae height`=NULL,`Type name`="algae height"),
+             mutate(chs,`Coral health`=NULL,`Type name`="coral health")) %>% 
+   select(Name, `Site name`, `Type name`, Rep) %>% 
+   arrange(Name, `Site name`, `Type name`, Rep)
+
+
+
+# % done?
+perdone = round(nrow(done)/nrow(logs_raw) *100)
+```
+
+We are `r perdone`% done with entry!
+
+Here is the number of surveys each person has entered:
+
+```{r, echo = FALSE}
+done %>% group_by(Name) %>% summarize(n=length(Rep)) %>% 
+   arrange(desc(n))
+```
+
+## What is left?
+
+```{r, echo=FALSE}
+notran <- ftlogs[!(ftlogs$ID %in% fts$ID),]
+norov <- frlogs[!(frlogs$ID %in% frs$ID),]
+nohts <- ahlogs[!(ahlogs$ID %in% ahs$ID),]
+nochs <- chlogs[!(chlogs$ID %in% chs$ID),]
+
+todo <- notran %>%
+   bind_rows(norov, nohts, nochs) %>%
+   select(Name, `Site name`, `Date completed`, `Type name`, Rep) %>%
+   arrange(Name, `Site name`, `Date completed`, `Type name`, Rep)
+```
+
+Here's how many each person has left:
+
+```{r, echo=FALSE}
+todo %>% group_by(Name) %>% summarize(n=length(Rep)) %>% 
+   arrange(desc(n)) %>% kable()
+```
+
+## Check for duplicates
+
+Are there any duplicated fish transect boatlogs?
+
+```{r, echo=FALSE}
+ftlog_dups <- ftlogs[duplicated(ftlogs$ID),]
+if(nrow(ftlog_dups)>0){
+   ftlog_dups %>% kable()
+} else {
+   print("No")
+}
+```
+
+Are there any duplicated fish transect entries?
+
+```{r, echo=FALSE}
+ft_dups <- fts[duplicated(fts$ID),]
+if(nrow(ft_dups)>0){
+   ft_dups %>% kable()
+} else {
+   print("No")
+}
+```
+
+Are there any duplicated fish rover boatlogs?
+
+```{r, echo=FALSE}
+frlog_dups <- frlogs[duplicated(frlogs$ID),]
+if(nrow(frlog_dups)>0){
+   frlog_dups %>% kable()
+} else {
+   print("No")
+}
+```
+
+Are there any duplicated fish transect entries?
+
+```{r, echo=FALSE}
+fr_dups <- frs[duplicated(frs$ID),]
+if(nrow(fr_dups)>0){
+   fr_dups %>% kable()
+} else {
+   print("No")
+}
+```
+
+Coral health and algae heights are allowed to be duplicated so multiple people can collect and enter data for each transect.
+
+# Full To Do List
+
+```{r, echo=FALSE}
+todo %>% kable()
+```
