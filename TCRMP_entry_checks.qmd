@@ -12,7 +12,7 @@ editor_options:
 library(tidyverse, quietly = TRUE)
 library(knitr)
 
-downdate <- "2024-04-12"
+downdate <- "2024-04-16"
 dd <- gsub("-","",downdate)
 # Boatlogs
 logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
