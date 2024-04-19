@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-04-16"
+date: "2024-04-19"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -12,7 +12,7 @@ editor_options:
 library(tidyverse, quietly = TRUE)
 library(knitr)
 
-downdate <- "2024-04-16"
+downdate <- "2024-04-19"
 dd <- gsub("-","",downdate)
 # Boatlogs
 logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
@@ -32,6 +32,7 @@ chlogs <- logs_raw %>%
 # Fish transects
 fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv"),
                     col_types = cols(`Site name` = col_character(),
+                                     Proofed = col_logical(),
                                     Name = col_character(),
                                     `Oc cc`= col_character(),
                                     `Common name` = col_character(),
@@ -39,14 +40,15 @@ fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv")
                                     `Date completed`=col_date(),
                                      .default=col_double()))
 fts <- fts_raw %>%
-   select(`Fish transect`,`Site name`, Name, `Date completed`, Rep) %>%
+   select(`Fish transect`, Proofed,`Site name`, Name, `Date completed`, Rep) %>%
    unique() %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
 # Fish rovers
 frs_raw <- read_csv(paste0("data/data",dd,"/FishRovers_all_",downdate,".csv"))
 frs <- frs_raw %>%
-   select(`Fish rover`,`Site name`, Name, `Date completed`, Rep) %>%
+   select(`Fish rover`,Proofed,`Site name`, 
+          Name, `Date completed`, Rep) %>%
    unique() %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
@@ -54,14 +56,14 @@ frs <- frs_raw %>%
 # Algae heights
 ahs_raw <- read_csv(paste0("data/data",dd,"/AlgaeHeights_all_",downdate,".csv"))
 ahs <- ahs_raw %>%
-   select(`Algae height`,`Site name`, Name, `Date completed`, Rep) %>%
+   select(`Algae height`,Proofed,`Site name`, Name, `Date completed`, Rep) %>%
    unique() %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
 # Coral healths
 chs_raw <- read_csv(paste0("data/data",dd,"/CoralHealth_all_",downdate,".csv"))
 chs <- chs_raw %>% 
-   select(`Coral health`,`Site name`, Name, `Date completed`, Rep, Method) %>% 
+   select(`Coral health`,Proofed,`Site name`, Name, `Date completed`, Rep, Method) %>% 
    unique() %>% 
    mutate(ID = paste(`Site name`, Rep, Name,  `Date completed`,
                      # Method,
@@ -147,7 +149,14 @@ done %>%
    arrange(desc(Total)) %>% kable()
 ```
 
-### 
+## How much as been proofed?
+
+```{r, echo = FALSE}
+totenter <- nrow(done)
+totproof <- as.numeric(summary(done$Proofed)[[3]])
+```
+
+Out of `r totenter` surveys entered so far, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
 
 ## What is left?
 
