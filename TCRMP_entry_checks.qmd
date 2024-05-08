@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-05-02"
+date: "2024-05-08"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -15,7 +15,7 @@ library(knitr)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-05-02"
+downdate <- "2024-05-08"
 dd <- gsub("-","",downdate)
 # Boatlogs
 logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
