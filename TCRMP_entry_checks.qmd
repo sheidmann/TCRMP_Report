@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-05-08"
+date: "2024-05-13"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -15,7 +15,7 @@ library(knitr)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-05-08"
+downdate <- "2024-05-13"
 dd <- gsub("-","",downdate)
 # Boatlogs
 logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
@@ -80,7 +80,7 @@ done <- fts %>%
              mutate(chs,`Coral health`=NULL,`Type name`="coral health"))
 ```
 
-## How much has been entered?
+# Completed data entry
 
 ### 2023
 
@@ -152,7 +152,7 @@ done %>%
    arrange(desc(Total)) %>% kable()
 ```
 
-## Check for mismatched entries
+### Check for mismatched entries
 
 Are there any fish transects that don't match a boatlog entry?
 
@@ -203,7 +203,7 @@ if(nrow(cherror)>0){
 }
 ```
 
-## Check for duplicates
+### Check for duplicates
 
 Are there any duplicated fish transect boatlogs?
 
@@ -251,7 +251,7 @@ if(nrow(fr_dups)>0){
 
 Coral health and algae heights are allowed to be duplicated so multiple people can collect and enter data for each transect.
 
-## How much as been proofed?
+## Fish proofing progress
 
 ```{r, echo = FALSE}
 totenter <- nrow(done)
@@ -274,7 +274,7 @@ done %>%
 ```
 
 
-## What is left to enter?
+# Remaining Data Entry
 
 ```{r, echo=FALSE}
 notran <- ftlogs[!(ftlogs$ID %in% fts$ID),]
@@ -300,7 +300,7 @@ todo %>%
 ```
 
 
-## Full To Do List
+## Full Entry To Do List
 
 ```{r, echo=FALSE}
 todo %>% 
