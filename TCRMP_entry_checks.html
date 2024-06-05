@@ -77,8 +77,8 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Please note that this page does not update automatically. It is accurate up to the date above.</p>
-<section id="completed-data-entry" class="level1">
-<h1>Completed data entry</h1>
+<section id="entry-progress" class="level1">
+<h1>Entry Progress</h1>
 <section id="section" class="level3">
 <h3 class="anchored" data-anchor-id="section">2023</h3>
 <p>We are 100% done with fieldwork, and 100% done with entry.</p>
@@ -87,70 +87,25 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="post-bleaching">2024 Post Bleaching</h3>
 <p>We are 99% done with fieldwork, and 91% done with entry.</p>
 </section>
-<section id="check-for-mismatched-entries" class="level3">
-<h3 class="anchored" data-anchor-id="check-for-mismatched-entries">Check for mismatched entries</h3>
-<p>Are there any fish transects that don’t match a boatlog entry?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Are there any fish rovers that don’t match a boatlog entry?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Are there any algae heights that don’t match a boatlog entry?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Are there any coral healths that don’t match a boatlog entry?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-</section>
-<section id="check-for-duplicates" class="level3">
-<h3 class="anchored" data-anchor-id="check-for-duplicates">Check for duplicates</h3>
-<p>Are there any duplicated fish transect boatlogs?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Are there any duplicated fish transect entries?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Are there any duplicated fish rover boatlogs?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Are there any duplicated fish transect entries?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "No"</code></pre>
-</div>
-</div>
-<p>Coral health and algae heights are allowed to be duplicated so multiple people can collect and enter data for each transect.</p>
-</section>
-<section id="fish-proofing-progress" class="level2">
-<h2 class="anchored" data-anchor-id="fish-proofing-progress">Fish proofing progress</h2>
-<p>Out of 1099 surveys entered so far, 377 have been proofed (34%). Here is what each person has left to proof (just fish for now):</p>
+<section id="proofing-progress" class="level2">
+<h2 class="anchored" data-anchor-id="proofing-progress">Proofing progress</h2>
+<p>Out of 1099 surveys entered so far, 377 have been proofed (34%). Here is what each person has left to proof:</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 18%">
+<col style="width: 8%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Name</th>
+<th style="text-align: right;">algae height</th>
+<th style="text-align: right;">coral health</th>
 <th style="text-align: right;">fish rover</th>
 <th style="text-align: right;">fish transect</th>
 <th style="text-align: right;">Total</th>
@@ -158,28 +113,108 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">KRAMPITZ_NICOLE</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">159</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SMITH_TYLER</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">122</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HEIDMANN_SARAH</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HOLLANDER_ERIN</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">74</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DADE_LINDSAY</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARRINGTON_BRAD</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">44</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">QUETEL_JASON</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
 <td style="text-align: right;">6</td>
 <td style="text-align: right;">31</td>
 <td style="text-align: right;">37</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">SHELBY_ADELINE</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GRETTA_ABIGAIL</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HARRIS_ELIZABETH</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TIERNEY_COURTNEY</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">MAXIN_STEFANIE</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">9</td>
 <td style="text-align: right;">13</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">HOLLANDER_ERIN</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">6</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SMITH_TYLER</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: left;">POWELL_JAMES</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">11</td>
 </tr>
 </tbody>
 </table>
@@ -445,6 +480,211 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</section>
+</section>
+<section id="qaqc" class="level1">
+<h1>QAQC</h1>
+<section id="check-for-mismatched-entries" class="level3">
+<h3 class="anchored" data-anchor-id="check-for-mismatched-entries">Check for mismatched entries</h3>
+<p>Are there any fish transects that don’t match a boatlog entry?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any fish rovers that don’t match a boatlog entry?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any algae heights that don’t match a boatlog entry?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any coral healths that don’t match a boatlog entry?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+</section>
+<section id="check-for-duplicates" class="level3">
+<h3 class="anchored" data-anchor-id="check-for-duplicates">Check for duplicates</h3>
+<p>Are there any duplicated fish transect boatlogs?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any duplicated fish transect entries?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any duplicated fish rover boatlogs?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any duplicated fish transect entries?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Coral health and algae height boatlogs are allowed to be duplicated so multiple people can collect and enter data for each transect.</p>
+<p>Are there any duplicated coral health entries?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
+</div>
+</div>
+<p>Are there any duplicated algae height entries?</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 11%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 20%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Algae height</th>
+<th style="text-align: left;">Proofed</th>
+<th style="text-align: left;">Site name</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Date completed</th>
+<th style="text-align: right;">Rep</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">South Water</td>
+<td style="text-align: left;">KRAMPITZ_NICOLE</td>
+<td style="text-align: left;">2023-10-23</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">56</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">South Water</td>
+<td style="text-align: left;">KRAMPITZ_NICOLE</td>
+<td style="text-align: left;">2023-10-23</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">67</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Salt River Deep</td>
+<td style="text-align: left;">ARRINGTON_BRAD</td>
+<td style="text-align: left;">2023-11-11</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="check-the-belts" class="level3">
+<h3 class="anchored" data-anchor-id="check-the-belts">Check the belts</h3>
+<p>Are there any belts where there should not be belts? <em>Coculus 2 was a belt that has been discontinued.</em></p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 4%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Proofed</th>
+<th style="text-align: left;">Site name</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Date completed</th>
+<th style="text-align: right;">Rep</th>
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Type name</th>
+<th style="text-align: left;">Method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Botany Bay</td>
+<td style="text-align: left;">SMITH_TYLER</td>
+<td style="text-align: left;">2023-10-12</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Botany Bay,4</td>
+<td style="text-align: left;">coral health</td>
+<td style="text-align: left;">belt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Coculus Rock</td>
+<td style="text-align: left;">DADE_LINDSAY</td>
+<td style="text-align: left;">2023-10-13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Coculus Rock,2</td>
+<td style="text-align: left;">coral health</td>
+<td style="text-align: left;">belt</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Coculus Rock</td>
+<td style="text-align: left;">SHELBY_ADELINE</td>
+<td style="text-align: left;">2023-10-13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Coculus Rock,2</td>
+<td style="text-align: left;">coral health</td>
+<td style="text-align: left;">belt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Coculus Rock</td>
+<td style="text-align: left;">SMITH_TYLER</td>
+<td style="text-align: left;">2023-10-13</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Coculus Rock,4</td>
+<td style="text-align: left;">coral health</td>
+<td style="text-align: left;">belt</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Castle</td>
+<td style="text-align: left;">SMITH_TYLER</td>
+<td style="text-align: left;">2023-11-13</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Castle,6</td>
+<td style="text-align: left;">coral health</td>
+<td style="text-align: left;">belt</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Are there any belt transects that have been entered but do not have both belt and intercept?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No"</code></pre>
 </div>
 </div>
 </section>

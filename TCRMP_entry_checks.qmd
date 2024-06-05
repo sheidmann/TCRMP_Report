@@ -17,6 +17,12 @@ options(knitr.kable.NA = '')
 
 downdate <- "2024-06-03"
 dd <- gsub("-","",downdate)
+
+# CH belt list
+beltlist <- read_csv("data/beltlist.csv") %>% 
+   mutate(ID = paste(`Site name`, Rep, sep = ","),
+          ID2 = paste(`Site name`, Rep, Method, sep = ","))
+
 # Boatlogs
 logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
 ftlogs <- logs_raw %>%
@@ -30,7 +36,7 @@ ahlogs <- logs_raw %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 chlogs <- logs_raw %>% 
    filter(`Type name`=="coral health") %>% 
-   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=",")) 
 
 # Fish transects
 fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv"),
@@ -68,7 +74,7 @@ chs_raw <- read_csv(paste0("data/data",dd,"/CoralHealth_all_",downdate,".csv"))
 chs <- chs_raw %>% 
    select(`Coral health`,Proofed,`Site name`, Name, `Date completed`, Rep, Method) %>% 
    unique() %>% 
-   mutate(ID = paste(`Site name`, Rep, Name,  `Date completed`,
+   mutate(ID = paste(`Site name`, Rep, Name,  `Date completed`, 
                      # Method,
                      sep=","))
 
@@ -80,7 +86,7 @@ done <- fts %>%
              mutate(chs,`Coral health`=NULL,`Type name`="coral health"))
 ```
 
-# Completed data entry
+# Entry Progress
 
 ### 2023
 
@@ -154,6 +160,64 @@ We are `r perdonefw24`% done with fieldwork, and `r perdone24`% done with entry.
 #    arrange(desc(Total)) %>% kable()
 ```
 
+
+## Proofing progress
+
+```{r, echo = FALSE}
+totenter <- nrow(done)
+totproof <- as.numeric(summary(done$Proofed)[[3]])
+```
+
+Out of `r totenter` surveys entered so far, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+Here is what each person has left to proof:
+
+```{r, echo = FALSE}
+done %>% 
+   filter(!Proofed) %>% 
+   select(Name, `Site name`, `Type name`, Rep) %>% 
+   group_by(Name, `Type name`) %>% 
+   summarize(n=length(Rep), .groups="drop") %>% 
+   pivot_wider(names_from = `Type name`, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
+```
+
+
+# Remaining Data Entry
+
+```{r, echo=FALSE}
+notran <- ftlogs[!(ftlogs$ID %in% fts$ID),]
+norov <- frlogs[!(frlogs$ID %in% frs$ID),]
+nohts <- ahlogs[!(ahlogs$ID %in% ahs$ID),]
+nochs <- chlogs[!(chlogs$ID %in% chs$ID),]
+
+todo <- notran %>%
+   bind_rows(norov, nohts, nochs) %>%
+   select(Name, `Site name`, `Date completed`, `Type name`, Rep) %>%
+   arrange(Name, `Site name`, `Date completed`, `Type name`, Rep)
+```
+
+Here's how many each person has left to enter:
+
+```{r, echo=FALSE}
+todo %>% 
+   group_by(Name, `Type name`) %>% 
+   summarize(n=length(Rep), .groups= "drop") %>% 
+   pivot_wider(names_from = `Type name`, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Name), na.rm = TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
+```
+
+
+## Full Entry To Do List
+
+```{r, echo=FALSE}
+todo %>% 
+   arrange(`Date completed`) %>% 
+   kable()
+```
+
+# QAQC
 ### Check for mismatched entries
 
 Are there any fish transects that don't match a boatlog entry?
@@ -212,7 +276,7 @@ Are there any duplicated fish transect boatlogs?
 ```{r, echo=FALSE}
 ftlog_dups <- ftlogs[duplicated(ftlogs$ID),]
 if(nrow(ftlog_dups)>0){
-   ftlog_dups %>% kable()
+   ftlog_dups %>% select(-ID) %>% kable()
 } else {
    print("No")
 }
@@ -223,7 +287,7 @@ Are there any duplicated fish transect entries?
 ```{r, echo=FALSE}
 ft_dups <- fts[duplicated(fts$ID),]
 if(nrow(ft_dups)>0){
-   ft_dups %>% kable()
+   ft_dups %>% select(-ID) %>% kable()
 } else {
    print("No")
 }
@@ -234,7 +298,7 @@ Are there any duplicated fish rover boatlogs?
 ```{r, echo=FALSE}
 frlog_dups <- frlogs[duplicated(frlogs$ID),]
 if(nrow(frlog_dups)>0){
-   frlog_dups %>% kable()
+   frlog_dups %>% select(-ID) %>% kable()
 } else {
    print("No")
 }
@@ -245,67 +309,67 @@ Are there any duplicated fish transect entries?
 ```{r, echo=FALSE}
 fr_dups <- frs[duplicated(frs$ID),]
 if(nrow(fr_dups)>0){
-   fr_dups %>% kable()
+   fr_dups %>% select(-ID) %>% kable()
 } else {
    print("No")
 }
 ```
 
-Coral health and algae heights are allowed to be duplicated so multiple people can collect and enter data for each transect.
+Coral health and algae height boatlogs are allowed to be duplicated so multiple people can collect and enter data for each transect.
 
-## Fish proofing progress
-
-```{r, echo = FALSE}
-totenter <- nrow(done)
-totproof <- as.numeric(summary(done$Proofed)[[3]])
-```
-
-Out of `r totenter` surveys entered so far, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
-Here is what each person has left to proof (just fish for now):
-
-```{r, echo = FALSE}
-done %>% 
-   filter((`Type name`=="fish transect" | `Type name`=="fish rover") &
-             !Proofed) %>% 
-   select(Name, `Site name`, `Type name`, Rep) %>% 
-   group_by(Name, `Type name`) %>% 
-   summarize(n=length(Rep), .groups="drop") %>% 
-   pivot_wider(names_from = `Type name`, values_from = n) %>% 
-   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
-   arrange(desc(Total)) %>% kable()
-```
-
-
-# Remaining Data Entry
+Are there any duplicated coral health entries?
 
 ```{r, echo=FALSE}
-notran <- ftlogs[!(ftlogs$ID %in% fts$ID),]
-norov <- frlogs[!(frlogs$ID %in% frs$ID),]
-nohts <- ahlogs[!(ahlogs$ID %in% ahs$ID),]
-nochs <- chlogs[!(chlogs$ID %in% chs$ID),]
-
-todo <- notran %>%
-   bind_rows(norov, nohts, nochs) %>%
-   select(Name, `Site name`, `Date completed`, `Type name`, Rep) %>%
-   arrange(Name, `Site name`, `Date completed`, `Type name`, Rep)
+ch_dups <- chs[duplicated(paste(chs$ID, chs$Method, sep=",")),]
+if(nrow(ch_dups)>0){
+   ch_dups %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
 ```
-
-Here's how many each person has left to enter:
+Are there any duplicated algae height entries?
 
 ```{r, echo=FALSE}
-todo %>% 
-   group_by(Name, `Type name`) %>% 
-   summarize(n=length(Rep), .groups= "drop") %>% 
-   pivot_wider(names_from = `Type name`, values_from = n) %>% 
-   mutate(Total = rowSums(select(.,-Name), na.rm = TRUE)) %>% 
-   arrange(desc(Total)) %>% kable()
+ah_dups <- ahs[duplicated(ahs$ID),]
+if(nrow(ah_dups)>0){
+   ah_dups %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
 ```
 
+### Check the belts
+Are there any belts where there should not be belts?
 
-## Full Entry To Do List
-
+*Coculus 2 was a belt that has been discontinued.*
 ```{r, echo=FALSE}
-todo %>% 
-   arrange(`Date completed`) %>% 
-   kable()
+belterror <- done %>% 
+   filter(Method == "belt") %>% 
+   mutate(ID = paste(`Site name`, Rep, sep=",")) %>% 
+   filter(!(ID %in% beltlist$ID))
+if(nrow(belterror)>0){
+   belterror %>% kable()
+} else {
+   print("No")
+}
 ```
+
+Are there any belt transects that have been entered but do not have both belt and intercept?
+```{r, echo=FALSE}
+chtodo <- todo %>% 
+   filter(`Type name`=="coral health") %>% 
+   mutate(ID = paste(`Site name`, Rep, sep = ","))
+donebelts <- done %>% 
+   filter(`Type name`=="coral health") %>% 
+   mutate(ID2 = paste(`Site name`,Rep, Method, sep=",")) %>% 
+   filter(ID2 %in% beltlist$ID2)
+beltmiss <- beltlist %>% 
+   filter(!(ID %in% chtodo$ID) &
+             !(ID2 %in% donebelts$ID2))
+if(nrow(beltmiss)>0){
+   beltmiss %>% kable()
+} else {
+   print("No")
+}
+```
+
