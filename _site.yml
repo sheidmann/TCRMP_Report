@@ -4,6 +4,8 @@ navbar:
   left:
     - text: "Entry Progress"
       href: TCRMP_entry_checks.html
+    - text: "Entry Progress"
+      href: ECMP_entry_checks.html
 output_dir: "docs"
 output:
   html_document:
