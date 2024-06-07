@@ -20,12 +20,127 @@ downdate <- "2024-06-07"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
-logs <- read_csv(paste0("data/ecdata",dd,"/ECMP_Boatlogs_",downdate,".csv")) %>%
-   mutate(ID = paste(Fid, `Date completed`, Team, Role, Name, sep=","))
+logs_raw <- read_csv(paste0("data/ecdata",dd,"/ECMP_Boatlogs_",downdate,".csv")) %>%
+   mutate(Island = ifelse(substr(Fid, 1, 1)==1, "STTSTJ", "STX"),
+          ID = paste(Fid, `Date completed`, Team, Role, Name, sep=","))
+logs <- logs_raw %>% 
+   select(Fid, Island, `Date completed`, Team, Role, Name, ID)
 
 # Abiotic (Plots)
-done <- read_csv(paste0("data/ecdata",dd,"/ECMP_Abiotic_all_",downdate,".csv")) %>% 
-   mutate(ID = paste(Fid, `Date completed`, Team, Role, Diver, sep=","))
-
+doneplots <- read_csv(paste0("data/ecdata",dd,"/ECMP_Abiotic_all_",downdate,".csv")) %>% 
+   mutate(Island = ifelse(substr(Fid, 1, 1)==1, "STTSTJ", "STX"),
+          ID = paste(Fid, `Date completed`, Team, Role, Diver, sep=","))
+done <- doneplots %>% 
+   select(Proofed, Fid, Island, `Date completed`, Team, Role, Diver, ID) %>% 
+   unique()
 
 ```
+
+# Entry Progress
+
+```{r, echo=FALSE}
+numdone <- length(unique(logs$Fid))
+# % done w fieldwork (600 sites total)
+perdonefw <- round(numdone / 600 * 100)
+# % done w entry
+perdone <- round(length(unique(done$ID)) / length(unique(logs$ID)) * 100)
+```
+
+We are `r perdonefw`% done with fieldwork (`r numdone` sites of 600), and `r perdone`% done with entry.
+
+Here is the number of surveys each person has entered:
+```{r, echo = FALSE}
+done %>%
+   group_by(Diver, Island) %>%
+   summarize(n=length(Fid), .groups="drop") %>%
+   pivot_wider(names_from = Island, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Diver), na.rm=TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
+```
+
+
+# Remaining Data Entry
+
+Here's how many each person has left to enter:
+
+```{r, echo=FALSE}
+todo <- logs[!(logs$ID %in% done$ID),] %>% 
+   select(`Date completed`, Island, Fid, Team, Role, Name) %>%
+   arrange(`Date completed`, Fid, Team, Role)
+todo %>%  
+   group_by(Name, Island) %>% 
+   summarize(n=length(Fid), .groups= "drop") %>% 
+   pivot_wider(names_from = Island, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
+```
+
+## Full Entry To Do List
+
+```{r, echo=FALSE}
+todo %>% 
+   kable()
+```
+
+# QAQC
+## Proofing progress
+
+```{r, echo = FALSE}
+totenter <- nrow(done)
+totproof <- as.numeric(summary(done$Proofed)[[3]])
+```
+
+Out of `r totenter` surveys entered so far, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+Here is what each person has left to proof:
+
+```{r, echo = FALSE}
+done %>% 
+   filter(!Proofed) %>% 
+   group_by(Diver, Island) %>% 
+   summarize(n=length(Fid), .groups="drop") %>% 
+   pivot_wider(names_from = Island, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Diver), na.rm=TRUE)) %>% 
+   arrange(desc(Total)) %>% kable()
+```
+
+### Check for mismatched entries
+
+Are there any surveys that don't match a boatlog entry?
+
+```{r, echo = FALSE}
+surverror <- done %>% 
+   filter(!(ID %in% logs$ID))
+if(nrow(surverror)>0){
+   surverror %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
+```
+
+### Check for duplicates
+
+Are there any duplicated boatlogs?
+
+```{r, echo=FALSE}
+log_dups <- logs[duplicated(logs$ID),]
+   
+if(nrow(log_dups)>0){
+   log_dups %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
+```
+
+Are there any duplicated survey entries?
+
+```{r, echo=FALSE}
+sitediverlist <- done %>% 
+   mutate(sitediver = paste(Fid, Diver, sep=","))
+done_dups <- sitediverlist[duplicated(sitediverlist$ID),]
+if(nrow(done_dups)>0){
+   done_dups %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
+```
+
