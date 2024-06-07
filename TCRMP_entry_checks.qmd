@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-06-05"
+date: "2024-06-07"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -15,7 +15,7 @@ library(knitr)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-06-05"
+downdate <- "2024-06-07"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -133,7 +133,7 @@ donefw24 <- logs_raw %>%
              `Date completed` > as.Date("2023-12-31")) %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
-perdonefw24 <- round(nrow(donefw24) / (33*6) * 100)
+perdonefw24 <- round(nrow(donefw24) / (33*6-1) * 100)
 # % done w entry
 done24 <- done %>% 
    filter(`Type name`=="coral health" &
@@ -144,6 +144,7 @@ perdone24 <- round(nrow(done24) / nrow(donefw24) * 100)
 ```
 
 We are `r perdonefw24`% done with fieldwork, and `r perdone24`% done with entry.
+This excludes the 1 coral health transect we skipped (Hind 6).
 
 
 
