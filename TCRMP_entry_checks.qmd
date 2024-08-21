@@ -75,6 +75,7 @@ frs <- frs_raw %>%
 # Algae heights
 ahs_raw <- read_csv(paste0("data/data",dd,"/AlgaeHeights_all_",downdate,".csv"))
 ahs <- ahs_raw %>%
+   mutate(Proofed = as.logical(Proofed), `Date completed` = as.Date(`Date completed`), Rep = as.double(Rep)) %>% 
    select(`Algae height`,Proofed,`Site name`, Name, `Date completed`, Rep) %>%
    unique() %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
@@ -82,6 +83,7 @@ ahs <- ahs_raw %>%
 # Coral healths
 chs_raw <- read_csv(paste0("data/data",dd,"/CoralHealth_all_",downdate,".csv"))
 chs <- chs_raw %>% 
+   mutate(Proofed = as.logical(Proofed), `Date completed` = as.Date(`Date completed`), Rep = as.double(Rep)) %>% 
    select(`Coral health`,Proofed,`Site name`, Name, `Date completed`, Rep, Method) %>% 
    unique() %>% 
    mutate(ID = paste(`Site name`, Rep, Name,  `Date completed`, 
@@ -98,87 +100,27 @@ done <- fts %>%
 
 # Entry Progress
 
-### 2023 Annual (Benthic Only)
-
-```{r, echo=FALSE}
-# % done w fieldwork (33 sites excluding GBF * 12 units per site)
-donefw23 <- logs_raw %>% 
-   filter(`Date completed` < as.Date("2023-12-31")) %>% 
-   select(`Site name`, `Type name`, Rep) %>% 
-   unique()
-perdonefw23 <- round(nrow(donefw23) / (33*12) * 100)
-# % done w entry
-done23 <- done %>% 
-   filter(`Date completed` < as.Date("2023-12-31")) %>% 
-   select(`Site name`, `Type name`, Rep) %>% 
-   unique()
-perdone23 <- round(nrow(done23) / nrow(donefw23) * 100)
-```
-
-We are `r perdonefw23`% done with fieldwork, and `r perdone23`% done with entry.
-
-
-
-```{r, echo = FALSE}
-# Here is the number of surveys each person has entered:
-# done %>% 
-#    filter(`Type name`=="fish rover" | `Type name`=="fish transect" |
-#              `Date completed` < as.Date("2023-12-31")) %>% 
-#    select(Name, `Site name`, `Type name`, Rep) %>% 
-#    group_by(Name, `Type name`) %>% 
-#    summarize(n=length(Rep), .groups="drop") %>% 
-#    pivot_wider(names_from = `Type name`, values_from = n) %>% 
-#    mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
-#    arrange(desc(Total)) %>% kable()
-```
-
-### 2024 Post Bleaching
-
-```{r, echo = FALSE}
-# % done w fieldwork (33 sites excluding GBF * 6 units per site)
-donefw24pb <- logs_raw %>% 
-   filter(`Type name`=="coral health" &
-             `Date completed` > as.Date("2023-12-31")) %>% 
-   select(`Site name`, `Type name`, Rep) %>% 
-   unique()
-perdonefw24pb <- round(nrow(donefw24pb) / (33*6-1) * 100)
-# % done w entry
-done24pb <- done %>% 
-   filter(`Type name`=="coral health" &
-             `Date completed` > as.Date("2023-12-31")) %>% 
-   select(`Site name`, `Type name`, Rep) %>% 
-   unique()
-perdone24pb <- round(nrow(done24pb) / nrow(donefw24pb) * 100)
-```
-
-We are `r perdonefw24pb`% done with fieldwork, and `r perdone24pb`% done with entry.
-This excludes the 1 coral health transect we skipped (Hind 6).
-
-
 ### 2024 Annual
 
 ```{r, echo=FALSE}
 # % done w fieldwork (33 sites excluding GBF * 24 units per site)
-donefw24 <- logs_raw %>% 
-   filter(`Date completed` > as.Date("2024-08-01")) %>% 
+donefw <- logs_raw %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
-perdonefw24 <- round(nrow(donefw24) / (33*24) * 100)
+perdonefw <- round(nrow(donefw) / (33*24) * 100)
 # % done w entry
-done24 <- done %>% 
-   filter(`Date completed` > as.Date("2024-08-01")) %>% 
+donelist <- done %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
-perdone24 <- round(nrow(done24) / nrow(donefw24) * 100)
+perdone <- round(nrow(donelist) / nrow(donefw) * 100)
 ```
 
-We are `r perdonefw24`% done with fieldwork, and `r perdone24`% done with entry.
+We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry.
 
 
 Here is the number of surveys each person has entered:
 ```{r, echo = FALSE}
 done %>%
-   filter(`Date completed` > as.Date("2024-08-01")) %>%
    select(Name, `Site name`, `Type name`, Rep) %>%
    group_by(Name, `Type name`) %>%
    summarize(n=length(Rep), .groups="drop") %>%
@@ -188,17 +130,18 @@ done %>%
 ```
 
 
-## Proofing progress (2023 and 2024 PBL benthic)
+## Proofing progress
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 totenter <- filter(done, `Date completed` < as.Date("2024-08-01")) %>% nrow(.)
 totproof <- filter(done, `Date completed` < as.Date("2024-08-01") & Proofed==TRUE) %>% nrow(.)
+# Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+# Here is what each person has left to proof:
 ```
 
-Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
-Here is what each person has left to proof:
+DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 done %>% 
    filter(!Proofed & `Date completed`< as.Date("2024-08-01")) %>% 
    select(Name, `Site name`, `Type name`, Rep) %>% 
@@ -368,7 +311,6 @@ if(nrow(ah_dups)>0){
 ### Check the belts
 Are there any belts where there should not be belts?
 
-*Coculus 2 was a belt that has been discontinued.*
 ```{r, echo=FALSE}
 belterror <- done %>% 
    filter(Method == "belt") %>% 
@@ -390,9 +332,10 @@ donebelts <- done %>%
    filter(`Type name`=="coral health") %>% 
    mutate(ID2 = paste(`Site name`,Rep, Method, sep=",")) %>% 
    filter(ID2 %in% beltlist$ID2)
-beltmiss <- beltlist %>% 
-   filter(!(ID %in% chtodo$ID) &
-             !(ID2 %in% donebelts$ID2))
+beltmiss <- beltlist %>% # only worry about it if:
+   filter(ID %in% with(chlogs, paste(`Site name`, Rep, sep=",")) & # it has a boatlog and
+      !(ID %in% chtodo$ID) & # it has been entered and
+             !(ID2 %in% donebelts$ID2)) # it does not have both belt and intercept
 if(nrow(beltmiss)>0){
    beltmiss %>% kable()
 } else {
