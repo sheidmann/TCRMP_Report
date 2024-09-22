@@ -261,9 +261,74 @@ size_flag %>% group_by(Name) %>%
    arrange(desc(PercentFlagged)) %>% datatable()
 ```
 
-### \*TODO: Plot observer size frequencies
+Let's look at each person's size frequency distribution:
 
-# \*TODO: species richness by observer
+```{r}
+ftsizemelt <- fts_raw %>% 
+   # take out masked goby because I'm the only one who counts them
+   # it messes up my size distribution
+   filter(`Common name`!="masked goby") %>% 
+   pivot_longer(cols = c("X0to5":"Xgt150"), 
+                names_to = "SizeBin", values_to = "num") %>% 
+   mutate(num = replace_na(num, 0))
+ftsizemeltSum <- ftsizemelt %>% 
+      group_by(Name, SizeBin) %>% 
+      summarize(total = sum(num, na.rm=T), .groups="drop_last") %>% 
+      mutate(totalrel = total / sum(total)*100,
+             SizeBin = factor(gsub("X","",SizeBin), 
+                              levels = gsub("X","",
+                                            c("X0to5","X6to10","X11to20",
+                                              "X21to30","X31to40",
+                                              "X41to50","X51to60",
+                                              "X61to70","X71to80",
+                                              "X81to90","X91to100",
+                                              "X101to110","X111to120",
+                                              "X121to130","X131to140",
+                                              "X141to150","Xgt150")))) %>% 
+      ungroup()
+
+ggplot(data=ftsizemeltSum, aes(x=SizeBin,y=totalrel)) +
+   geom_bar(aes(alpha=0.5), stat="identity", position="stack", 
+            color = "blue") +
+   facet_wrap(~Name) +
+   guides(alpha="none") +
+   ylab("Relative number") +
+   theme(axis.text.x = element_text(angle=-90, hjust=0))
+```
+
+# Species Richness
+
+## Transects
+
+How many species did people see on transects on average?
+
+```{r}
+fts_raw %>% 
+   group_by(Name, `Fish transect`) %>% 
+   summarize(Richness = length(`Common name`), .groups = "drop_last") %>% 
+   summarize(n= length(Richness),
+             mean=round(mean(Richness),2),
+             sd=round(sd(Richness),2),
+             min=min(Richness),
+             max=max(Richness)) %>% 
+   kable()
+```
+
+## Rovers
+
+How many species did people see on rovers on average?
+
+```{r}
+frs_raw %>% 
+   group_by(Name, `Fish rover`) %>% 
+   summarize(Richness = length(`Common name`), .groups = "drop_last") %>% 
+   summarize(n= length(Richness),
+             mean=round(mean(Richness),2),
+             sd=round(sd(Richness),2),
+             min=min(Richness),
+             max=max(Richness)) %>% 
+   kable()
+```
 
 # Rare Fish
 
