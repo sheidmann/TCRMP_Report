@@ -7,7 +7,7 @@ editor: visual
 
 ### Sarah Heidmann
 
-### 2024-09-17
+### 2024-09-23
 
 QAQC for TCRMP fish data for 2023. Suggestions for additions and improvement are welcomed.
 
@@ -108,7 +108,9 @@ tperabundflag <- round(summary(fts_abund$flag)[2] / nrow(fts_abund) *100, 1)
 # Make table of flags
 tabund_flag <- fts_abund %>% filter(flag == "yes") %>%
    select(`Site name`,Rep,Name,
-          `Scientific name`,`Common name`,Total,MAX_NUM)
+          `Scientific name`,`Common name`,Total,MAX_NUM) %>% 
+   mutate(Diff = Total - MAX_NUM) %>% 
+   mutate(RelDiff = round(Diff / MAX_NUM,1))
 ```
 
 There were `r tperabundflag`% of transect species flagged on abundance.
@@ -159,8 +161,11 @@ frs_abund <- frs_raw %>%
 rperabundflag <- round(summary(frs_abund$flag)[2] / nrow(frs_abund) *100, 1) 
 # Make table of flags
 rabund_flag <- frs_abund %>% filter(flag == "yes") %>%
+   mutate(Diff = MinAbund - MAX_NUM) %>% 
+   mutate(RelDiff = round(Diff / MAX_NUM,1)) %>% 
    select(`Site name`,Rep,Name,
-          `Scientific name`,`Common name`,`Abundance index`,MAX_NUM)
+          `Scientific name`,`Common name`,`Abundance index`,
+          MAX_NUM, Diff, RelDiff)
 ```
 
 There were `r rperabundflag`% of rover species flagged on abundance.
