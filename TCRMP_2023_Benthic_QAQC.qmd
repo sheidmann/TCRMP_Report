@@ -1,0 +1,120 @@
+---
+title: "TCRMP_2023_Benthic_QAQC.qmd"
+author: "Sarah Heidmann"
+format: html
+editor: visual
+---
+
+### Sarah Heidmann
+
+### 2024-09-24
+
+QAQC for TCRMP coral health and algae height data for 2023 and 2024 Post Bleaching (PBL). Suggestions for additions and improvement are welcomed.
+
+Luckily, the data entry system catches a lot of easy mistakes like mispellings. We just have to go through the mistakes it might not catch. When we catch some that are fixable, change online and export again, or if the online database has already been cleared, change directly in the data.
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+library(tidyverse, quietly = TRUE)
+library(knitr)
+options(knitr.kable.NA = '')
+library(DT)
+
+# Read qaqc'd data for fish and diadema
+chs_raw_23 <- read_csv("data/2023/TCRMP_CoralHealth_2023_webexport.csv")
+chs_raw_24 <- read_csv("data/2023/TCRMP_CoralHealth_2024PBL_webexport.csv")
+ahs_raw <- read_csv("data/2023/TCRMP_AlgaeHeights_2023_webexport.csv")
+
+# Species master for QAQC numbers
+#species <- read_csv("data/fish_species_list_2022.csv")
+
+```
+
+# Overview
+
+How big are the datasets?
+
+```{r}
+corals23 <- length(unique(chs_raw_23$`Transect coral`))
+corals24 <- length(unique(chs_raw_24$`Transect coral`))
+```
+
+Coral health 2023 has `r corals23` corals. Coral health 2024PBL has `r corals24` corals.
+
+Do we have all the coral transects in 2023? (should have 6 transects each at 33 sites)
+
+```{r}
+# Summarize number of transects by site
+chs_sitesum_23 <- chs_raw_23 %>% 
+   group_by(`Site name`,Rep) %>% 
+   summarize(n=1, .groups="drop_last") %>% 
+   summarize(Transects = sum(n))
+# High level look at number of reps
+chs_sitesum_23 %>% 
+   group_by(Transects) %>% 
+   summarize(Sites = length(`Site name`)) %>% kable()
+```
+
+Those with less than 6 transects are below.
+
+```{r}
+# See the sitewise list
+chs_sitesum_23 %>% filter(Transects<6) %>% arrange(Transects) %>% datatable()
+```
+
+Do we have all the coral transects in 2024PBL? (should have 6 transects each at 33 sites)
+
+```{r}
+# Summarize number of transects by site
+chs_sitesum_24 <- chs_raw_24 %>% 
+   group_by(`Site name`,Rep) %>% 
+   summarize(n=1, .groups="drop_last") %>% 
+   summarize(Transects = sum(n))
+# High level look at number of reps
+chs_sitesum_24 %>% 
+   group_by(Transects) %>% 
+   summarize(Sites = length(`Site name`)) %>% kable()
+```
+
+Those with less than 6 transects are below.
+
+```{r}
+# See the sitewise list
+chs_sitesum_24 %>% filter(Transects<6) %>% arrange(Transects) %>% datatable()
+```
+
+Do we have all the algae transects in 2023? (should have 6 transects each at 33 sites)
+
+```{r}
+# Summarize number of transects by site
+ahs_sitesum <- ahs_raw %>% 
+   group_by(`Site name`,Rep) %>% 
+   summarize(n=1, .groups="drop_last") %>% 
+   summarize(Transects = sum(n))
+# High level look at number of reps
+ahs_sitesum %>% 
+   group_by(Transects) %>% 
+   summarize(Sites = length(`Site name`)) %>% kable()
+```
+
+Those with less than 6 transects are below.
+
+```{r}
+# See the sitewise list
+ahs_sitesum %>% filter(Transects<6) %>% arrange(Transects) %>% datatable()
+```
+
+## Date ranges
+
+```{r}
+# Date ranges for each survey type
+ch_range_23 <- range(chs_raw_23$`Date completed`)
+ch_range_24 <- range(chs_raw_24$`Date completed`)
+ah_range <- range(ahs_raw$`Date completed`)
+```
+
+Coral health 2023 took place between dates: `r ch_range_23`
+
+Coral health 2024PBL took place between dates: `r ch_range_24`
+
+Algae heights took place between dates: `r ah_range`
