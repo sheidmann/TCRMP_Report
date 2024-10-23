@@ -444,3 +444,27 @@ das_raw %>%
    scale_x_continuous(breaks=seq(0,15,1)) +
    theme_minimal()
 ```
+
+# Changes Made
+
+Based on the information above, Nicole and Sarah decided to make a few changes to the transects (rovers were unchanged).
+
+-   Hind Bank East FSA Transect 3 Kadison: 170 schoolmaster. We went back to the datasheet and it looked like it was supposed to be 70.
+
+-   Coculus Rock Transect 5 Maxin: 0-5 cm schoolmaster. Nicole was on this dive and thought it was more likely in the 6-10 cm range.
+
+-   Buck Island STT Transect 7 Meiling: 11-20 cm black jack. Nicole and Sarah agreed it was unlikely to be this small and bumped it up to 20-30 cm.
+
+-   South Water Transect 7 Meiling: 11-20 cm greater amberjacks. Nicole and Sarah agreed these were unlikely to be this small and bumped them up to 20-30 cm.
+
+-   Coral Bay Transect 9 Kadison: 31-40 cm tomtate. This was an entry mistake and all tomtates on this survey were off by one size bin.
+
+-   Coral Bay Transect 3 Dade: blue angelfish. Nicole talked to Lindsay and this was a mis-ID and was changed to a queen angelfish.
+
+-   Buck Island STT Transect 6 Meiling: blue hamlet. Nicole and Sarah agreed this was a mis-ID and the datasheet just says "bl ham", which is more likely to be black hamlet.
+
+-   College Shoal Transect 8 Meiling: remora. Since we use this name colloquially for sharksuckers but don't see actual remoras, Nicole and Sarah agreed to change it.
+
+-   Cane Bay Transect 5 Kadison: trunkfish. Since this is also a colloquial name that could be confused with this species we never see, Nicole and Sarah agreed to change it to trunkfish sp.
+
+-   Various missing Diadema transects. Nicole talked to Brad and they decided that he didn't enter them correctly and we added his back in with zero Diadema. The rest we added with a blank because we weren't sure they looked.
