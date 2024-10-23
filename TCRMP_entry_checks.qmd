@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-10-21"
+date: "2024-10-23"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -15,7 +15,7 @@ library(knitr)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-10-21"
+downdate <- "2024-10-23"
 dd <- gsub("-","",downdate)
 
 # CH belt list
