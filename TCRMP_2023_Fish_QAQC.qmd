@@ -94,6 +94,19 @@ Diademas took place between dates: `r da_range`
 
 Fish rovers took place between dates: `r fr_range`
 
+## Notes
+
+Are there any notes we should know about?
+
+```{r}
+fts_raw %>% filter(!is.na(Notes)) %>% 
+   pull(Notes) %>% 
+   unique()
+frs_raw %>% filter(!is.na(Notes)) %>% 
+   pull(Notes) %>% 
+   unique()
+```
+
 # Abundance
 
 ## Transect Abundance
