@@ -460,7 +460,7 @@ das_raw %>%
 
 # Changes Made
 
-Based on the information above, Nicole and Sarah decided to make a few changes to the transects (rovers were unchanged).
+Based on the information above, Nicole and Sarah decided to make a few changes to the transects, listed below. Rovers were unchanged.
 
 -   Hind Bank East FSA Transect 3 Kadison: 170 schoolmaster. We went back to the datasheet and it looked like it was supposed to be 70.
 
