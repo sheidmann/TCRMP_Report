@@ -21,9 +21,10 @@ library(openxlsx)
 
 ##### Import the data #####
 reportperiod <- "2023"
+period <- "Annual" # Annual or PostHurr or WS
 
 # Fish transects
-fts_raw <- read_csv("data/2023/TCRMP_FishTransects_2023_qaqc.csv",
+fts_raw <- read_csv(paste0("data/",reportperiod,"/TCRMP_FishTransects_",reportperiod,"_qaqc.csv"),
                     col_types = cols(Proofed = col_logical(),
                                      `Site name` = col_character(),
                                      `Date completed`=col_date(format = "%m/%d/%y"),
@@ -35,48 +36,51 @@ fts_raw <- read_csv("data/2023/TCRMP_FishTransects_2023_qaqc.csv",
                                      .default=col_double()))
 
 # Fish rovers
-frs_raw <- read_csv("data/2023/TCRMP_FishRovers_2023_qaqc.csv",
+frs_raw <- read_csv(paste0("data/",reportperiod,"/TCRMP_FishRovers_",reportperiod,"_qaqc.csv"),
                     col_types = cols(`Date completed`=col_date(format = "%m/%d/%y")))
 # Diademas
-das_raw <- read_csv("data/2023/TCRMP_Diadema_2023_qaqc.csv",
+das_raw <- read_csv(paste0("data/",reportperiod,"/TCRMP_Diadema_",reportperiod,"_qaqc.csv"),
                     col_types = cols(`Date completed`=col_date(format = "%m/%d/%y")))
 
 # Site metadata to merge with Diadema data
 sites <- read_csv("data/sitelist_2023.csv")
 
 ##### Fish Transects #####
-# LOCATION, MONTH, DAY, YEAR, OBSERVER, TRANSECT, COMMON NAME, SCIENTIFIC NAME, 0-5 etc.
+# Location, SampleYear, SampleMonth, Period, Transect, ScientificName, CommonName, TrophicGroup, 0-5:91-100, SppTotal
 fts_exp <- fts_raw %>% 
    # Split the date
-   mutate(MONTH = month(`Date completed`),
-          DAY = day(`Date completed`),
-          YEAR = year(`Date completed`)) %>% 
-   # Pick only needed columns
-   select(`Site name`, MONTH, DAY, YEAR, Name, Rep, 
-          `Common name`,`Scientific name`, starts_with("X")) %>% 
+   mutate(SampleYear = year(`Date completed`),
+          SampleMonth = month(`Date completed`),
+      # Add Period column
+          Period = period) %>%
+   # Trophic classification
+   # Species Total
+   mutate(SppTotal = rowSums(select(.,starts_with("X")), na.rm=TRUE)) %>% 
+   # Replace sizebin NAs with 0
+   mutate(across(starts_with("X"), ~replace_na(.,0))) %>% 
+   # Pick only needed columns and rename
+   select(Location=`Site name`, SampleYear, SampleMonth, Period, Transect=Rep, 
+          ScientificName=`Scientific name`, CommonName=`Common name`, 
+          starts_with("X"), SppTotal) %>% 
    # Change gt to >
    rename_with(.data=., .fn = ~ gsub("to","-",gsub("gt","\u003E",.)), 
                .cols = starts_with("X")) %>% 
    # Take out X on size columns
    rename_with(.data=., .fn = ~ gsub("to","-",gsub("X","",.)), 
-               .cols = starts_with("X")) %>% 
-   # Rename as needed
-   rename(LOCATION = `Site name`, OBSERVER = Name, TRANSECT = Rep,
-          `COMMON NAME` = `Common name`, `SCIENTIFIC NAME` = `Scientific name`) 
+               .cols = starts_with("X"))
 ##### Fish Rovers #####
-# LOCATION, MONTH, DAY, YEAR, OBSERVER, TRANSECT, COMMON NAME, SCIENTIFIC NAME, ABUNDANCE INDEX
+# We don't have a master sheet for this one so let's make it similar to transects
+# Location, SampleYear, SampleMonth, Period, Transect, ScientificName, CommonName, TrophicGroup, AbundanceIndex
 frs_exp <- frs_raw %>% 
    # Split the date
-   mutate(MONTH = month(`Date completed`),
-          DAY = day(`Date completed`),
-          YEAR = year(`Date completed`)) %>% 
-   # Pick only needed columns
-   select(`Site name`, MONTH, DAY, YEAR, Name, Rep, 
-          `Common name`,`Scientific name`, `Abundance index`) %>% 
-   # Rename as needed
-   rename(LOCATION = `Site name`, OBSERVER = Name, TRANSECT = Rep,
-          `COMMON NAME` = `Common name`, `SCIENTIFIC NAME` = `Scientific name`,
-          `ABUNDANCE INDEX`= `Abundance index`)
+   mutate(SampleYear = year(`Date completed`),
+          SampleMonth = month(`Date completed`),
+   # Add Period column
+          Period = period) %>% 
+   # Pick only needed columns and rename
+   select(Location=`Site name`, SampleYear, SampleMonth, Period, Transect=Rep, 
+          ScientificName=`Scientific name`, CommonName=`Common name`, 
+          AbundanceIndex=`Abundance index`)
 
 ##### Diademas #####
 # YEAR, ISLAND, LOCATION, DATE, REPORT PERIOD, ORIENTATION, LAND, REEF COMPLEX, TRANSECT, DEPTH, RECORDER, DIADEMA TEST (cm),
