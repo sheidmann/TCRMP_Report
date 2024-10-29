@@ -3,7 +3,7 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2024-10-21"
+date: "2024-10-29"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -12,10 +12,11 @@ Please note that this page does not update automatically. It is accurate up to t
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse, quietly = TRUE)
 library(knitr)
+library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-10-21"
+downdate <- "2024-10-29"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
@@ -78,7 +79,7 @@ todo %>%
 
 ```{r, echo=FALSE}
 todo %>% 
-   kable()
+   datatable()
 ```
 
 # QAQC

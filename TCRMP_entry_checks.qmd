@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-10-23"
+date: "2024-10-29"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -12,10 +12,11 @@ Please note that this page does not update automatically. It is accurate up to t
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse, quietly = TRUE)
 library(knitr)
+library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-10-23"
+downdate <- "2024-10-29"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -184,7 +185,7 @@ todo %>%
 ```{r, echo=FALSE}
 todo %>% 
    arrange(`Date completed`) %>% 
-   kable()
+   datatable()
 ```
 
 # QAQC
@@ -324,6 +325,8 @@ if(nrow(belterror)>0){
 ```
 
 Are there any belt transects that have been entered but do not have both belt and intercept?
+
+**TBS forgot to star intercepts at BTY 3-6, BIT 6, and SVN 2-3.**
 ```{r, echo=FALSE}
 chtodo <- todo %>% 
    filter(`Type name`=="coral health") %>% 
