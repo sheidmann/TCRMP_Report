@@ -326,7 +326,7 @@ if(nrow(belterror)>0){
 
 Are there any belt transects that have been entered but do not have both belt and intercept?
 
-**TBS forgot to star intercepts at BTY 3-6, BIT 6, and SVN 2-3.**
+**TBS forgot to star intercepts at BTY 3, BIT 6, and SVN 2&3.**
 ```{r, echo=FALSE}
 chtodo <- todo %>% 
    filter(`Type name`=="coral health") %>% 
