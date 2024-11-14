@@ -3,7 +3,7 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2024-11-12"
+date: "2024-11-14"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-11-12"
+downdate <- "2024-11-14"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
@@ -56,6 +56,18 @@ done %>%
    pivot_wider(names_from = Island, values_from = n) %>% 
    mutate(Total = rowSums(select(.,-Diver), na.rm=TRUE)) %>% 
    arrange(desc(Total)) %>% kable()
+```
+
+Out of the entered surveys, here is the habitat breakdown:
+```{r, echo=FALSE}
+doneplots %>% 
+   group_by(Fid) %>% 
+   filter(row_number()==1) %>% 
+   group_by(Island, Habitat) %>% 
+   summarize(n = length(Fid), .groups="drop") %>% 
+   pivot_wider(names_from = Habitat, values_from = n) %>% 
+   mutate(Total = rowSums(select(.,-Island), na.rm=TRUE)) %>% 
+   kable()
 ```
 
 
@@ -139,6 +151,22 @@ sitediverlist <- done %>%
 done_dups <- sitediverlist[duplicated(sitediverlist$ID),]
 if(nrow(done_dups)>0){
    done_dups %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
+```
+
+### Check for habitat agreement
+Do any of the habitats not agree between buddies?
+```{r, echo = FALSE}
+habsame <- doneplots %>% 
+   select(Fid, Role, Habitat) %>% 
+   unique() %>% 
+   pivot_wider(names_from = Role, values_from = Habitat) %>% 
+   mutate(same = A==B) %>% 
+   filter(same==FALSE)
+if(nrow(habsame)>0){
+   habsame %>% select(-same) %>% kable()
 } else {
    print("No")
 }

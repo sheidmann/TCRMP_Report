@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-11-12"
+date: "2024-11-14"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-11-12"
+downdate <- "2024-11-14"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -324,7 +324,7 @@ if(nrow(belterror)>0){
 }
 ```
 
-Are there any belt transects that have been entered but do not have both belt and intercept?
+Are there any belt transects that have been entered but do not have both belt and intercept? The ones below are missing.
 
 **TBS forgot to star intercepts at BTY 3, BIT 6, and SVN 2&3.**
 ```{r, echo=FALSE}
