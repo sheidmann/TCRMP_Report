@@ -3,7 +3,7 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2024-11-14"
+date: "2024-11-18"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-11-14"
+downdate <- "2024-11-18"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
