@@ -1,7 +1,7 @@
 # tcrmp_fish_format_2023.R
 # Sarah Heidmann
 # Created 24 Oct 2024
-# Last modified 29 Oct 2024
+# Last modified 19 Nov 2024
 
 # This script takes csvs exported from our online data entry.
 # QAQC has already been done manually on this data.
@@ -42,12 +42,6 @@ trophs <- read_csv("data/fish_species_uvimaster.csv") %>%
 ##### Fish Transects #####
 # Location, SampleYear, SampleMonth, Period, Transect, ScientificName, CommonName, TrophicGroup, 0-5:91-100, SppTotal
 fts_exp <- fts_raw %>% 
-   # Fix some spelling mistakes
-   mutate(`Scientific name`=gsub("sp.","sp", `Scientific name`),
-          `Scientific name`=gsub("Microspthodon chrysurus", 
-                                 "Microspathodon chrysurus", `Scientific name`),
-          `Scientific name`=gsub("Gymnothorax spcies","Gymnothorax sp", 
-                                 `Scientific name`)) %>% 
    # Split the date
    mutate(SampleYear = year(`Date completed`),
           SampleMonth = month(`Date completed`),
@@ -73,18 +67,6 @@ fts_exp <- fts_raw %>%
 # We don't have a master sheet for this one so let's make it similar to transects
 # Location, SampleYear, SampleMonth, Period, Transect, ScientificName, CommonName, TrophicGroup, AbundanceIndex
 frs_exp <- frs_raw %>% 
-   # Fix some spelling mistakes
-   mutate(`Scientific name`=gsub("sp.","sp", `Scientific name`),
-          `Scientific name`=gsub("Sphoeroides spngleri", 
-                                 "Sphoeroides spengleri", `Scientific name`),
-          `Scientific name`=gsub("Microspthodon chrysurus", 
-                                 "Microspathodon chrysurus", `Scientific name`),
-          `Scientific name`=gsub("Paraspyraenops incisus", 
-                                 "Parasphyraenops incisus", `Scientific name`),
-          `Scientific name`=gsub("Rypticus bistrispnus", 
-                                 "Rypticus bistrispinus", `Scientific name`),
-          `Scientific name`=gsub("Trachinotus falcatus", "Trachinotus blochii", 
-                                 `Scientific name`)) %>% 
    # Split the date
    mutate(SampleYear = year(`Date completed`),
           SampleMonth = month(`Date completed`),
