@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-11-18"
+date: "2024-11-21"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-11-18"
+downdate <- "2024-11-21"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -133,18 +133,18 @@ done %>%
 
 ## Proofing progress
 
-```{r, echo = FALSE, eval = FALSE}
-totenter <- filter(done, `Date completed` < as.Date("2024-08-01")) %>% nrow(.)
-totproof <- filter(done, `Date completed` < as.Date("2024-08-01") & Proofed==TRUE) %>% nrow(.)
-# Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
-# Here is what each person has left to proof:
+```{r, echo = FALSE}
+# DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
+totenter <- nrow(done)
+totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
 ```
+Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+Here is what each person has left to proof:
 
-DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE}
 done %>% 
-   filter(!Proofed & `Date completed`< as.Date("2024-08-01")) %>% 
+   filter(!Proofed) %>% 
    select(Name, `Site name`, `Type name`, Rep) %>% 
    group_by(Name, `Type name`) %>% 
    summarize(n=length(Rep), .groups="drop") %>% 
@@ -311,6 +311,8 @@ if(nrow(ah_dups)>0){
 
 ### Check the belts
 Are there any belts where there should not be belts?
+
+**TBS did a belt at SWT 6 to get more coral.**
 
 ```{r, echo=FALSE}
 belterror <- done %>% 
