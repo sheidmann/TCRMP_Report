@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2024-11-21"
+date: "2024-11-25"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2024-11-21"
+downdate <- "2024-11-25"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -108,7 +108,8 @@ done <- fts %>%
 donefw <- logs_raw %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
-perdonefw <- round(nrow(donefw) / (33*24) * 100)
+missedunits <- 4
+perdonefw <- round(nrow(donefw) / ((33*24)-missedunits) * 100)
 # % done w entry
 donelist <- done %>% 
    select(`Site name`, `Type name`, Rep) %>% 
@@ -116,7 +117,7 @@ donelist <- done %>%
 perdone <- round(nrow(donelist) / nrow(donefw) * 100)
 ```
 
-We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry.
+We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. This year we missed 1 algae height at CBD, 2 algae heights at SRW, and 1.5 coral healths at SRD.
 
 
 Here is the number of surveys each person has entered:
