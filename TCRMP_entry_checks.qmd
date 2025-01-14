@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2025-01-07"
+date: "2025-01-14"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2025-01-07"
+downdate <- "2025-01-14"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -51,6 +51,16 @@ fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv")
                                      .default=col_double()))
 fts <- fts_raw %>%
    select(`Fish transect`, Proofed,`Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+# Diademas (for checking against transects)
+das_raw <- read_csv(paste0("data/data",dd,"/Diadema_all_",downdate,".csv"),
+                    col_types = cols(`Site name` = col_character(),
+                                    Name = col_character(),
+                                    `Date completed`=col_date(),
+                                     .default=col_double()))
+das <- das_raw %>%
+   select(`Fish transect`, `Site name`, Name, `Date completed`, Rep) %>%
    unique() %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
@@ -309,6 +319,20 @@ if(nrow(ah_dups)>0){
    print("No")
 }
 ```
+
+### Check Diadema
+Are any fish transects missing Diadema? This could be an entry mistake, or the diver forgot to size them or forgot to look. The diver should clarify what went wrong.
+
+```{r, echo=FALSE}
+diamiss <- fts %>% 
+   filter(!(ID %in% das$ID))
+if(nrow(diamiss)>0){
+   diamiss %>% select(-ID) %>% kable()
+} else {
+   print("No")
+}
+```
+
 
 ### Check the belts
 Are there any belts where there should not be belts?
