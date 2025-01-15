@@ -7,7 +7,7 @@ editor: visual
 
 ### Sarah Heidmann
 
-### 2024-09-24
+### 2025-01-15
 
 QAQC for TCRMP coral health and algae height data for 2023 and 2024 Post Bleaching (PBL). Suggestions for additions and improvement are welcomed.
 
@@ -118,3 +118,185 @@ Coral health 2023 took place between dates: `r ch_range_23`
 Coral health 2024PBL took place between dates: `r ch_range_24`
 
 Algae heights took place between dates: `r ah_range`
+
+## Notes
+
+Are there any notes we should know about?
+
+```{r}
+chs_raw_23 %>% filter(!is.na(`Site Notes`)) %>% 
+   pull(`Site Notes`) %>% 
+   unique()
+chs_raw_24 %>% filter(!is.na(`Site Notes`)) %>% 
+   pull(`Site Notes`) %>% 
+   unique()
+ahs_raw %>% filter(!is.na(Notes)) %>% 
+   pull(Notes) %>% 
+   unique()
+```
+
+# Corals
+
+## Abundance
+
+How many corals did we see on average on transects across sites?
+
+In 2023:
+
+```{r}
+chs_corals_23 <- chs_raw_23 %>% 
+   select(`Site name`, Rep, Method, `Transect coral`, 
+          `Coral full name`, `Length cm`) %>% 
+   unique() 
+chs_corals_23 %>% 
+   group_by(`Site name`, Method, Rep) %>% 
+   summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
+   summarize(mean = round(mean(Corals),1), sd = round(sd(Corals),1),
+             min = min(Corals), max = max(Corals),
+             .groups="drop") %>% 
+   arrange(desc(mean)) %>% datatable()
+```
+
+In 2024 PBL:
+
+```{r}
+chs_corals_24 <- chs_raw_24 %>% 
+   select(`Site name`, Rep, Method, `Transect coral`,
+          `Coral full name`, `Length cm`) %>% 
+   unique() 
+chs_corals_24 %>% 
+   group_by(`Site name`, Method, Rep) %>% 
+   summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
+   summarize(mean = round(mean(Corals),1), sd = round(sd(Corals),1),
+             min = min(Corals), max = max(Corals),
+             .groups="drop") %>% 
+   arrange(desc(mean)) %>% datatable()
+```
+
+## Sizing
+
+coral size by species summary table and size frequency plots. can put vertical line for max_diam? Frequency and probability distributions of size dimensions by species like fig 4 of ncrmp document
+
+What did the max dimension of each coral species look like? You can use this table to look at rare species as well.
+
+In 2023:
+
+```{r}
+chs_corals_23 %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(n = length(`Length cm`),
+             mean = round(mean(`Length cm`),1), sd = round(sd(`Length cm`),1),
+             min = min(`Length cm`), max = max(`Length cm`),
+             .groups = "drop") %>% 
+   arrange(`Coral full name`) %>% datatable()
+```
+
+In 2024 PBL:
+
+```{r}
+chs_corals_24 %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(n = length(`Length cm`),
+             mean = round(mean(`Length cm`),1), sd = round(sd(`Length cm`),1),
+             min = min(`Length cm`), max = max(`Length cm`),
+             .groups = "drop") %>% 
+   arrange(`Coral full name`) %>% datatable()
+```
+
+Let's look at the size frequency distributions of the top 10 most common species.
+
+In 2023:
+
+```{r}
+commcoral <- chs_corals_23 %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(n = length(`Coral full name`)) %>% 
+   arrange(desc(n)) %>% slice_head(n=10) %>% pull(`Coral full name`)
+chs_corals_23 %>% 
+   filter(`Coral full name` %in% commcoral) %>% 
+   ggplot(data=.) + 
+   geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   facet_wrap(~`Coral full name`, scales = "free")
+```
+
+In 2024PBL:
+
+```{r}
+chs_corals_24 %>% 
+   filter(`Coral full name` %in% commcoral) %>% 
+   ggplot(data=.) + 
+   geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   facet_wrap(~`Coral full name`, scales = "free")
+```
+
+### More ideas
+
+coral size flags table. what is our 99% vs ncrmp?
+
+Frequency of occurrence for each coral species, overall and by diver (do this for fish too)
+
+Frequency of percent old and new mortality by coral species (or just overall). same for bleaching conditions (stacked bar?)
+
+Number of bleaching occurrences per species
+
+# Algae Heights
+
+## Abundance
+
+How many algal points did we get per transect on average across sites?
+
+```{r}
+ahs_raw %>% 
+   group_by(`Site name`, Rep) %>% 
+   summarize(Algaes = length(`Code name`), .groups = "drop_last") %>% 
+   summarize(n=length(Algaes), mean = round(mean(Algaes),1), 
+             sd = round(sd(Algaes),1), 
+             min = min(Algaes), max = max(Algaes), .groups="drop") %>% 
+   arrange(desc(mean)) %>% datatable()
+```
+
+## Sizing
+
+How tall (cm) was each species of algae? You can use this table to look at rare species as well.
+
+```{r}
+ahs_raw %>% 
+   group_by(`Code name`) %>% 
+   summarize(n=length(`Height cm`), mean = round(mean(`Height cm`),1), 
+             sd = round(sd(`Height cm`),1), 
+             min = min(`Height cm`), max = max(`Height cm`), .groups="drop") %>% 
+   arrange(desc(mean)) %>% datatable()
+```
+
+FILSED should not be 7.5 cm. What happened there? Let's look at the FILSED \> 2 cm.
+
+```{r}
+ahs_raw %>% 
+   filter(`Code name`=="FILSED") %>% 
+   filter(`Height cm`>2) %>% 
+   arrange(desc(`Height cm`)) %>% 
+   select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+```
+
+Also 9.6 cm LOBO? They can be quite fleshy at deep sites but that's a lot. Let's look at LOBO \> 3 cm.
+
+```{r}
+ahs_raw %>% 
+   filter(`Code name`=="LOBO") %>% 
+   filter(`Height cm`>3) %>% 
+   arrange(desc(`Height cm`)) %>% 
+   select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+```
+
+Could these transects be in mm instead of cm? Look at Erin's Magens data and Shaun's BIT data.
+
+```{r}
+ahs_raw %>% 
+   filter(`Site name`=="Magens Bay", Name == "HOLLANDER_ERIN") %>% 
+   select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+ahs_raw %>% 
+   filter(`Site name`=="Buck Island STT", Name == "KADISON_SHAUN") %>% 
+   select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+```
+
+Erin's look like they might be mm. Shaun has enough decimals that I think they are cm.
