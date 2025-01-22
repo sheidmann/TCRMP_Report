@@ -7,7 +7,7 @@ editor: visual
 
 ### Sarah Heidmann
 
-### 2025-01-15
+### 2025-01-22
 
 QAQC for TCRMP coral health and algae height data for 2023 and 2024 Post Bleaching (PBL). Suggestions for additions and improvement are welcomed.
 
@@ -21,8 +21,12 @@ options(knitr.kable.NA = '')
 library(DT)
 
 # Read qaqc'd data for fish and diadema
-chs_raw_23 <- read_csv("data/2023/TCRMP_CoralHealth_2023_webexport.csv")
-chs_raw_24 <- read_csv("data/2023/TCRMP_CoralHealth_2024PBL_webexport.csv")
+chs_raw_23 <- read_csv("data/2023/TCRMP_CoralHealth_2023_webexport.csv") %>% 
+   replace_na(list(`Old mortality`=0, `Recent mortality`=0,
+                  `Bl sp`=0,`Bl p`=0, `Bl vp`=0, `Bl bl`=0))
+chs_raw_24 <- read_csv("data/2023/TCRMP_CoralHealth_2024PBL_webexport.csv") %>% 
+   replace_na(list(`Old mortality`=0, `Recent mortality`=0,
+                  `Bl sp`=0,`Bl p`=0, `Bl vp`=0, `Bl bl`=0))
 ahs_raw <- read_csv("data/2023/TCRMP_AlgaeHeights_2023_webexport.csv")
 
 # Species master for QAQC numbers
@@ -55,7 +59,7 @@ chs_sitesum_23 %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 6 transects are below.
+Those with less than 6 transects are below. We know we missed one transect at Hind.
 
 ```{r}
 # See the sitewise list
@@ -137,6 +141,58 @@ ahs_raw %>% filter(!is.na(Notes)) %>%
 
 # Corals
 
+## Occurrence
+
+How often did we see each coral species, overall and by diver? You can use this table to look at rare species and possible mis-IDs.
+
+In 2023:
+
+```{r}
+chs_corals_23 <- chs_raw_23 %>% 
+   select(`Site name`, Rep, Name, Method, `Transect coral`, 
+          `Coral full name`, `Length cm`, `Width cm`, `Height cm`,
+          `Bl sp`, `Bl p`, `Bl vp`, `Bl bl`, 
+          `Old mortality`, `Recent mortality`) %>% 
+   unique()
+chs_corals_23 %>% 
+   group_by(`Coral full name`, Name) %>% 
+   summarize(n = length(`Transect coral`), .groups = "drop") %>% 
+   pivot_wider(id_cols = c(`Coral full name`), 
+               names_from = Name, values_from = n, values_fill = 0) %>% 
+   mutate(Total = rowSums(select(.,-`Coral full name`)), 
+          .after = `Coral full name`) %>% 
+   datatable()
+chs_corals_23 %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill = Name)) +
+   geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
+   ylab("Proportion of Corals Seen")+
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024 PBL:
+
+```{r}
+chs_corals_24 <- chs_raw_24 %>% 
+   select(`Site name`, Rep, Name, Method, `Transect coral`,
+          `Coral full name`, `Length cm`, `Width cm`, `Height cm`,
+          `Bl sp`, `Bl p`, `Bl vp`, `Bl bl`, 
+          `Old mortality`, `Recent mortality`) %>% 
+   unique() 
+chs_corals_24 %>% 
+   group_by(`Coral full name`, Name) %>% 
+   summarize(n = length(`Transect coral`), .groups = "drop") %>% 
+   pivot_wider(id_cols = c(`Coral full name`), 
+               names_from = Name, values_from = n, values_fill = 0) %>% 
+   mutate(Total = rowSums(select(.,-`Coral full name`)), 
+          .after = `Coral full name`) %>% 
+   datatable()
+chs_corals_24 %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill = Name)) +
+   geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
+   ylab("Proportion of Corals Seen")+
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
 ## Abundance
 
 How many corals did we see on average on transects across sites?
@@ -144,11 +200,7 @@ How many corals did we see on average on transects across sites?
 In 2023:
 
 ```{r}
-chs_corals_23 <- chs_raw_23 %>% 
-   select(`Site name`, Rep, Method, `Transect coral`, 
-          `Coral full name`, `Length cm`) %>% 
-   unique() 
-chs_corals_23 %>% 
+ chs_corals_23 %>% 
    group_by(`Site name`, Method, Rep) %>% 
    summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
    summarize(mean = round(mean(Corals),1), sd = round(sd(Corals),1),
@@ -160,10 +212,6 @@ chs_corals_23 %>%
 In 2024 PBL:
 
 ```{r}
-chs_corals_24 <- chs_raw_24 %>% 
-   select(`Site name`, Rep, Method, `Transect coral`,
-          `Coral full name`, `Length cm`) %>% 
-   unique() 
 chs_corals_24 %>% 
    group_by(`Site name`, Method, Rep) %>% 
    summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
@@ -175,13 +223,14 @@ chs_corals_24 %>%
 
 ## Sizing
 
-coral size by species summary table and size frequency plots. can put vertical line for max_diam? Frequency and probability distributions of size dimensions by species like fig 4 of ncrmp document
-
-What did the max dimension of each coral species look like? You can use this table to look at rare species as well.
+What did the max dimension (length in cm) of each coral species look like?
 
 In 2023:
 
 ```{r}
+# Do we want to add width and height to this check?
+# See Fig 4 of ncrmp for example.
+# would need to pivot_longer the dimensions then summarize then wrap.
 chs_corals_23 %>% 
    group_by(`Coral full name`) %>% 
    summarize(n = length(`Length cm`),
@@ -229,15 +278,401 @@ chs_corals_24 %>%
    facet_wrap(~`Coral full name`, scales = "free")
 ```
 
-### More ideas
+## Mortality
 
-coral size flags table. what is our 99% vs ncrmp?
+What is the prevalence of old and new mortality by coral species?
 
-Frequency of occurrence for each coral species, overall and by diver (do this for fish too)
+In 2023:
 
-Frequency of percent old and new mortality by coral species (or just overall). same for bleaching conditions (stacked bar?)
+```{r}
+chs_corals_23 %>%  
+   mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
+          `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(`Old mortality`=sum(`Old mortality`)/length(`Old mortality`),
+             `Recent mortality`=sum(`Recent mortality`)/length(`Recent mortality`),
+             .groups = "drop") %>% 
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
 
-Number of bleaching occurrences per species
+In 2024 PBL:
+
+```{r}
+chs_corals_24 %>%  
+   mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
+          `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(`Old mortality`=sum(`Old mortality`)/length(`Old mortality`),
+             `Recent mortality`=sum(`Recent mortality`)/length(`Recent mortality`),
+             .groups = "drop") %>% 
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What is the prevalence of old and new mortality by diver? Check for possible over- or under-estimating.
+
+In 2023:
+
+```{r}
+chs_corals_23 %>%  
+   mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
+          `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
+   group_by(Name) %>% 
+   summarize(`Old mortality`=sum(`Old mortality`)/length(`Old mortality`),
+             `Recent mortality`=sum(`Recent mortality`)/length(`Recent mortality`),
+             .groups = "drop") %>% 
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   add_row(Name = "Overall", Type="Old mortality", 
+           value = nrow(filter(chs_corals_23,`Old mortality`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Recent mortality", 
+           value = nrow(filter(chs_corals_23,`Recent mortality`>0))/nrow(chs_corals_23)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024PBL:
+
+```{r}
+chs_corals_24 %>%  
+   mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
+          `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
+   group_by(Name) %>% 
+   summarize(`Old mortality`=sum(`Old mortality`)/length(`Old mortality`),
+             `Recent mortality`=sum(`Recent mortality`)/length(`Recent mortality`),
+             .groups = "drop") %>% 
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   add_row(Name = "Overall", Type="Old mortality", 
+           value = nrow(filter(chs_corals_24,`Old mortality`>0))/nrow(chs_corals_24)) %>% 
+   add_row(Name = "Overall", Type="Recent mortality", 
+           value = nrow(filter(chs_corals_24,`Recent mortality`>0))/nrow(chs_corals_24)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What is the extent of old and new mortality by coral species?
+
+In 2023:
+
+```{r, warning=FALSE}
+chs_corals_23 %>%  
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(`Coral full name`, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024 PBL:
+
+```{r, warning=FALSE}
+chs_corals_24 %>%  
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(`Coral full name`, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What is the extent of old and new mortality by diver? Check for possible over- or under-estimating.
+
+In 2023:
+
+```{r}
+chs_corals_23 %>%  
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(Name, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   add_row(Name = "Overall", Type="Old mortality", 
+           mean = round(mean(chs_corals_23$`Old mortality`),2), 
+           sd = round(sd(chs_corals_23$`Old mortality`),2),
+           n = length(chs_corals_23$`Old mortality`)) %>% 
+   add_row(Name = "Overall", Type="Recent mortality", 
+           mean = round(mean(chs_corals_23$`Recent mortality`),2), 
+           sd = round(sd(chs_corals_23$`Recent mortality`),2),
+           n = length(chs_corals_23$`Recent mortality`)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024 PBL:
+
+```{r}
+chs_corals_24 %>%  
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(Name, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   add_row(Name = "Overall", Type="Old mortality", 
+           mean = round(mean(chs_corals_24$`Old mortality`),2), 
+           sd = round(sd(chs_corals_24$`Old mortality`),2),
+           n = length(chs_corals_24$`Old mortality`)) %>% 
+   add_row(Name = "Overall", Type="Recent mortality", 
+           mean = round(mean(chs_corals_24$`Recent mortality`),2), 
+           sd = round(sd(chs_corals_24$`Recent mortality`),2),
+           n = length(chs_corals_24$`Recent mortality`)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+## Bleaching
+
+What is the prevalence of bleaching types by coral species?
+
+In 2023:
+
+```{r}
+chs_corals_23 %>%  
+   mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
+          `Bl p`= ifelse(`Bl p`>0,1,0),
+          `Bl vp`= ifelse(`Bl vp`>0,1,0),
+          `Bl bl`= ifelse(`Bl bl`>0,1,0)) %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(`Bl sp`=sum(`Bl sp`)/length(`Bl sp`),
+             `Bl p`=sum(`Bl p`)/length(`Bl p`),
+             `Bl vp`=sum(`Bl vp`)/length(`Bl vp`),
+             `Bl bl`=sum(`Bl bl`)/length(`Bl bl`),
+             .groups = "drop") %>% 
+   pivot_longer(!`Coral full name`, 
+                names_to = "Type", values_to = "value") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024 PBL:
+
+```{r}
+chs_corals_24 %>%  
+   mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
+          `Bl p`= ifelse(`Bl p`>0,1,0),
+          `Bl vp`= ifelse(`Bl vp`>0,1,0),
+          `Bl bl`= ifelse(`Bl bl`>0,1,0)) %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(`Bl sp`=sum(`Bl sp`)/length(`Bl sp`),
+             `Bl p`=sum(`Bl p`)/length(`Bl p`),
+             `Bl vp`=sum(`Bl vp`)/length(`Bl vp`),
+             `Bl bl`=sum(`Bl bl`)/length(`Bl bl`),
+             .groups = "drop") %>% 
+   pivot_longer(!`Coral full name`, 
+                names_to = "Type", values_to = "value") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What is the prevalence of bleaching types by diver? Check for possible over- or under-estimating.
+
+In 2023:
+
+```{r}
+chs_corals_23 %>%  
+   mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
+          `Bl p`= ifelse(`Bl p`>0,1,0),
+          `Bl vp`= ifelse(`Bl vp`>0,1,0),
+          `Bl bl`= ifelse(`Bl bl`>0,1,0)) %>% 
+   group_by(Name) %>% 
+   summarize(`Bl sp`=sum(`Bl sp`)/length(`Bl sp`),
+             `Bl p`=sum(`Bl p`)/length(`Bl p`),
+             `Bl vp`=sum(`Bl vp`)/length(`Bl vp`),
+             `Bl bl`=sum(`Bl bl`)/length(`Bl bl`),
+             .groups = "drop") %>% 
+   pivot_longer(!Name, 
+                names_to = "Type", values_to = "value") %>% 
+   add_row(Name = "Overall", Type="Bl sp", 
+           value = nrow(filter(chs_corals_23,`Bl sp`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Bl p", 
+           value = nrow(filter(chs_corals_23,`Bl p`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Bl vp", 
+           value = nrow(filter(chs_corals_23,`Bl vp`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Bl bl", 
+           value = nrow(filter(chs_corals_23,`Bl bl`>0))/nrow(chs_corals_23)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024PBL:
+
+```{r}
+chs_corals_24 %>%  
+   mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
+          `Bl p`= ifelse(`Bl p`>0,1,0),
+          `Bl vp`= ifelse(`Bl vp`>0,1,0),
+          `Bl bl`= ifelse(`Bl bl`>0,1,0)) %>% 
+   group_by(Name) %>% 
+   summarize(`Bl sp`=sum(`Bl sp`)/length(`Bl sp`),
+             `Bl p`=sum(`Bl p`)/length(`Bl p`),
+             `Bl vp`=sum(`Bl vp`)/length(`Bl vp`),
+             `Bl bl`=sum(`Bl bl`)/length(`Bl bl`),
+             .groups = "drop") %>% 
+   pivot_longer(!Name, 
+                names_to = "Type", values_to = "value") %>% 
+   add_row(Name = "Overall", Type="Bl sp", 
+           value = nrow(filter(chs_corals_24,`Bl sp`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Bl p", 
+           value = nrow(filter(chs_corals_24,`Bl p`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Bl vp", 
+           value = nrow(filter(chs_corals_24,`Bl vp`>0))/nrow(chs_corals_23)) %>% 
+   add_row(Name = "Overall", Type="Bl bl", 
+           value = nrow(filter(chs_corals_24,`Bl bl`>0))/nrow(chs_corals_23)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What is the extent of bleaching types by coral species?
+
+In 2023:
+
+```{r, warning=FALSE}
+chs_corals_23 %>%  
+   pivot_longer(cols = starts_with("Bl"), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(`Coral full name`, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024 PBL:
+
+```{r, warning=FALSE}
+chs_corals_24 %>%  
+   pivot_longer(cols = starts_with("Bl"),
+                names_to = "Type", values_to = "value") %>% 
+   group_by(`Coral full name`, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What is the extent of bleaching types by diver? Check for possible over- or under-estimating.
+
+In 2023:
+
+```{r}
+chs_corals_23 %>%  
+   pivot_longer(cols = starts_with("Bl"), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(Name, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   add_row(Name = "Overall", Type="Bl sp", 
+           mean = round(mean(chs_corals_23$`Bl sp`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl p", 
+           mean = round(mean(chs_corals_23$`Bl p`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl vp", 
+           mean = round(mean(chs_corals_23$`Bl vp`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl bl", 
+           mean = round(mean(chs_corals_23$`Bl bl`),2)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+In 2024 PBL:
+
+```{r}
+chs_corals_24 %>%  
+   pivot_longer(cols = starts_with("Bl"), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(Name, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   add_row(Name = "Overall", Type="Bl sp", 
+           mean = round(mean(chs_corals_24$`Bl sp`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl p", 
+           mean = round(mean(chs_corals_24$`Bl p`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl vp", 
+           mean = round(mean(chs_corals_24$`Bl vp`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl bl", 
+           mean = round(mean(chs_corals_24$`Bl bl`),2)) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+## Interactions
+
+What were the most common interactions and their average values?
+
+```{r}
+chs_raw_23 %>% 
+   filter(!is.na(`Interaction name`)) %>% 
+   group_by(`Interaction name`) %>% 
+   summarize(n = length(`Interaction value`),
+             mean = round(mean(`Interaction value`),2),
+             sd = round(sd(`Interaction value`),2),
+             max = max(`Interaction value`),
+             min = min(`Interaction value`)) %>% 
+   arrange(desc(n)) %>% datatable()
+```
+
+```{r}
+# More ideas
+# 
+# focus on diver trends to generate info for feedback on training.
+# 
+# coral size flags table. what is our 99% vs ncrmp? how many are flagged?
+```
 
 # Algae Heights
 
@@ -254,6 +689,8 @@ ahs_raw %>%
              min = min(Algaes), max = max(Algaes), .groups="drop") %>% 
    arrange(desc(mean)) %>% datatable()
 ```
+
+Buck STX was 90% CYAN, which was not recorded. We may want to delete this data altogether.
 
 ## Sizing
 
