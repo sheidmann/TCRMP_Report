@@ -3,7 +3,7 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2025-01-14"
+date: "2025-01-22"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -15,8 +15,9 @@ library(knitr)
 library(DT)
 
 options(knitr.kable.NA = '')
+knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-01-14"
+downdate <- "2025-01-22"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
@@ -38,7 +39,7 @@ done <- doneplots %>%
 
 # Entry Progress
 
-```{r, echo=FALSE}
+```{r}
 numdone <- length(unique(logs$Fid)) + 300
 # % done w fieldwork (600 sites total)
 perdonefw <- round(numdone / 600 * 100)
@@ -49,7 +50,7 @@ perdone <- round(length(unique(done$ID)) / length(unique(logs$ID)) * 100)
 We are `r perdonefw`% done with fieldwork (`r numdone` sites of 600, 300 of which were done in 2024), and `r perdone`% done with entry.
 
 Here is the number of surveys each person has entered:
-```{r, echo = FALSE}
+```{r}
 done %>%
    group_by(Diver, Island) %>%
    summarize(n=length(Fid), .groups="drop") %>%
@@ -59,7 +60,7 @@ done %>%
 ```
 
 Out of the entered surveys, here is the habitat breakdown:
-```{r, echo=FALSE}
+```{r}
 doneplots %>% 
    group_by(Fid) %>% 
    filter(row_number()==1) %>% 
@@ -75,7 +76,7 @@ doneplots %>%
 
 Here's how many each person has left to enter:
 
-```{r, echo=FALSE}
+```{r}
 todo <- logs[!(logs$ID %in% done$ID),] %>% 
    select(`Date completed`, Island, Fid, Team, Role, Name) %>%
    arrange(`Date completed`, Fid, Team, Role)
@@ -89,7 +90,7 @@ todo %>%
 
 ## Full Entry To Do List
 
-```{r, echo=FALSE}
+```{r}
 todo %>% 
    datatable()
 ```
@@ -97,7 +98,7 @@ todo %>%
 # QAQC
 ## Proofing progress
 
-```{r, echo = FALSE}
+```{r}
 totenter <- nrow(done)
 #totproof <- as.numeric(summary(done$Proofed)[["TRUE"]])
 totproof <- 0
@@ -106,7 +107,7 @@ totproof <- 0
 Out of `r totenter` surveys entered so far, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
 Here is what each person has left to proof:
 
-```{r, echo = FALSE}
+```{r}
 done %>% 
    filter(!Proofed) %>% 
    group_by(Diver, Island) %>% 
@@ -120,7 +121,7 @@ done %>%
 
 Are there any surveys that don't match a boatlog entry?
 
-```{r, echo = FALSE}
+```{r}
 surverror <- done %>% 
    filter(!(ID %in% logs$ID))
 if(nrow(surverror)>0){
@@ -134,7 +135,7 @@ if(nrow(surverror)>0){
 
 Are there any duplicated boatlogs?
 
-```{r, echo=FALSE}
+```{r}
 log_dups <- logs[duplicated(logs$ID),]
    
 if(nrow(log_dups)>0){
@@ -146,7 +147,7 @@ if(nrow(log_dups)>0){
 
 Are there any duplicated survey entries?
 
-```{r, echo=FALSE}
+```{r}
 sitediverlist <- done %>% 
    mutate(sitediver = paste(Fid, Diver, sep=","))
 done_dups <- sitediverlist[duplicated(sitediverlist$ID),]
@@ -159,7 +160,8 @@ if(nrow(done_dups)>0){
 
 ### Check for habitat agreement
 Do any of the habitats not agree between buddies?
-```{r, echo = FALSE, eval = FALSE}
+We don't have any full sites entered yet.
+```{r, eval = F}
 habsame <- doneplots %>% 
    select(Fid, Role, Habitat) %>% 
    unique() %>% 
