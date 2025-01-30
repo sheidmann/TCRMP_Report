@@ -3,7 +3,7 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2025-01-22"
+date: "2025-01-30"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -17,7 +17,7 @@ library(DT)
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-01-22"
+downdate <- "2025-01-30"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
@@ -159,9 +159,8 @@ if(nrow(done_dups)>0){
 ```
 
 ### Check for habitat agreement
-Do any of the habitats not agree between buddies?
-We don't have any full sites entered yet.
-```{r, eval = F}
+Do any of the habitats disagree between buddies?
+```{r}
 habsame <- doneplots %>% 
    select(Fid, Role, Habitat) %>% 
    unique() %>% 
