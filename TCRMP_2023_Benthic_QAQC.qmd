@@ -1,13 +1,12 @@
 ---
-title: "TCRMP_2023_Benthic_QAQC.qmd"
+title: "TCRMP 2023 Benthic QAQC"
 author: "Sarah Heidmann"
 format: html
 editor: visual
+toc: true
 ---
 
-### Sarah Heidmann
-
-### 2025-01-22
+#### 2025-01-31
 
 QAQC for TCRMP coral health and algae height data for 2023 and 2024 Post Bleaching (PBL). Suggestions for additions and improvement are welcomed.
 
@@ -30,7 +29,8 @@ chs_raw_24 <- read_csv("data/2023/TCRMP_CoralHealth_2024PBL_webexport.csv") %>%
 ahs_raw <- read_csv("data/2023/TCRMP_AlgaeHeights_2023_webexport.csv")
 
 # Species master for QAQC numbers
-#species <- read_csv("data/fish_species_list_2022.csv")
+species <- read_csv("data/coral_size_flags_2024.csv") %>% 
+   rename("LENGTH95"="MAX_DIAMETER95")
 
 ```
 
@@ -45,9 +45,7 @@ corals24 <- length(unique(chs_raw_24$`Transect coral`))
 
 Coral health 2023 has `r corals23` corals. Coral health 2024PBL has `r corals24` corals.
 
-Do we have all the coral transects in 2023? (should have 6 transects each at 33 sites)
-
-```{r}
+```{r, tab.cap="Table 1_23. Do we have all the coral transects in 2023? We should have 6 transects each at 33 sites."}
 # Summarize number of transects by site
 chs_sitesum_23 <- chs_raw_23 %>% 
    group_by(`Site name`,Rep) %>% 
@@ -59,16 +57,14 @@ chs_sitesum_23 %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 6 transects are below. We know we missed one transect at Hind.
-
-```{r}
+```{r, tab.cap="Table 2_23. Sites with less than 6 coral health transects in 2023."}
 # See the sitewise list
-chs_sitesum_23 %>% filter(Transects<6) %>% arrange(Transects) %>% datatable()
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_sitesum_23 %>% filter(Transects<6) %>% arrange(Transects) %>% 
+   datatable()
 ```
 
-Do we have all the coral transects in 2024PBL? (should have 6 transects each at 33 sites)
-
-```{r}
+```{r, tab.cap="Table 1_24. Do we have all the coral transects in 2024PBL? We should have 6 transects each at 33 sites."}
 # Summarize number of transects by site
 chs_sitesum_24 <- chs_raw_24 %>% 
    group_by(`Site name`,Rep) %>% 
@@ -80,16 +76,13 @@ chs_sitesum_24 %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 6 transects are below.
-
-```{r}
+```{r, tab.cap="Table 2_24. Sites with less than 6 coral health transects in 2024PBL."}
 # See the sitewise list
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_sitesum_24 %>% filter(Transects<6) %>% arrange(Transects) %>% datatable()
 ```
 
-Do we have all the algae transects in 2023? (should have 6 transects each at 33 sites)
-
-```{r}
+```{r, tab.cap="Table 3. Do we have all the algae height transects in 2023? We should have 6 transects each at 33 sites."}
 # Summarize number of transects by site
 ahs_sitesum <- ahs_raw %>% 
    group_by(`Site name`,Rep) %>% 
@@ -101,12 +94,14 @@ ahs_sitesum %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 6 transects are below.
-
-```{r}
+```{r, tab.cap="Table 4. Sites with less than 6 algae height transects in 2023."}
 # See the sitewise list
-ahs_sitesum %>% filter(Transects<6) %>% arrange(Transects) %>% datatable()
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ahs_sitesum %>% filter(Transects<6) %>% arrange(Transects) %>% 
+   datatable()
 ```
+
+We didn't do algae heights in 2024PBL.
 
 ## Date ranges
 
@@ -128,12 +123,15 @@ Algae heights took place between dates: `r ah_range`
 Are there any notes we should know about?
 
 ```{r}
+cat("Coral health notes for 2023:")
 chs_raw_23 %>% filter(!is.na(`Site Notes`)) %>% 
    pull(`Site Notes`) %>% 
    unique()
+cat("Coral health notes for 2024PBL:")
 chs_raw_24 %>% filter(!is.na(`Site Notes`)) %>% 
    pull(`Site Notes`) %>% 
    unique()
+cat("Algae heights notes for 2023:")
 ahs_raw %>% filter(!is.na(Notes)) %>% 
    pull(Notes) %>% 
    unique()
@@ -143,17 +141,19 @@ ahs_raw %>% filter(!is.na(Notes)) %>%
 
 ## Occurrence
 
-How often did we see each coral species, overall and by diver? You can use this table to look at rare species and possible mis-IDs.
-
-In 2023:
-
-```{r}
+```{r, tab.cap="Table 5_23. Percent occurrence of each coral species in 2023, overall and by diver. You can use this table to look at rare species and possible mis-IDs."}
 chs_corals_23 <- chs_raw_23 %>% 
    select(`Site name`, Rep, Name, Method, `Transect coral`, 
           `Coral full name`, `Length cm`, `Width cm`, `Height cm`,
           `Bl sp`, `Bl p`, `Bl vp`, `Bl bl`, 
           `Old mortality`, `Recent mortality`) %>% 
    unique()
+# Standardize to total number of corals seen
+diver_corals_23 <- chs_corals_23 %>% 
+   group_by(Name) %>% 
+   summarize(Corals = length(`Transect coral`)) %>% 
+   add_row(Name="Total", Corals=nrow(chs_corals_23)) 
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_corals_23 %>% 
    group_by(`Coral full name`, Name) %>% 
    summarize(n = length(`Transect coral`), .groups = "drop") %>% 
@@ -161,7 +161,17 @@ chs_corals_23 %>%
                names_from = Name, values_from = n, values_fill = 0) %>% 
    mutate(Total = rowSums(select(.,-`Coral full name`)), 
           .after = `Coral full name`) %>% 
+   pivot_longer(cols = !`Coral full name`, 
+                names_to = "Name", values_to = "n") %>% 
+   left_join(diver_corals_23, by="Name") %>% 
+   mutate(prop = round(n / Corals*100,1)) %>% 
+   pivot_wider(id_cols=c(`Coral full name`),
+               names_from = Name, values_from = prop) %>% 
    datatable()
+```
+
+```{r, fig.cap="Figure 1_23. Commonness of each coral species seen in 2023 as proportion of total, colored by observing diver."}
+# #| fig-cap: "other option for fig cap"
 chs_corals_23 %>% 
    ggplot(data=., aes(x=`Coral full name`, fill = Name)) +
    geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
@@ -169,15 +179,19 @@ chs_corals_23 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, tab.cap="Table 5_24. Percent occurrence of each coral species in 2024PBL, overall and by diver. You can use this table to look at rare species and possible mis-IDs."}
 chs_corals_24 <- chs_raw_24 %>% 
    select(`Site name`, Rep, Name, Method, `Transect coral`,
           `Coral full name`, `Length cm`, `Width cm`, `Height cm`,
           `Bl sp`, `Bl p`, `Bl vp`, `Bl bl`, 
           `Old mortality`, `Recent mortality`) %>% 
    unique() 
+# Standardize to total number of corals seen
+diver_corals_24 <- chs_corals_24 %>% 
+   group_by(Name) %>% 
+   summarize(Corals = length(`Transect coral`)) %>% 
+   add_row(Name="Total", Corals=nrow(chs_corals_24)) 
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_corals_24 %>% 
    group_by(`Coral full name`, Name) %>% 
    summarize(n = length(`Transect coral`), .groups = "drop") %>% 
@@ -185,7 +199,16 @@ chs_corals_24 %>%
                names_from = Name, values_from = n, values_fill = 0) %>% 
    mutate(Total = rowSums(select(.,-`Coral full name`)), 
           .after = `Coral full name`) %>% 
+   pivot_longer(cols = !`Coral full name`, 
+                names_to = "Name", values_to = "n") %>% 
+   left_join(diver_corals_24, by="Name") %>% 
+   mutate(prop = round(n / Corals*100,1)) %>% 
+   pivot_wider(id_cols=c(`Coral full name`),
+               names_from = Name, values_from = prop) %>% 
    datatable()
+```
+
+```{r, fig.cap="Figure 1_24. Commonness of each coral species seen in 2024PBL as proportion of total, colored by observing diver."}
 chs_corals_24 %>% 
    ggplot(data=., aes(x=`Coral full name`, fill = Name)) +
    geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
@@ -195,54 +218,51 @@ chs_corals_24 %>%
 
 ## Abundance
 
-How many corals did we see on average on transects across sites?
-
-In 2023:
-
-```{r}
+```{r, tab.cap="Table 6_23. How many corals did we see on average on transects across sites in 2023?"}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
  chs_corals_23 %>% 
    group_by(`Site name`, Method, Rep) %>% 
    summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
    summarize(mean = round(mean(Corals),1), sd = round(sd(Corals),1),
              min = min(Corals), max = max(Corals),
              .groups="drop") %>% 
-   arrange(desc(mean)) %>% datatable()
+   arrange(desc(mean)) %>% 
+   datatable()
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, tab.cap="Table 6_24. How many corals did we see on average on transects across sites in 2024PBL?"}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_corals_24 %>% 
    group_by(`Site name`, Method, Rep) %>% 
    summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
    summarize(mean = round(mean(Corals),1), sd = round(sd(Corals),1),
              min = min(Corals), max = max(Corals),
              .groups="drop") %>% 
-   arrange(desc(mean)) %>% datatable()
+   arrange(desc(mean)) %>% 
+   datatable()
 ```
 
 ## Sizing
 
-What did the max dimension (length in cm) of each coral species look like?
+### Size Summaries
 
-In 2023:
-
-```{r}
+```{r, tab.cap="Table 7_23. What did the max dimension (length in cm) of each coral species look like in 2023?"}
 # Do we want to add width and height to this check?
 # See Fig 4 of ncrmp for example.
 # would need to pivot_longer the dimensions then summarize then wrap.
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_corals_23 %>% 
    group_by(`Coral full name`) %>% 
    summarize(n = length(`Length cm`),
              mean = round(mean(`Length cm`),1), sd = round(sd(`Length cm`),1),
              min = min(`Length cm`), max = max(`Length cm`),
              .groups = "drop") %>% 
-   arrange(`Coral full name`) %>% datatable()
+   arrange(`Coral full name`) %>% 
+   datatable(caption="")
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, tab.cap="Table 7_24. What did the max dimension (length in cm) of each coral species look like in 2024PBL?"}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_corals_24 %>% 
    group_by(`Coral full name`) %>% 
    summarize(n = length(`Length cm`),
@@ -252,11 +272,7 @@ chs_corals_24 %>%
    arrange(`Coral full name`) %>% datatable()
 ```
 
-Let's look at the size frequency distributions of the top 10 most common species.
-
-In 2023:
-
-```{r}
+```{r, fig.cap="Figure 2_23. Size frequency distributions of the top 10 most common coral species in 2023."}
 commcoral <- chs_corals_23 %>% 
    group_by(`Coral full name`) %>% 
    summarize(n = length(`Coral full name`)) %>% 
@@ -268,9 +284,7 @@ chs_corals_23 %>%
    facet_wrap(~`Coral full name`, scales = "free")
 ```
 
-In 2024PBL:
-
-```{r}
+```{r, fig.cap="Figure 2_24. Size frequency distributions of the top 10 most common coral species in 2024PBL."}
 chs_corals_24 %>% 
    filter(`Coral full name` %in% commcoral) %>% 
    ggplot(data=.) + 
@@ -278,13 +292,87 @@ chs_corals_24 %>%
    facet_wrap(~`Coral full name`, scales = "free")
 ```
 
-## Mortality
+```{r, fig.cap="Figure 3_23. Size frequency distributions of all corals observed by each diver in 2023."}
+chs_corals_23 %>% 
+   ggplot(data=.) + 
+   geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   facet_wrap(~Name, scales = "free_y")
+```
 
-What is the prevalence of old and new mortality by coral species?
+```{r, fig.cap="Figure 3_24. Size frequency distributions of all corals observed by each diver in 2024PBL."}
+chs_corals_24 %>% 
+   ggplot(data=.) + 
+   geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   facet_wrap(~Name, scales = "free_y")
+```
 
-In 2023:
+### Size Flags
+
+These all combine 2023 and 2024PBL for simplicity.
 
 ```{r}
+coral_size <- chs_corals_23 %>% 
+   bind_rows(chs_corals_24) %>% 
+# Join to master list to set flags
+   left_join(species, by="Coral full name") %>% 
+   # If length or height pass the 95%, flag it.
+   mutate(flagL = ifelse(`Length cm` > LENGTH95, "yes","no"),
+          flagH = ifelse(`Height cm` > HEIGHT95,"yes","no"))
+# Calculate percent flagged for length
+persizeflagL <- round(summary(as.factor(coral_size$flagL))[2] / nrow(coral_size) *100, 1) 
+# Calculate percent flagged for length
+persizeflagH <- round(summary(as.factor(coral_size$flagH))[2] / nrow(coral_size) *100, 1) 
+# Make table of flags
+size_flag <- coral_size %>% filter(flagL == "yes" | flagH =="yes") %>%
+   select(`Site name`,Rep,Name,
+          `Coral full name`,flagL,flagH,
+          `Length cm`,LENGTH95,`Height cm`,HEIGHT95)
+```
+
+There were `r persizeflagL`% of coral observations flagged on length, and `r persizeflagH`% of coral observations flagged on height.
+
+```{r, tab.cap="Table 8. All coral observations that were flagged on either length or height for being larger than NOAA's 95th percentile in 2023 and 2024PBL."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+datatable(size_flag)
+```
+
+```{r, tab.cap="Table 9. Frequency of flagging of each coral species on either length or height for being larger than NOAA's 95th percentile in 2023 and 2024PBL. We might want to change the size guidelines on these."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+# Summarize size flag table by species
+size_flag %>%
+   mutate(flagL=case_match(flagL, "yes"~1, "no"~0),
+          flagH=case_match(flagH,"yes"~1, "no"~0)) %>% 
+   group_by(`Coral full name`,LENGTH95,HEIGHT95) %>%
+   summarize(FlagsL = sum(flagL),
+             FlagsH = sum(flagH), .groups="drop") %>%
+   mutate(Flags = FlagsL+FlagsH) %>% 
+   select(`Coral full name`, Flags, FlagsL, LENGTH95, FlagsH,HEIGHT95) %>% 
+   arrange(desc(Flags)) %>% datatable()
+```
+
+```{r, tab.cap="Table 10. Number of corals each diver saw that were flagged on either length or height for being larger than NOAA's 95th percentile in 2023 and 2024PBL. The observers who had the most flags may (or may not) need some sizing practice."}
+# Standardize flags to a percentage of total corals seen
+# First calculate total corals
+diver_corals <- chs_corals_23 %>% 
+   bind_rows(chs_corals_24) %>% 
+   group_by(Name) %>% 
+   summarize(Corals = length(`Transect coral`))
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+size_flag %>% 
+   mutate(flagL=case_match(flagL, "yes"~1, "no"~0),
+          flagH=case_match(flagH,"yes"~1, "no"~0)) %>% 
+   group_by(Name) %>%
+   summarize(FlagsL = sum(flagL),
+             FlagsH = sum(flagH)) %>%
+   mutate(Flags = FlagsL+FlagsH) %>% 
+   left_join(diver_corals,by="Name") %>%
+   mutate(PercentFlagged = round(Flags / Corals*100)) %>%
+   arrange(desc(PercentFlagged)) %>% datatable()
+```
+
+## Mortality
+
+```{r, fig.cap="Figure 4_23. Prevalence of old and new morality by coral species in 2023."}
 chs_corals_23 %>%  
    mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
           `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
@@ -301,9 +389,7 @@ chs_corals_23 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, fig.cap="Figure 4_24. Prevalence of old and new morality by coral species in 2024PBL."}
 chs_corals_24 %>%  
    mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
           `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
@@ -320,11 +406,8 @@ chs_corals_24 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-What is the prevalence of old and new mortality by diver? Check for possible over- or under-estimating.
-
-In 2023:
-
-```{r}
+```{r, fig.cap="Figure 5_23. Prevalence of old and new morality by diver in 2023. Check for possible over- or under-estimating."}
+coraldiverlist_23 <- sort(unique(chs_corals_23$Name))
 chs_corals_23 %>%  
    mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
           `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
@@ -338,6 +421,7 @@ chs_corals_23 %>%
            value = nrow(filter(chs_corals_23,`Old mortality`>0))/nrow(chs_corals_23)) %>% 
    add_row(Name = "Overall", Type="Recent mortality", 
            value = nrow(filter(chs_corals_23,`Recent mortality`>0))/nrow(chs_corals_23)) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_23))) %>% 
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "dodge", 
             aes(y = value)) +
@@ -345,9 +429,8 @@ chs_corals_23 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024PBL:
-
-```{r}
+```{r, fig.cap="Figure 5_24. Prevalence of old and new morality by diver in 2024PBL. Check for possible over- or under-estimating."}
+coraldiverlist_24 <- sort(unique(chs_corals_24$Name))
 chs_corals_24 %>%  
    mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
           `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
@@ -361,6 +444,7 @@ chs_corals_24 %>%
            value = nrow(filter(chs_corals_24,`Old mortality`>0))/nrow(chs_corals_24)) %>% 
    add_row(Name = "Overall", Type="Recent mortality", 
            value = nrow(filter(chs_corals_24,`Recent mortality`>0))/nrow(chs_corals_24)) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_24))) %>% 
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "dodge", 
             aes(y = value)) +
@@ -368,11 +452,7 @@ chs_corals_24 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-What is the extent of old and new mortality by coral species?
-
-In 2023:
-
-```{r, warning=FALSE}
+```{r, warning=FALSE, fig.cap="Figure 6_23. Extent of old and new morality by coral species in 2023."}
 chs_corals_23 %>%  
    pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
                 names_to = "Type", values_to = "value") %>% 
@@ -387,9 +467,7 @@ chs_corals_23 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r, warning=FALSE}
+```{r, warning=FALSE, fig.cap="Figure 6_24. Extent of old and new morality by coral species in 2024PBL."}
 chs_corals_24 %>%  
    pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
                 names_to = "Type", values_to = "value") %>% 
@@ -404,11 +482,7 @@ chs_corals_24 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-What is the extent of old and new mortality by diver? Check for possible over- or under-estimating.
-
-In 2023:
-
-```{r}
+```{r, fig.cap="Figure 7_23. Extent of old and new morality by diver in 2023. Check for possible over- or under-estimating."}
 chs_corals_23 %>%  
    pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
                 names_to = "Type", values_to = "value") %>% 
@@ -424,6 +498,7 @@ chs_corals_23 %>%
            mean = round(mean(chs_corals_23$`Recent mortality`),2), 
            sd = round(sd(chs_corals_23$`Recent mortality`),2),
            n = length(chs_corals_23$`Recent mortality`)) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_23))) %>% 
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "stack", 
             aes(y = mean)) +
@@ -431,9 +506,7 @@ chs_corals_23 %>%
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, fig.cap="Figure 7_24. Extent of old and new morality by diver in 2024. Check for possible over- or under-estimating."}
 chs_corals_24 %>%  
    pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
                 names_to = "Type", values_to = "value") %>% 
@@ -449,6 +522,7 @@ chs_corals_24 %>%
            mean = round(mean(chs_corals_24$`Recent mortality`),2), 
            sd = round(sd(chs_corals_24$`Recent mortality`),2),
            n = length(chs_corals_24$`Recent mortality`)) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_24))) %>% 
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "stack", 
             aes(y = mean)) +
@@ -458,11 +532,8 @@ chs_corals_24 %>%
 
 ## Bleaching
 
-What is the prevalence of bleaching types by coral species?
-
-In 2023:
-
-```{r}
+```{r, fig.cap="Figure 8_23. Prevalence of bleaching types by coral species in 2023."}
+bl_cols <- c("BL"="gray100","VP"="gray75","P"="gray50","SP"="gray25")
 chs_corals_23 %>%  
    mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
           `Bl p`= ifelse(`Bl p`>0,1,0),
@@ -476,15 +547,18 @@ chs_corals_23 %>%
              .groups = "drop") %>% 
    pivot_longer(!`Coral full name`, 
                 names_to = "Type", values_to = "value") %>% 
+   # Reformat bleaching labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   # Plot
    ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
    geom_bar(stat = "identity", position = "dodge", 
-            aes(y = value)) +
+            aes(y = value), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, fig.cap="Figure 8_24. Prevalence of bleaching types by coral species in 2024PBL."}
 chs_corals_24 %>%  
    mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
           `Bl p`= ifelse(`Bl p`>0,1,0),
@@ -498,17 +572,18 @@ chs_corals_24 %>%
              .groups = "drop") %>% 
    pivot_longer(!`Coral full name`, 
                 names_to = "Type", values_to = "value") %>% 
+   # Reformat bleaching labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   # Plot
    ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
    geom_bar(stat = "identity", position = "dodge", 
-            aes(y = value)) +
+            aes(y = value), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-What is the prevalence of bleaching types by diver? Check for possible over- or under-estimating.
-
-In 2023:
-
-```{r}
+```{r, fig.cap="Figure 9_23. Prevalence of bleaching types by diver in 2023. Check for possible over- or under-estimating."}
 chs_corals_23 %>%  
    mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
           `Bl p`= ifelse(`Bl p`>0,1,0),
@@ -530,15 +605,19 @@ chs_corals_23 %>%
            value = nrow(filter(chs_corals_23,`Bl vp`>0))/nrow(chs_corals_23)) %>% 
    add_row(Name = "Overall", Type="Bl bl", 
            value = nrow(filter(chs_corals_23,`Bl bl`>0))/nrow(chs_corals_23)) %>% 
+   # Reformat bleaching and diver labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_23))) %>% 
+   # Plot
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "dodge", 
-            aes(y = value)) +
+            aes(y = value), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024PBL:
-
-```{r}
+```{r, fig.cap="Figure 9_24. Prevalence of bleaching types by diver in 2024PBL. Check for possible over- or under-estimating."}
 chs_corals_24 %>%  
    mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
           `Bl p`= ifelse(`Bl p`>0,1,0),
@@ -560,17 +639,19 @@ chs_corals_24 %>%
            value = nrow(filter(chs_corals_24,`Bl vp`>0))/nrow(chs_corals_23)) %>% 
    add_row(Name = "Overall", Type="Bl bl", 
            value = nrow(filter(chs_corals_24,`Bl bl`>0))/nrow(chs_corals_23)) %>% 
+   # Reformat bleaching and diver labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_24))) %>% 
+   # Plot
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "dodge", 
-            aes(y = value)) +
+            aes(y = value), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-What is the extent of bleaching types by coral species?
-
-In 2023:
-
-```{r, warning=FALSE}
+```{r, warning=FALSE, fig.cap="Figure 10_23. Extent of bleaching types by coral species in 2023."}
 chs_corals_23 %>%  
    pivot_longer(cols = starts_with("Bl"), 
                 names_to = "Type", values_to = "value") %>% 
@@ -578,15 +659,18 @@ chs_corals_23 %>%
    summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
              n = length(value), 
              .groups = "drop") %>% 
+   # Reformat bleaching labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   # Plot
    ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
    geom_bar(stat = "identity", position = "stack", 
-            aes(y = mean)) +
+            aes(y = mean), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r, warning=FALSE}
+```{r, warning=FALSE, fig.cap="Figure 10_24. Extent of bleaching types by coral species in 2024PBL."}
 chs_corals_24 %>%  
    pivot_longer(cols = starts_with("Bl"),
                 names_to = "Type", values_to = "value") %>% 
@@ -594,17 +678,18 @@ chs_corals_24 %>%
    summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
              n = length(value), 
              .groups = "drop") %>% 
+   # Reformat bleaching labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   # Plot
    ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
    geom_bar(stat = "identity", position = "stack", 
-            aes(y = mean)) +
+            aes(y = mean), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-What is the extent of bleaching types by diver? Check for possible over- or under-estimating.
-
-In 2023:
-
-```{r}
+```{r, fig.cap="Figure 11_23. Extent of bleaching types by diver in 2023. Check for possible over- or under-estimating."}
 chs_corals_23 %>%  
    pivot_longer(cols = starts_with("Bl"), 
                 names_to = "Type", values_to = "value") %>% 
@@ -620,15 +705,19 @@ chs_corals_23 %>%
            mean = round(mean(chs_corals_23$`Bl vp`),2)) %>% 
    add_row(Name = "Overall", Type="Bl bl", 
            mean = round(mean(chs_corals_23$`Bl bl`),2)) %>% 
+   # Reformat bleaching and diver labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_23))) %>% 
+   # Plot
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "stack", 
-            aes(y = mean)) +
+            aes(y = mean), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
-In 2024 PBL:
-
-```{r}
+```{r, fig.cap="Figure 11_24. Extent of bleaching types by diver in 2024PBL. Check for possible over- or under-estimating."}
 chs_corals_24 %>%  
    pivot_longer(cols = starts_with("Bl"), 
                 names_to = "Type", values_to = "value") %>% 
@@ -644,9 +733,15 @@ chs_corals_24 %>%
            mean = round(mean(chs_corals_24$`Bl vp`),2)) %>% 
    add_row(Name = "Overall", Type="Bl bl", 
            mean = round(mean(chs_corals_24$`Bl bl`),2)) %>% 
+   # Reformat bleaching and diver labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist_24))) %>% 
+   # Plot
    ggplot(data=., aes(x=Name, fill =Type)) +
    geom_bar(stat = "identity", position = "stack", 
-            aes(y = mean)) +
+            aes(y = mean), color="black") +
+   scale_fill_manual(values=bl_cols) +
    theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
 
@@ -654,7 +749,8 @@ chs_corals_24 %>%
 
 What were the most common interactions and their average values?
 
-```{r}
+```{r, tab.cap="Table 11_23. Most common interactions and their average values in 2023."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 chs_raw_23 %>% 
    filter(!is.na(`Interaction name`)) %>% 
    group_by(`Interaction name`) %>% 
@@ -664,6 +760,67 @@ chs_raw_23 %>%
              max = max(`Interaction value`),
              min = min(`Interaction value`)) %>% 
    arrange(desc(n)) %>% datatable()
+```
+
+```{r, tab.cap="Table 11_24. Most common interactions and their average values in 2024PBL."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_raw_24 %>% 
+   filter(!is.na(`Interaction name`)) %>% 
+   group_by(`Interaction name`) %>% 
+   summarize(n = length(`Interaction value`),
+             mean = round(mean(`Interaction value`),2),
+             sd = round(sd(`Interaction value`),2),
+             max = max(`Interaction value`),
+             min = min(`Interaction value`)) %>% 
+   arrange(desc(n)) %>% datatable()
+
+```
+
+```{r, tab.cap="Table 12_23. Summary of number of interactions recorded by each diver in 2023, and summary of corals with and without interactions. Interaction summary numbers only include corals with at least 1 interaction."}
+propInts_23 <- chs_raw_23 %>% 
+   filter(is.na(`Interaction name`)) %>% 
+   group_by(Name) %>% 
+   summarize(CoralsNoInts = length(`Transect coral`))
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_raw_23 %>% 
+   filter(!is.na(`Interaction name`)) %>% 
+   group_by(Name,`Transect coral`) %>% 
+   summarize(Interactions = length(`Interaction name`), 
+             .groups="drop_last") %>% 
+   summarize(CoralsWInts = length(Interactions),
+             MeanInts = round(mean(Interactions),2),
+             sd = round(sd(Interactions),2),
+             max = max(Interactions),
+             min = min(Interactions), .groups="drop") %>% 
+   left_join(propInts_23, by="Name") %>% 
+   mutate(TotCorals = CoralsWInts + CoralsNoInts) %>% 
+   mutate(PropWInts = round(CoralsWInts / TotCorals*100)) %>% 
+   select(-CoralsNoInts) %>% 
+   arrange(desc(MeanInts)) %>% datatable()
+```
+
+```{r, tab.cap="Table 12_24. Summary of number of interactions recorded by each diver in 2024, and summary of corals with and without interactions. Interaction summary numbers only include corals with at least 1 interaction."}
+propInts_24 <- chs_raw_24 %>% 
+   filter(is.na(`Interaction name`)) %>% 
+   group_by(Name) %>% 
+   summarize(CoralsNoInts = length(`Transect coral`))
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_raw_24 %>% 
+   filter(!is.na(`Interaction name`)) %>% 
+   group_by(Name,`Transect coral`) %>% 
+   summarize(Interactions = length(`Interaction name`), 
+             .groups="drop_last") %>% 
+   summarize(CoralsWInts = length(Interactions),
+             MeanInts = round(mean(Interactions),2),
+             sd = round(sd(Interactions),2),
+             max = max(Interactions),
+             min = min(Interactions), .groups="drop") %>% 
+   left_join(propInts_24, by="Name") %>% 
+   mutate(TotCorals = CoralsWInts + CoralsNoInts) %>% 
+   mutate(PropWInts = round(CoralsWInts / TotCorals*100)) %>% 
+   select(-CoralsNoInts) %>% 
+   arrange(desc(MeanInts)) %>% datatable()
+
 ```
 
 ```{r}
@@ -678,9 +835,8 @@ chs_raw_23 %>%
 
 ## Abundance
 
-How many algal points did we get per transect on average across sites?
-
-```{r}
+```{r, tab.cap="Table 13. Number of algal points per transect on average across sites in 2023."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    group_by(`Site name`, Rep) %>% 
    summarize(Algaes = length(`Code name`), .groups = "drop_last") %>% 
@@ -694,9 +850,8 @@ Buck STX was 90% CYAN, which was not recorded. We may want to delete this data a
 
 ## Sizing
 
-How tall (cm) was each species of algae? You can use this table to look at rare species as well.
-
-```{r}
+```{r, tab.cap="Table 14. Height (cm) of each species of algae in 2023. You can use this table to look at rare species as well."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    group_by(`Code name`) %>% 
    summarize(n=length(`Height cm`), mean = round(mean(`Height cm`),1), 
@@ -707,7 +862,8 @@ ahs_raw %>%
 
 FILSED should not be 7.5 cm. What happened there? Let's look at the FILSED \> 2 cm.
 
-```{r}
+```{r, tab.cap="Table 15. A closer look at FILSED points > 2cm in 2023."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    filter(`Code name`=="FILSED") %>% 
    filter(`Height cm`>2) %>% 
@@ -717,7 +873,8 @@ ahs_raw %>%
 
 Also 9.6 cm LOBO? They can be quite fleshy at deep sites but that's a lot. Let's look at LOBO \> 3 cm.
 
-```{r}
+```{r, tab.cap="Table 16. A closer look at LOBO points > 3cm in 2023."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    filter(`Code name`=="LOBO") %>% 
    filter(`Height cm`>3) %>% 
@@ -727,13 +884,20 @@ ahs_raw %>%
 
 Could these transects be in mm instead of cm? Look at Erin's Magens data and Shaun's BIT data.
 
-```{r}
+```{r, tab.cap="Table 17. A closer look at Erin's algae height transects at Magens to determine if they might be in the wrong units."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    filter(`Site name`=="Magens Bay", Name == "HOLLANDER_ERIN") %>% 
    select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+```
+
+Erin's look like they might be mm.
+
+```{r, tab.cap="Table 18. A closer look at Shaun's algae height transects at Buck STT to determine if they might be in the wrong units."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    filter(`Site name`=="Buck Island STT", Name == "KADISON_SHAUN") %>% 
    select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
 ```
 
-Erin's look like they might be mm. Shaun has enough decimals that I think they are cm.
+Shaun has enough decimals that I think they are cm.
