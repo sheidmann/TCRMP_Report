@@ -6,7 +6,7 @@ editor: visual
 toc: true
 ---
 
-#### 2025-01-31
+#### 2025-02-03
 
 QAQC for TCRMP coral health and algae height data for 2023 and 2024 Post Bleaching (PBL). Suggestions for additions and improvement are welcomed.
 
@@ -292,17 +292,19 @@ chs_corals_24 %>%
    facet_wrap(~`Coral full name`, scales = "free")
 ```
 
-```{r, fig.cap="Figure 3_23. Size frequency distributions of all corals observed by each diver in 2023."}
+```{r, fig.cap="Figure 3_23. Size frequency distributions of all corals observed by each diver in 2023.", warning=FALSE}
 chs_corals_23 %>% 
    ggplot(data=.) + 
    geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   scale_x_continuous(limits=c(0,100)) +
    facet_wrap(~Name, scales = "free_y")
 ```
 
-```{r, fig.cap="Figure 3_24. Size frequency distributions of all corals observed by each diver in 2024PBL."}
+```{r, fig.cap="Figure 3_24. Size frequency distributions of all corals observed by each diver in 2024PBL.", warning = FALSE}
 chs_corals_24 %>% 
    ggplot(data=.) + 
    geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   scale_x_continuous(limits=c(0,100)) +
    facet_wrap(~Name, scales = "free_y")
 ```
 
