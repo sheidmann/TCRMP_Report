@@ -1,0 +1,559 @@
+---
+title: "TCRMP 2024 Benthic QAQC"
+author: "Sarah Heidmann"
+format: html
+editor: visual
+toc: true
+---
+
+#### 2025-02-03
+
+QAQC for TCRMP coral health and algae height data for 2024. Suggestions for additions and improvement are welcomed.
+
+Luckily, the data entry system catches a lot of easy mistakes like mispellings. We just have to go through the mistakes it might not catch. When we catch some that are fixable, change online and export again, or if the online database has already been cleared, change directly in the data.
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+library(tidyverse, quietly = TRUE)
+library(knitr)
+options(knitr.kable.NA = '')
+library(DT)
+
+# Read qaqc'd data for fish and diadema
+chs_raw <- read_csv("data/2024/TCRMP_CoralHealth_2024_webexport.csv") %>% 
+   replace_na(list(`Old mortality`=0, `Recent mortality`=0,
+                  `Bl sp`=0,`Bl p`=0, `Bl vp`=0, `Bl bl`=0))
+ahs_raw <- read_csv("data/2024/TCRMP_AlgaeHeights_2024_webexport.csv")
+
+# Species master for QAQC numbers
+species <- read_csv("data/coral_size_flags_2024.csv") %>% 
+   rename("LENGTH95"="MAX_DIAMETER95")
+
+```
+
+# Overview
+
+How big are the datasets?
+
+```{r}
+numcorals <- length(unique(chs_raw$`Transect coral`))
+```
+
+Coral health 2024 has `r numcorals` corals.
+
+```{r, tab.cap="Table 1. Do we have all the coral transects? We should have 6 transects each at 33 sites."}
+# Summarize number of transects by site
+chs_sitesum <- chs_raw %>% 
+   group_by(`Site name`,Rep) %>% 
+   summarize(n=1, .groups="drop_last") %>% 
+   summarize(Transects = sum(n))
+# High level look at number of reps
+chs_sitesum %>% 
+   group_by(Transects) %>% 
+   summarize(Sites = length(`Site name`)) %>% kable()
+```
+
+```{r, tab.cap="Table 2. Sites with less than 6 coral health transects."}
+# See the sitewise list
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_sitesum %>% filter(Transects<6) %>% arrange(Transects) %>% 
+   datatable()
+```
+
+```{r, tab.cap="Table 3. Do we have all the algae height transects? We should have 6 transects each at 33 sites."}
+# Summarize number of transects by site
+ahs_sitesum <- ahs_raw %>% 
+   group_by(`Site name`,Rep) %>% 
+   summarize(n=1, .groups="drop_last") %>% 
+   summarize(Transects = sum(n))
+# High level look at number of reps
+ahs_sitesum %>% 
+   group_by(Transects) %>% 
+   summarize(Sites = length(`Site name`)) %>% kable()
+```
+
+```{r, tab.cap="Table 4. Sites with less than 6 algae height transects."}
+# See the sitewise list
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ahs_sitesum %>% filter(Transects<6) %>% arrange(Transects) %>% 
+   datatable()
+```
+
+## Date ranges
+
+```{r}
+# Date ranges for each survey type
+ch_range <- range(chs_raw$`Date completed`)
+ah_range <- range(ahs_raw$`Date completed`)
+```
+
+Coral health took place between dates: `r ch_range`
+
+Algae heights took place between dates: `r ah_range`
+
+## Notes
+
+Are there any notes we should know about?
+
+```{r}
+cat("Coral health notes:")
+chs_raw %>% filter(!is.na(`Site notes`)) %>% 
+   pull(`Site notes`) %>% 
+   unique()
+cat("Algae heights notes:")
+ahs_raw %>% filter(!is.na(Notes)) %>% 
+   pull(Notes) %>% 
+   unique()
+```
+
+# Corals
+
+## Occurrence
+
+```{r, tab.cap="Table 5. Percent occurrence of each coral species, overall and by diver. You can use this table to look at rare species and possible mis-IDs."}
+chs_corals <- chs_raw %>% 
+   select(`Site name`, Rep, Name, Method, `Transect coral`, 
+          `Coral full name`, `Length cm`, `Width cm`, `Height cm`,
+          `Bl sp`, `Bl p`, `Bl vp`, `Bl bl`, 
+          `Old mortality`, `Recent mortality`) %>% 
+   unique()
+# Standardize to total number of corals seen
+diver_corals <- chs_corals %>% 
+   group_by(Name) %>% 
+   summarize(Corals = length(`Transect coral`)) %>% 
+   add_row(Name="Total", Corals=nrow(chs_corals)) 
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_corals %>% 
+   group_by(`Coral full name`, Name) %>% 
+   summarize(n = length(`Transect coral`), .groups = "drop") %>% 
+   pivot_wider(id_cols = c(`Coral full name`), 
+               names_from = Name, values_from = n, values_fill = 0) %>% 
+   mutate(Total = rowSums(select(.,-`Coral full name`)), 
+          .after = `Coral full name`) %>% 
+   pivot_longer(cols = !`Coral full name`, 
+                names_to = "Name", values_to = "n") %>% 
+   left_join(diver_corals, by="Name") %>% 
+   mutate(prop = round(n / Corals*100,1)) %>% 
+   pivot_wider(id_cols=c(`Coral full name`),
+               names_from = Name, values_from = prop) %>% 
+   datatable()
+```
+
+```{r, fig.cap="Figure 1. Commonness of each coral species seen as proportion of total, colored by observing diver."}
+# #| fig-cap: "other option for fig cap"
+chs_corals %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill = Name)) +
+   geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
+   ylab("Proportion of Corals Seen")+
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+## Abundance
+
+```{r, tab.cap="Table 6. How many corals did we see on average on transects across sites?"}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ chs_corals %>% 
+   group_by(`Site name`, Method, Rep) %>% 
+   summarize(Corals = length(`Transect coral`), .groups = "drop_last") %>% 
+   summarize(mean = round(mean(Corals),1), sd = round(sd(Corals),1),
+             min = min(Corals), max = max(Corals),
+             .groups="drop") %>% 
+   arrange(desc(mean)) %>% 
+   datatable()
+```
+
+## Sizing
+
+### Size Summaries
+
+```{r, tab.cap="Table 7. What did the max dimension (length in cm) of each coral species look like?"}
+# Do we want to add width and height to this check?
+# See Fig 4 of ncrmp for example.
+# would need to pivot_longer the dimensions then summarize then wrap.
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_corals %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(n = length(`Length cm`),
+             mean = round(mean(`Length cm`),1), sd = round(sd(`Length cm`),1),
+             min = min(`Length cm`), max = max(`Length cm`),
+             .groups = "drop") %>% 
+   arrange(`Coral full name`) %>% 
+   datatable(caption="")
+```
+
+```{r, fig.cap="Figure 2. Size frequency distributions of the top 10 most common coral species."}
+commcoral <- chs_corals %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(n = length(`Coral full name`)) %>% 
+   arrange(desc(n)) %>% slice_head(n=10) %>% pull(`Coral full name`)
+chs_corals %>% 
+   filter(`Coral full name` %in% commcoral) %>% 
+   ggplot(data=.) + 
+   geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   facet_wrap(~`Coral full name`, scales = "free")
+```
+
+Why is the Porites astreoides x axis so large? Let's look at all PAST \> 50 cm.
+
+```{r, tab.cap="Extra Table 1. Porites astreoides > 50 cm length."}
+chs_corals %>% 
+   filter(`Coral full name`=="Porites astreoides" & `Length cm`>50) %>% 
+   arrange(desc(`Length cm`)) %>% 
+   datatable()
+```
+
+```{r, fig.cap="Figure 3. Size frequency distributions of all corals <100 cm length observed by each diver.", warning=FALSE}
+chs_corals %>% 
+   ggplot(data=.) + 
+   geom_histogram(aes(x=`Length cm`), binwidth=10) + 
+   scale_x_continuous(limits=c(0,100)) +
+   facet_wrap(~Name, scales = "free_y")
+```
+
+### Size Flags
+
+```{r}
+coral_size <- chs_corals %>% 
+# Join to master list to set flags
+   left_join(species, by="Coral full name") %>% 
+   # If length or height pass the 95%, flag it.
+   mutate(flagL = ifelse(`Length cm` > LENGTH95, "yes","no"),
+          flagH = ifelse(`Height cm` > HEIGHT95,"yes","no"))
+# Calculate percent flagged for length
+persizeflagL <- round(summary(as.factor(coral_size$flagL))[2] / nrow(coral_size) *100, 1) 
+# Calculate percent flagged for length
+persizeflagH <- round(summary(as.factor(coral_size$flagH))[2] / nrow(coral_size) *100, 1) 
+# Make table of flags
+size_flag <- coral_size %>% filter(flagL == "yes" | flagH =="yes") %>%
+   select(`Site name`,Rep,Name,
+          `Coral full name`,flagL,flagH,
+          `Length cm`,LENGTH95,`Height cm`,HEIGHT95)
+```
+
+There were `r persizeflagL`% of coral observations flagged on length, and `r persizeflagH`% of coral observations flagged on height.
+
+```{r, tab.cap="Table 8. All coral observations that were flagged on either length or height for being larger than NOAA's 95th percentile."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+datatable(size_flag)
+```
+
+```{r, tab.cap="Table 9. Frequency of flagging of each coral species on either length or height for being larger than NOAA's 95th percentile. We might want to change the size guidelines on these."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+# Summarize size flag table by species
+size_flag %>%
+   mutate(flagL=case_match(flagL, "yes"~1, "no"~0),
+          flagH=case_match(flagH,"yes"~1, "no"~0)) %>% 
+   group_by(`Coral full name`,LENGTH95,HEIGHT95) %>%
+   summarize(FlagsL = sum(flagL),
+             FlagsH = sum(flagH), .groups="drop") %>%
+   mutate(Flags = FlagsL+FlagsH) %>% 
+   select(`Coral full name`, Flags, FlagsL, LENGTH95, FlagsH,HEIGHT95) %>% 
+   arrange(desc(Flags)) %>% datatable()
+```
+
+```{r, tab.cap="Table 10. Number of corals each diver saw that were flagged on either length or height for being larger than NOAA's 95th percentile. The observers who had the most flags may (or may not) need some sizing practice."}
+# Standardize flags to a percentage of total corals seen
+# First calculate total corals
+diver_corals <- chs_corals %>% 
+   group_by(Name) %>% 
+   summarize(Corals = length(`Transect coral`))
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+size_flag %>% 
+   mutate(flagL=case_match(flagL, "yes"~1, "no"~0),
+          flagH=case_match(flagH,"yes"~1, "no"~0)) %>% 
+   group_by(Name) %>%
+   summarize(FlagsL = sum(flagL),
+             FlagsH = sum(flagH)) %>%
+   mutate(Flags = FlagsL+FlagsH) %>% 
+   left_join(diver_corals,by="Name") %>%
+   mutate(PercentFlagged = round(Flags / Corals*100)) %>%
+   arrange(desc(PercentFlagged)) %>% datatable()
+```
+
+## Mortality
+
+```{r, fig.cap="Figure 4. Prevalence of old and new morality by coral species."}
+chs_corals %>%  
+   mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
+          `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(`Old mortality`=sum(`Old mortality`)/length(`Old mortality`),
+             `Recent mortality`=sum(`Recent mortality`)/length(`Recent mortality`),
+             .groups = "drop") %>% 
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+```{r, fig.cap="Figure 5. Prevalence of old and new morality by diver. Check for possible over- or under-estimating."}
+coraldiverlist <- sort(unique(chs_corals$Name))
+chs_corals %>%  
+   mutate(`Old mortality`= ifelse(`Old mortality`>0,1,0),
+          `Recent mortality`= ifelse(`Recent mortality`>0,1,0)) %>% 
+   group_by(Name) %>% 
+   summarize(`Old mortality`=sum(`Old mortality`)/length(`Old mortality`),
+             `Recent mortality`=sum(`Recent mortality`)/length(`Recent mortality`),
+             .groups = "drop") %>% 
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   add_row(Name = "Overall", Type="Old mortality", 
+           value = nrow(filter(chs_corals,`Old mortality`>0))/nrow(chs_corals)) %>% 
+   add_row(Name = "Overall", Type="Recent mortality", 
+           value = nrow(filter(chs_corals,`Recent mortality`>0))/nrow(chs_corals)) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist))) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+```{r, warning=FALSE, fig.cap="Figure 6. Extent of old and new morality by coral species."}
+chs_corals %>%  
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(`Coral full name`, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+What's with the large recent mortality for Millepora complanata?
+
+```{r, tab.cap="Extra Table 2. Millepora complanata with recent mortality."}
+chs_corals %>% 
+   filter(`Coral full name`=="Millepora complanata" & `Recent mortality`>0) %>% 
+   select(-`Transect coral`) %>% 
+   arrange(desc(`Recent mortality`)) %>% 
+   datatable()
+```
+
+All the highest ones are at Great Pond and most are by Tyler, so they're probably correct.
+
+```{r, fig.cap="Figure 7. Extent of old and new morality by diver. Check for possible over- or under-estimating."}
+chs_corals %>%  
+   pivot_longer(cols = c(`Old mortality`, `Recent mortality`), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(Name, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   add_row(Name = "Overall", Type="Old mortality", 
+           mean = round(mean(chs_corals$`Old mortality`),2), 
+           sd = round(sd(chs_corals$`Old mortality`),2),
+           n = length(chs_corals$`Old mortality`)) %>% 
+   add_row(Name = "Overall", Type="Recent mortality", 
+           mean = round(mean(chs_corals$`Recent mortality`),2), 
+           sd = round(sd(chs_corals$`Recent mortality`),2),
+           n = length(chs_corals$`Recent mortality`)) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist))) %>% 
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean)) +
+   #geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd)) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+## Bleaching
+
+```{r, fig.cap="Figure 8. Prevalence of bleaching types by coral species."}
+bl_cols <- c("BL"="gray100","VP"="gray75","P"="gray50","SP"="gray25")
+chs_corals %>%  
+   mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
+          `Bl p`= ifelse(`Bl p`>0,1,0),
+          `Bl vp`= ifelse(`Bl vp`>0,1,0),
+          `Bl bl`= ifelse(`Bl bl`>0,1,0)) %>% 
+   group_by(`Coral full name`) %>% 
+   summarize(`Bl sp`=sum(`Bl sp`)/length(`Bl sp`),
+             `Bl p`=sum(`Bl p`)/length(`Bl p`),
+             `Bl vp`=sum(`Bl vp`)/length(`Bl vp`),
+             `Bl bl`=sum(`Bl bl`)/length(`Bl bl`),
+             .groups = "drop") %>% 
+   pivot_longer(!`Coral full name`, 
+                names_to = "Type", values_to = "value") %>% 
+   # Reformat bleaching labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   # Plot
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value), color="black") +
+   scale_fill_manual(values=bl_cols) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+```{r, fig.cap="Figure 9. Prevalence of bleaching types by diver. Check for possible over- or under-estimating."}
+chs_corals %>%  
+   mutate(`Bl sp`= ifelse(`Bl sp`>0,1,0),
+          `Bl p`= ifelse(`Bl p`>0,1,0),
+          `Bl vp`= ifelse(`Bl vp`>0,1,0),
+          `Bl bl`= ifelse(`Bl bl`>0,1,0)) %>% 
+   group_by(Name) %>% 
+   summarize(`Bl sp`=sum(`Bl sp`)/length(`Bl sp`),
+             `Bl p`=sum(`Bl p`)/length(`Bl p`),
+             `Bl vp`=sum(`Bl vp`)/length(`Bl vp`),
+             `Bl bl`=sum(`Bl bl`)/length(`Bl bl`),
+             .groups = "drop") %>% 
+   pivot_longer(!Name, 
+                names_to = "Type", values_to = "value") %>% 
+   add_row(Name = "Overall", Type="Bl sp", 
+           value = nrow(filter(chs_corals,`Bl sp`>0))/nrow(chs_corals)) %>% 
+   add_row(Name = "Overall", Type="Bl p", 
+           value = nrow(filter(chs_corals,`Bl p`>0))/nrow(chs_corals)) %>% 
+   add_row(Name = "Overall", Type="Bl vp", 
+           value = nrow(filter(chs_corals,`Bl vp`>0))/nrow(chs_corals)) %>% 
+   add_row(Name = "Overall", Type="Bl bl", 
+           value = nrow(filter(chs_corals,`Bl bl`>0))/nrow(chs_corals)) %>% 
+   # Reformat bleaching and diver labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist))) %>% 
+   # Plot
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "dodge", 
+            aes(y = value), color="black") +
+   scale_fill_manual(values=bl_cols) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+```{r, warning=FALSE, fig.cap="Figure 10. Extent of bleaching types by coral species."}
+chs_corals %>%  
+   pivot_longer(cols = starts_with("Bl"), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(`Coral full name`, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   # Reformat bleaching labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   # Plot
+   ggplot(data=., aes(x=`Coral full name`, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean), color="black") +
+   scale_fill_manual(values=bl_cols) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+```{r, fig.cap="Figure 11. Extent of bleaching types by diver. Check for possible over- or under-estimating."}
+chs_corals %>%  
+   pivot_longer(cols = starts_with("Bl"), 
+                names_to = "Type", values_to = "value") %>% 
+   group_by(Name, Type) %>% 
+   summarize(mean = round(mean(value),2), sd = round(sd(value),2), 
+             n = length(value), 
+             .groups = "drop") %>% 
+   add_row(Name = "Overall", Type="Bl sp", 
+           mean = round(mean(chs_corals$`Bl sp`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl p", 
+           mean = round(mean(chs_corals$`Bl p`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl vp", 
+           mean = round(mean(chs_corals$`Bl vp`),2)) %>% 
+   add_row(Name = "Overall", Type="Bl bl", 
+           mean = round(mean(chs_corals$`Bl bl`),2)) %>% 
+   # Reformat bleaching and diver labels
+   mutate(Type=str_to_upper(gsub("Bl ","", Type))) %>% 
+   mutate(Type=factor(Type, levels = c("BL","VP","P","SP"))) %>% 
+   mutate(Name=factor(Name,levels=c("Overall",coraldiverlist))) %>% 
+   # Plot
+   ggplot(data=., aes(x=Name, fill =Type)) +
+   geom_bar(stat = "identity", position = "stack", 
+            aes(y = mean), color="black") +
+   scale_fill_manual(values=bl_cols) +
+   theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+
+## Interactions
+
+What were the most common interactions and their average values?
+
+```{r, tab.cap="Table 11. Most common interactions and their average values."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_raw %>% 
+   filter(!is.na(`Interaction name`)) %>% 
+   group_by(`Interaction name`) %>% 
+   summarize(n = length(`Interaction value`),
+             mean = round(mean(`Interaction value`),2),
+             sd = round(sd(`Interaction value`),2),
+             max = max(`Interaction value`),
+             min = min(`Interaction value`)) %>% 
+   arrange(desc(n)) %>% datatable()
+```
+
+```{r, tab.cap="Table 12. Summary of number of interactions recorded by each diver, and summary of corals with and without interactions. Interaction summary numbers only include corals with at least 1 interaction."}
+propInts <- chs_raw %>% 
+   filter(is.na(`Interaction name`)) %>% 
+   group_by(Name) %>% 
+   summarize(CoralsNoInts = length(`Transect coral`))
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+chs_raw %>% 
+   filter(!is.na(`Interaction name`)) %>% 
+   group_by(Name,`Transect coral`) %>% 
+   summarize(Interactions = length(`Interaction name`), 
+             .groups="drop_last") %>% 
+   summarize(CoralsWInts = length(Interactions),
+             MeanInts = round(mean(Interactions),2),
+             sd = round(sd(Interactions),2),
+             max = max(Interactions),
+             min = min(Interactions), .groups="drop") %>% 
+   left_join(propInts, by="Name") %>% 
+   mutate(TotCorals = CoralsWInts + CoralsNoInts) %>% 
+   mutate(PropWInts = round(CoralsWInts / TotCorals*100)) %>% 
+   select(-CoralsNoInts) %>% 
+   arrange(desc(MeanInts)) %>% datatable()
+```
+
+```{r}
+# More ideas
+# 
+# focus on diver trends to generate info for feedback on training.
+# 
+# coral size flags table. what is our 99% vs ncrmp? how many are flagged?
+```
+
+# Algae Heights
+
+## Abundance
+
+```{r, tab.cap="Table 13. Number of algal points per transect on average across sites."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ahs_raw %>% 
+   group_by(`Site name`, Rep) %>% 
+   summarize(Algaes = length(`Code name`), .groups = "drop_last") %>% 
+   summarize(n=length(Algaes), mean = round(mean(Algaes),1), 
+             sd = round(sd(Algaes),1), 
+             min = min(Algaes), max = max(Algaes), .groups="drop") %>% 
+   arrange(desc(mean)) %>% datatable()
+```
+
+## Sizing
+
+```{r, tab.cap="Table 14. Height (cm) of each species of algae. You can use this table to look at rare species as well."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ahs_raw %>% 
+   group_by(`Code name`) %>% 
+   summarize(n=length(`Height cm`), mean = round(mean(`Height cm`),1), 
+             sd = round(sd(`Height cm`),1), 
+             min = min(`Height cm`), max = max(`Height cm`), .groups="drop") %>% 
+   arrange(desc(mean)) %>% datatable()
+```
+
+LOBO at 8.9 cm is questionable. They can be quite fleshy at deep sites but that's a lot. Let's look at LOBO \> 3 cm.
+
+```{r, tab.cap="Extra Table 3. A closer look at LOBO points > 3cm."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ahs_raw %>% 
+   filter(`Code name`=="LOBO") %>% 
+   filter(`Height cm`>3) %>% 
+   arrange(desc(`Height cm`)) %>% 
+   select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+```
