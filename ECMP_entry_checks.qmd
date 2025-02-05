@@ -3,7 +3,7 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2025-01-30"
+date: "2025-02-05"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -17,7 +17,7 @@ library(DT)
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-01-30"
+downdate <- "2025-02-05"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
@@ -100,8 +100,7 @@ todo %>%
 
 ```{r}
 totenter <- nrow(done)
-#totproof <- as.numeric(summary(done$Proofed)[["TRUE"]])
-totproof <- 0
+totproof <- as.numeric(summary(done$Proofed)[["TRUE"]])
 ```
 
 Out of `r totenter` surveys entered so far, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
