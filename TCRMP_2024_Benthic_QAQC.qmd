@@ -557,3 +557,7 @@ ahs_raw %>%
    arrange(desc(`Height cm`)) %>% 
    select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
 ```
+
+# Changes Made
+
+-   There was a really large PAST at SRD that turned out to be an entry mistake. It was fixed to the correct ID of ALAM.
