@@ -6,7 +6,7 @@ editor: visual
 toc: true
 ---
 
-#### 2025-02-03
+#### 2025-02-10
 
 QAQC for TCRMP coral health and algae height data for 2023 and 2024 Post Bleaching (PBL). Suggestions for additions and improvement are welcomed.
 
@@ -903,3 +903,12 @@ ahs_raw %>%
 ```
 
 Shaun has enough decimals that I think they are cm.
+
+# Changes Made
+
+-   Since CYAN was not recorded at Buck STX and they were a majority of the points there, we decided to delete those algae heights altogether.
+-   We decided Erin's FIL and FILSED at Magens were all in mm so divided those by 10.
+-   Courtney's 2.7 cm FILSED was an entry mistake so that was corrected to two points of 0.2 and 0.7 cm.
+-   Shaun's 9.6 LOBO at Buck STT was an entry mistake so was corrected to 0.6 cm.
+-   Brad's 7 cm LOBO at Salt River Deep 6 was an entry mistake so was corrected to 0.7 cm.
+-   Shaun's 4.8 LOBO at College Shoal 1 was an entry mistake so was corrected to 1.8 cm.

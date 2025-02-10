@@ -6,7 +6,7 @@ editor: visual
 toc: true
 ---
 
-#### 2025-02-03
+#### 2025-02-10
 
 QAQC for TCRMP coral health and algae height data for 2024. Suggestions for additions and improvement are welcomed.
 
@@ -547,13 +547,24 @@ ahs_raw %>%
    arrange(desc(mean)) %>% datatable()
 ```
 
-LOBO at 8.9 cm is questionable. They can be quite fleshy at deep sites but that's a lot. Let's look at LOBO \> 3 cm.
+Let's look for any LOBO \> 4 cm. If they match the datasheet and are plausible, leave them as-is.
 
-```{r, tab.cap="Extra Table 3. A closer look at LOBO points > 3cm."}
+```{r, tab.cap="Table 15. A closer look at LOBO points > 4cm."}
 kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
 ahs_raw %>% 
    filter(`Code name`=="LOBO") %>% 
-   filter(`Height cm`>3) %>% 
+   filter(`Height cm`>4) %>% 
+   arrange(desc(`Height cm`)) %>% 
+   select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
+```
+
+Let's also look for any FIL or FILSED \> 2 cm. If they match the datasheet, consider changing to MACA.
+
+```{r, tab.cap="Table 16. A closer look at FIL and FILSED points > 2cm."}
+kable(x=tibble(" "=" ")) # hacky way to put the caption above the datatable
+ahs_raw %>% 
+   filter(`Code name`=="FIL" | `Code name`=="FILSED") %>% 
+   filter(`Height cm`>2) %>% 
    arrange(desc(`Height cm`)) %>% 
    select(-Notes,-`Algae height`,-`Full name`,-Proofed) %>% datatable()
 ```
@@ -561,3 +572,4 @@ ahs_raw %>%
 # Changes Made
 
 -   There was a really large PAST at SRD that turned out to be an entry mistake. It was fixed to the correct ID of ALAM.
+-   There was a really long LOBO at BWR 2 that seemed unlikely, so we changed it to MACA.
