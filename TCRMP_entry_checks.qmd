@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2025-02-10"
+date: "2025-02-26"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2025-02-10"
+downdate <- "2025-02-26"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -341,7 +341,7 @@ Are there any belts where there should not be belts?
 
 ```{r, echo=FALSE}
 belterror <- done %>% 
-   filter(Method == "belt") %>% 
+   filter(substr(Method,1,4) == "belt") %>% 
    mutate(ID = paste(`Site name`, Rep, sep=",")) %>% 
    filter(!(ID %in% beltlist$ID))
 if(nrow(belterror)>0){
@@ -360,7 +360,8 @@ chtodo <- todo %>%
    mutate(ID = paste(`Site name`, Rep, sep = ","))
 donebelts <- done %>% 
    filter(`Type name`=="coral health") %>% 
-   mutate(ID2 = paste(`Site name`,Rep, Method, sep=",")) %>% 
+   mutate(ID2 = paste(`Site name`,Rep, substr(Method,1,4), 
+                      sep=",")) %>% 
    filter(ID2 %in% beltlist$ID2)
 beltmiss <- beltlist %>% # only worry about it if:
    filter(ID %in% with(chlogs, paste(`Site name`, Rep, sep=",")) & # it has a boatlog and
