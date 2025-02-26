@@ -7,7 +7,7 @@ editor: visual
 
 ### Sarah Heidmann
 
-### 2025-02-05
+### 2025-02-26
 
 QAQC for TCRMP fish data for 2024. Suggestions for additions and improvement are welcomed.
 
@@ -21,10 +21,10 @@ options(knitr.kable.NA = '')
 library(DT)
 
 # Read qaqc'd data for fish and diadema
-fts_raw <- read_csv("data/2024/FishTransects_all_2025-02-05.csv") %>% 
+fts_raw <- read_csv("data/2024/FishTransects_all_2025-02-26.csv") %>% 
    mutate(Total = rowSums(select(.,X0to5:Xgt150), na.rm=T))
-frs_raw <- read_csv("data/2024/FishRovers_all_2025-02-05.csv")
-das_raw <- read_csv("data/2024/Diadema_all_2025-02-05.csv")
+frs_raw <- read_csv("data/2024/FishRovers_all_2025-02-26.csv")
+das_raw <- read_csv("data/2024/Diadema_all_2025-02-26.csv")
 
 # Species master for QAQC numbers
 species <- read_csv("data/fish_species_list_2022.csv")
@@ -379,7 +379,6 @@ fts_raw %>%
    group_by(`Site name`, Rep, Name) %>% 
    summarize(n = sum(Total), .groups="drop") %>% 
    datatable()
-
 ```
 
 Did we see any Nassau grouper in rovers?
@@ -389,6 +388,31 @@ frs_raw %>%
    filter(`Common name`=="Nassau grouper") %>% 
    select(`Site name`, Rep, Name, `Abundance index`) %>% 
    arrange(desc(`Abundance index`)) %>% datatable()
+```
+
+Did we see any sharks in transects?
+
+```{r}
+fts_raw %>% 
+   left_join(select(species, `Scientific name`=SCIENTIFIC.NAME,
+                    Family = FAMILY_UVI), by="Scientific name") %>% 
+   filter(Family=="Carcharhinidae") %>% 
+   group_by(`Common name`, `Site name`, Rep, Name) %>% 
+   summarize(n = sum(Total), .groups="drop") %>% 
+   datatable()
+```
+
+Did we see any sharks in rovers?
+
+```{r}
+frs_raw %>% 
+   left_join(select(species, `Scientific name`=SCIENTIFIC.NAME,
+                    Family = FAMILY_UVI), by="Scientific name") %>% 
+   filter(Family=="Carcharhinidae") %>% 
+   select(`Common name`, `Site name`, Rep, Name, 
+            `Abundance index`) %>% 
+   arrange(desc(`Abundance index`)) %>% 
+   datatable()
 ```
 
 # Diadema
