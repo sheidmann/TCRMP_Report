@@ -3,11 +3,12 @@ title: "TCRMP 2024 Fish QAQC"
 author: "Sarah Heidmann"
 format: html
 editor: visual
+toc: true
 ---
 
 ### Sarah Heidmann
 
-### 2025-02-26
+### 2025-02-27
 
 QAQC for TCRMP fish data for 2024. Suggestions for additions and improvement are welcomed.
 
@@ -21,13 +22,14 @@ options(knitr.kable.NA = '')
 library(DT)
 
 # Read qaqc'd data for fish and diadema
-fts_raw <- read_csv("data/2024/FishTransects_all_2025-02-26.csv") %>% 
+fts_raw <- read_csv("data/2024/TCRMP_FishTransects_2024_webexport.csv") %>% 
    mutate(Total = rowSums(select(.,X0to5:Xgt150), na.rm=T))
-frs_raw <- read_csv("data/2024/FishRovers_all_2025-02-26.csv")
-das_raw <- read_csv("data/2024/Diadema_all_2025-02-26.csv")
+frs_raw <- read_csv("data/2024/TCRMP_FishRovers_2024_webexport.csv")
+das_raw <- read_csv("data/2024/TCRMP_Diadema_2024_qaqc.csv",
+                    col_types=cols(`Date completed`=col_date(format="%m/%d/%Y")))
 
 # Species master for QAQC numbers
-species <- read_csv("data/fish_species_list_2022.csv")
+species <- read_csv("data/fishlists/website.csv")
 
 ```
 
@@ -37,9 +39,7 @@ How big are the datasets?
 
 Transects have `r nrow(fts_raw)` transect-species. Rovers have `r nrow(frs_raw)` rover-species.
 
-Do we have all the transects? (should have 9 transects each at 33 sites)
-
-```{r}
+```{r, tab.cap="Table 1. Do we have all the fish transects? We should have 9 transects each at 33 sites and maybe 1 at Ginsburg's Fringe."}
 # Summarize number of transects by site
 fts_sitesum <- fts_raw %>% 
    group_by(`Site name`,Rep) %>% 
@@ -51,16 +51,13 @@ fts_sitesum %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 9 transects are below.
-
-```{r}
+```{r, tab.cap="Table 2. Sites with less than 9 fish transects."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # See the sitewise list
 fts_sitesum %>% filter(Transects<9) %>% arrange(Transects) %>% datatable()
 ```
 
-Do we have all the rovers? (should have 3 reps each at 33 sites and maybe 1 at Ginsburg's Fringe)
-
-```{r}
+```{r, tab.cap="Table 3. Do we have all the fish rovers? We should have 3 reps each at 33 sites and maybe 1 at Ginsburg's Fringe."}
 # Summarize number of rovers by site
 frs_sitesum <- frs_raw %>% 
    group_by(`Site name`,Rep) %>% 
@@ -72,9 +69,7 @@ frs_sitesum %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 3 rovers are below.
-
-```{r}
+```{r, tab.cap="Table 4. Sites with less than 3 fish rovers."}
 # See the sitewise list
 frs_sitesum %>% filter(Rovers <3) %>% arrange(Rovers) %>% datatable()
 ```
@@ -109,42 +104,43 @@ frs_raw %>% filter(!is.na(Notes)) %>%
 
 # Abundance
 
+An observation is flagged if the number of fish observed is greater than the maximum number guideline.
+
 ## Transect Abundance
 
 ```{r}
 # Create flags based on master species list
 fts_abund <- fts_raw %>% 
-   left_join(species,by=c("Scientific name"="SCIENTIFIC.NAME")) %>% 
-   mutate(flag = as.factor(ifelse(Total > MAX_NUM, "yes","no")))
+   left_join(species,by=c("Scientific name"="scientific name")) %>% 
+   mutate(flag = as.factor(ifelse(Total > `max abund`, "yes","no")))
 # Calculate percent flagged
 tperabundflag <- round(summary(fts_abund$flag)[2] / nrow(fts_abund) *100, 1) 
 # Make table of flags
 tabund_flag <- fts_abund %>% filter(flag == "yes") %>%
    select(`Site name`,Rep,Name,
-          `Scientific name`,`Common name`,Total,MAX_NUM) %>% 
-   mutate(Diff = Total - MAX_NUM) %>% 
-   mutate(RelDiff = round(Diff / MAX_NUM,1))
+          `Scientific name`,`Common name`,Total,`max abund`) %>% 
+   mutate(Diff = Total - `max abund`) %>% 
+   mutate(RelDiff = round(Diff / `max abund`,1))
 ```
 
 There were `r tperabundflag`% of transect species flagged on abundance.
 
-```{r}
+```{r, tab.cap="Table 5. Observations from fish transects flagged on high abundance."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 datatable(tabund_flag)
 ```
 
-Which species were most frequently flagged? We might want to change the max number on these.
-
-```{r}
+```{r, tab.cap="Table 6. Fish species that were most frequently flagged on abundance in transects. We might want to change the max number on these."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # Summarize abundance flag table by species
 tabund_flag %>%
-   group_by(`Common name`,MAX_NUM) %>%
+   group_by(`Common name`,`max abund`) %>%
    summarize(Flags = length(Total), .groups="drop") %>%
    arrange(desc(Flags)) %>% datatable()
 ```
 
-Which observers had the most flags? They might be overestimating numbers.
-
-```{r}
+```{r, tab.cap="Table 7. Divers who were most frequently flagged on high abundance in transects. They might be overestimating counts."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # Summarize total number of surveys for each person
 fts_namecount <- fts_raw %>% 
    group_by(Name) %>%
@@ -160,6 +156,8 @@ tabund_flag %>% group_by(Name) %>%
 
 ## Rover Abundance
 
+Indices are converted to the low end of the count bin (1 = 1, 2 = 2, 3 = 10, 4 = 100, 5 = 1000) before comparing to maximum count guideline.
+
 ```{r}
 # Create flags based on master species list
 frs_abund <- frs_raw %>% 
@@ -168,38 +166,37 @@ frs_abund <- frs_raw %>%
                                 1 ~ 1, 2 ~ 2, 3 ~ 10, 4 ~ 100, 5 ~ 1000),
           MaxAbund = case_match(`Abundance index`, 
                                 1 ~ 1, 2 ~ 10, 3 ~ 100, 4 ~ 1000, 5 ~ 10000)) %>% 
-   left_join(species,by=c("Scientific name"="SCIENTIFIC.NAME")) %>% 
-   mutate(flag = as.factor(ifelse(MinAbund > MAX_NUM, "yes","no")))
+   left_join(species,by=c("Scientific name"="scientific name")) %>% 
+   mutate(flag = as.factor(ifelse(MinAbund > `max abund`, "yes","no")))
 # Calculate percent flagged
 rperabundflag <- round(summary(frs_abund$flag)[2] / nrow(frs_abund) *100, 1) 
 # Make table of flags
 rabund_flag <- frs_abund %>% filter(flag == "yes") %>%
-   mutate(Diff = MinAbund - MAX_NUM) %>% 
-   mutate(RelDiff = round(Diff / MAX_NUM,1)) %>% 
+   mutate(Diff = MinAbund - `max abund`) %>% 
+   mutate(RelDiff = round(Diff / `max abund`,1)) %>% 
    select(`Site name`,Rep,Name,
           `Scientific name`,`Common name`,`Abundance index`,
-          MAX_NUM, Diff, RelDiff)
+          `max abund`, Diff, RelDiff)
 ```
 
 There were `r rperabundflag`% of rover species flagged on abundance.
 
-```{r}
+```{r, tab.cap="Table 8. Observations from fish rovers flagged on high abundance."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 datatable(rabund_flag)
 ```
 
-Which species were most frequently flagged? We might want to change the max number on these.
-
-```{r}
+```{r, tab.cap="Table 9. Fish species that were most frequently flagged on abundance in rovers. We might want to change the max number on these."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # Summarize abundance flag table by species
 rabund_flag %>% 
-   group_by(`Common name`,MAX_NUM) %>% 
+   group_by(`Common name`,`max abund`) %>% 
    summarize(Flags = length(`Abundance index`), .groups="drop") %>% 
    arrange(desc(Flags)) %>% datatable()
 ```
 
-Which observers had the most flags? They might be overestimating numbers.
-
-```{r}
+```{r, tab.cap="Table 10. Divers who were most frequently flagged on high abundance in rovers. They might be overestimating counts."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # Summarize total number of surveys for each person
 frs_namecount <- frs_raw %>% 
    group_by(Name) %>% 
@@ -221,9 +218,9 @@ We use size bins to estimate fish lengths, and we have a maximum and minimum siz
 # Create flags based on master species list
 fts_size  <- fts_raw %>% 
    # Convert to long format for easier processing
-   pivot_longer(cols = X0to5:Xgt150, names_to = "SizeBin",values_to = "Value") %>% 
+   pivot_longer(cols = X0to5:Xgt150, names_to = "SizeBin",values_to = "Count") %>% 
    # Take out empty observations
-   filter(!is.na(Value)) %>% 
+   filter(!is.na(Count)) %>% 
    # Rename bins
    mutate(SizeBin = gsub("to","-", gsub("X","",SizeBin))) %>% 
    # Set min and max size of observations based on bin
@@ -240,48 +237,45 @@ fts_size  <- fts_raw %>%
                               "111-120"~120,"121-130"~130,"131-140"~140,
                               "141-150"~150,"gt150"~151)) %>% 
    # Join to master list to set flags
-   left_join(species, by=c("Scientific name"="SCIENTIFIC.NAME")) %>% 
+   left_join(species, by=c("Scientific name"="scientific name")) %>% 
    # If the smallest option is larger than the max size or largest option is smaller than the min size, flag it.
-   mutate(flag = as.factor(ifelse(BinMin > MAX_SIZE | BinMax < MIN_SIZE, "yes","no")))
+   mutate(flag = as.factor(ifelse(BinMin > `max size` | BinMax < `min size`, "yes","no")))
 # Calculate percent flagged
 persizeflag <- round(summary(fts_size$flag)[2] / nrow(fts_size) *100, 1) 
 # Make table of flags
 size_flag <- fts_size %>% filter(flag == "yes") %>%
    select(`Site name`,Rep,Name,
-          `Common name`,SizeBin, Value, MIN_SIZE, MAX_SIZE)
+          `Common name`,SizeBin, Count, `min size`, `max size`)
 ```
 
 There were `r persizeflag`% of transect observations flagged on size.
 
-```{r}
+```{r, tab.cap="Table 11. Observations from fish transects flagged on small or large size."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 datatable(size_flag)
 ```
 
-Which species were most frequently flagged? We might want to change the size guidelines on these.
-
-```{r}
+```{r, tab.cap="Table 12. Fish species that were most frequently flagged on size in transects. We might want to change the size guidelines on these."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # Summarize size flag table by species
 size_flag %>%
-   group_by(`Common name`,SizeBin,MIN_SIZE,MAX_SIZE) %>%
-   summarize(Flags = length(Value), .groups="drop") %>%
+   group_by(`Common name`,SizeBin,`min size`,`max size`) %>%
+   summarize(Flags = length(Count), .groups="drop") %>%
    arrange(desc(Flags)) %>% datatable()
 ```
 
-Which observers had the most flags? They might need some sizing practice.
-
-```{r}
+```{r, tab.cap="Table 13. Divers who were most frequently flagged on sizes in transects. They might be under- or over-sizing."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # Use total number of transect fish seen from earlier
 # Standardize flags to a percentage of total fish seen
 size_flag %>% group_by(Name) %>%
-   summarize(Flags = length(Value)) %>%
+   summarize(Flags = length(Count)) %>%
    left_join(fts_namecount,by="Name") %>%
    mutate(PercentFlagged = round(Flags / Observations*100)) %>%
    arrange(desc(PercentFlagged)) %>% datatable()
 ```
 
-Let's look at each person's size frequency distribution:
-
-```{r}
+```{r, fig.cap="Figure 1. A closer look at each diver's overall distribution of observed sizes. Look for trends in under- or over-sizing."}
 ftsizemelt <- fts_raw %>% 
    # take out masked goby because I'm the only one who counts them
    # it messes up my size distribution
@@ -318,9 +312,8 @@ ggplot(data=ftsizemeltSum, aes(x=SizeBin,y=totalrel)) +
 
 ## Transects
 
-How many species did people see on transects on average?
-
-```{r}
+```{r, tab.cap="Table 14. Summary statistics for number of fish species seen on transects for each diver. Check if they need to learn more ID or may be inflating transect size."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 fts_raw %>% 
    group_by(Name, `Fish transect`) %>% 
    summarize(Richness = length(`Common name`), .groups = "drop_last") %>% 
@@ -334,9 +327,8 @@ fts_raw %>%
 
 ## Rovers
 
-How many species did people see on rovers on average?
-
-```{r}
+```{r, tab.cap="Table 15. Summary statistics for number of fish species seen on rovers for each diver. Check if they need to learn more ID."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 frs_raw %>% 
    group_by(Name, `Fish rover`) %>% 
    summarize(Richness = length(`Common name`), .groups = "drop_last") %>% 
@@ -350,9 +342,8 @@ frs_raw %>%
 
 # Rare Fish
 
-What species had the fewest observations (bottom 50)? Check for mistaken identity.
-
-```{r}
+```{r, tab.cap="Table 16. Fish species with the fewest number of observations (bottom 50). Check for mistaken identity."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 rare <- fts_raw %>% 
    group_by(`Common name`) %>% 
    summarize(TotalNum = sum(Total), .groups="drop") %>% 
@@ -361,9 +352,8 @@ rare <- fts_raw %>%
 datatable(rare)
 ```
 
-If you want to investigate, here's the identifying info.
-
-```{r}
+```{r, tab.cap="Table 17. Identifying information on fish in previous table to help check for mistaken identity."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 fts_raw %>% 
    filter(`Common name` %in% rare$`Common name`) %>% 
    left_join(rare, by="Common name") %>% 
@@ -371,9 +361,8 @@ fts_raw %>%
    arrange(Rank) %>% datatable()
 ```
 
-Did we see any Nassau grouper in transects?
-
-```{r}
+```{r, tab.cap="Table 18. Nassau grouper seen on transects."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 fts_raw %>% 
    filter(`Common name`=="Nassau grouper") %>% 
    group_by(`Site name`, Rep, Name) %>% 
@@ -381,33 +370,30 @@ fts_raw %>%
    datatable()
 ```
 
-Did we see any Nassau grouper in rovers?
-
-```{r}
+```{r, tab.cap="Table 19. Nassau grouper seen on rovers."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 frs_raw %>% 
    filter(`Common name`=="Nassau grouper") %>% 
    select(`Site name`, Rep, Name, `Abundance index`) %>% 
    arrange(desc(`Abundance index`)) %>% datatable()
 ```
 
-Did we see any sharks in transects?
-
-```{r}
+```{r, tab.cap="Table 20. Sharks seen on transects."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 fts_raw %>% 
-   left_join(select(species, `Scientific name`=SCIENTIFIC.NAME,
-                    Family = FAMILY_UVI), by="Scientific name") %>% 
+   left_join(select(species, `Scientific name`=`scientific name`,
+                    Family = family), by="Scientific name") %>% 
    filter(Family=="Carcharhinidae") %>% 
    group_by(`Common name`, `Site name`, Rep, Name) %>% 
    summarize(n = sum(Total), .groups="drop") %>% 
    datatable()
 ```
 
-Did we see any sharks in rovers?
-
-```{r}
+```{r, tab.cap="Table 21. Sharks seen on rovers."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 frs_raw %>% 
-   left_join(select(species, `Scientific name`=SCIENTIFIC.NAME,
-                    Family = FAMILY_UVI), by="Scientific name") %>% 
+   left_join(select(species, `Scientific name`=`scientific name`,
+                    Family = family), by="Scientific name") %>% 
    filter(Family=="Carcharhinidae") %>% 
    select(`Common name`, `Site name`, Rep, Name, 
             `Abundance index`) %>% 
@@ -419,9 +405,7 @@ frs_raw %>%
 
 ## Overview
 
-Do we have all the transects? (should have 9 transects each at 33 sites)
-
-```{r}
+```{r, tab.cap="Table 22. Do we have all the Diadema transects? We should have 9 transects each at 33 sites and maybe 1 at Ginsburg's Fringe."}
 # Summarize number of diadema surveys by site
 das_sitesum <- das_raw %>%
    group_by(`Site name`, Rep) %>% 
@@ -433,20 +417,22 @@ das_sitesum %>%
    summarize(Sites = length(`Site name`)) %>% kable()
 ```
 
-Those with less than 9 transects are below.
-
-```{r}
+```{r, tab.cap="Table 23. Sites with fewer than 9 Diadema transects."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # See the sitewise list
 das_sitesum %>% filter(Transects<9) %>% arrange(Transects) %>% datatable()
 ```
 
 ## Diadema Abundance
 
-```{r}
+```{r, tab.cap="Table 24. Summary statistics for number of Diadema seen on transects at each site. Most sites usually have none."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 # A 0 test size means diadema were looked for and not seen
+# A NA test size means diadema were seen but not sized
 das_raw %>% 
    # Convert to presence/absence: set 0 size to 0 and rest to 1
-   mutate(PA = ifelse(`Test size cm`==0, 0, 1)) %>% 
+   mutate(PA = ifelse(`Test size cm`==0 & !is.na(`Test size cm`), 
+                      0, 1)) %>% 
    group_by(`Site name`, Rep) %>% 
    # Add to get count per transect
    summarize(Count = sum(PA), .groups="drop") %>% 
@@ -461,17 +447,18 @@ das_raw %>%
 
 ## Diadema Sizing
 
-Were there any Diadema bigger than 15 cm?
-
-```{r}
+```{r, tab.cap="Table 25. Diadema with a test size estimated larger than 15 cm."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
 das_raw %>% 
    # Take out zeros
    filter(`Test size cm`>=15) %>% datatable()
+# Count number of NAs
+unsized <- das_raw %>% filter(is.na(`Test size cm`)) %>% nrow()
 ```
 
-Let's look at Diadema size frequency, colored by site.
+There were `r unsized` Diadema observed but not sized.
 
-```{r}
+```{r, fig.cap="Figure 2. Size frequency distribution of observed and sized Diadema, colored by site."}
 das_raw %>% 
    # Take out zeros
    filter(`Test size cm`>0) %>% 
@@ -482,6 +469,15 @@ das_raw %>%
    theme_minimal()
 ```
 
+```{r, tab.cap="Table 26. All Diadema observed."}
+kable(x=tibble(" "=" ")) # hack caption above datatable
+das_raw %>% 
+   # Take out zeros but not NAs
+   filter(`Test size cm`!=0 | is.na(`Test size cm`)) %>% 
+   select(-Notes,-`Fish transect`) %>% 
+   datatable()
+```
+
 # Changes Made
 
-None yet.
+Unsized Diadema were added into counts with a size of NA.
