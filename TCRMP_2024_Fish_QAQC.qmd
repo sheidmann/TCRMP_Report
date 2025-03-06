@@ -6,9 +6,7 @@ editor: visual
 toc: true
 ---
 
-### Sarah Heidmann
-
-### 2025-02-27
+### 2025-03-06
 
 QAQC for TCRMP fish data for 2024. Suggestions for additions and improvement are welcomed.
 
@@ -480,4 +478,42 @@ das_raw %>%
 
 # Changes Made
 
-Unsized Diadema were added into counts with a size of NA.
+-   Unsized Diadema were added into counts with a size of NA.
+
+-   Rover BTY 1 O'Neill red hind index incorrectly entered as 3, changed to 2.
+
+-   Rover SVN 2 O'Neill puddingwife index of 3 changed to wrasse species.
+
+-   Rover MGN 1 Hobbs longfin damsel index of 4 thought to be accidental tally and changed to 2. Only 1 other person saw 1 of this species at the whole site.
+
+-   Rover SVN 3 Hobbs tallied instead of using index and some were entered incorrectly so these were all checked and changed to the proper index.
+
+-   Rover SSJ 1 Kadison barred hamlet index of 3 changed to 2 since no one else saw more than 1.
+
+-   Rover GRP 2 Hollander cero index of 3 changed to 2, thought to be accidental tally.
+
+-   Rover MTS 2 Hollander sharpnose puffer index of 3 thought to be accidental tally and changed to 2.
+
+-   Rover MGN 2 O'Neill cocoa damselfish tallies were faded so not entered; added.
+
+-   Transect BTY 2 Hobbs trumpetfish 6-10cm changed to 11-20cm. All her fish appear on the small side; this should be mentioned for in-water correction on future surveys.
+
+-   Transect BIT 2 Maxim & BTY 8 O'Neill white margate thought to be unlikely and changed to grunt species.
+
+-   Transect BPT 4 Parr yellowbelly hamlets 21-30cm changed to 11-20cm.
+
+-   Transect CBS 8 Hollander trumpetfish each bumped up 1 size bin.
+
+-   Transect LBP 5 Arrington rock beauty tally in \>40cm was erased on datasheet so we deleted. We added one for him in 11-20cm on LBP 3 where there was no tally but it was obviously seen.
+
+-   Transect CBS 7 Arrington blue hamlet changed to indigo hamlet.
+
+-   Transect CBS 7 Arrington night sergeant thought to be entry mistake and changed to sergeant major.
+
+-   Transect BTY 1 Shelby 0-5 cm yellowtail parrotfish changed to parrotfish species.
+
+-   Transect SRD 1 Dade bantam bass only written because of pressure from TBS; deleted.
+
+-   Transect SVN 1 Shelby striped grunt changed to grunt species.
+
+-   Transect CST 1 Hollander painted wrasse changed to wrasse species.
