@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2025-05-05"
+date: "2025-05-09"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,7 +16,7 @@ library(DT)
 
 options(knitr.kable.NA = '')
 
-downdate <- "2025-05-05"
+downdate <- "2025-05-09"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -131,7 +131,7 @@ donelist <- done %>%
 perdone <- round(nrow(donelist) / nrow(donefw) * 100)
 ```
 
-We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We haven't missed any units yet.
+We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We didn't miss any units!
 
 
 Here is the number of surveys each person has entered:
@@ -147,17 +147,17 @@ done %>%
 
 
 ## Proofing progress
-DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
+
 ```{r, echo = FALSE}
-# totenter <- nrow(done)
-# totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
+# DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
+totenter <- nrow(done)
+totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
 ```
 
+Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+Here is what each person has left to proof:
 
-
-```{r, echo = FALSE, eval=FALSE}
-# Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
-# Here is what each person has left to proof:
+```{r, echo = FALSE}
 done %>% 
    filter(!Proofed) %>% 
    select(Name, `Site name`, `Type name`, Rep) %>% 
@@ -364,6 +364,8 @@ if(nrow(belterror)>0){
 ```
 
 Are there any belt transects that have been entered but do not have both belt and intercept? The ones below are missing.
+
+**CKR T1 intercepts were not starred, so all corals were entered as belt.**
 
 ```{r, echo=FALSE}
 chtodo <- todo %>% 
