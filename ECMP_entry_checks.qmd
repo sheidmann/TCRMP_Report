@@ -3,12 +3,14 @@ title: "ECMP Entry Checks"
 author: "Sarah Heidmann"
 format: html
 editor: visual
-date: "2025-05-28"
+date: "2025-06-06"
 editor_options: 
   chunk_output_type: inline
 ---
 
 Please note that this page does not update automatically. It is accurate up to the date above.
+
+\n Sarah is on maternity leave through the end of August. This page will not be updated during this time. For the most up-to-date information, contact Lindsay Dade ([lindsay.dade@uvi.edu](mailto:lindsay.dade@uvi.edu)) for an offline copy.
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse, quietly = TRUE)
 library(knitr)
@@ -17,7 +19,7 @@ library(DT)
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-05-28"
+downdate <- "2025-06-06"
 dd <- gsub("-","",downdate)
 
 # Boatlogs
