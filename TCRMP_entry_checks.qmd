@@ -3,14 +3,13 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2025-06-06"
+date: "2025-09-05"
 editor_options: 
   chunk_output_type: inline
 ---
 
 Please note that this page does not update automatically. It is accurate up to the date above.
 
-\n Sarah is on maternity leave through the end of August. This page will not be updated during this time. For the most up-to-date information, contact Erin Hollander ([erin.hollander@uvi.edu](mailto:erin.hollander@uvi.edu)) for an offline copy.
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse, quietly = TRUE)
 library(knitr)
@@ -19,7 +18,7 @@ library(DT)
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-06-06"
+downdate <- "2025-09-05"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -28,71 +27,72 @@ beltlist <- read_csv("data/beltlist.csv") %>%
           ID2 = paste(`Site name`, Rep, Method, sep = ","))
 
 # Boatlogs
-logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
-# ftlogs <- logs_raw %>%
-#    filter(`Type name`=="fish transect") %>%
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
-# frlogs <- logs_raw %>%
-#    filter(`Type name`=="fish rover") %>%
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
-# ahlogs <- logs_raw %>% 
-#    filter(`Type name`=="algae heights") %>% 
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"),
+                     col_types = cols(`Date completed` = col_date(format="%m/%d/%Y")))
+ftlogs <- logs_raw %>%
+   filter(`Type name`=="fish transect") %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+frlogs <- logs_raw %>%
+   filter(`Type name`=="fish rover") %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+ahlogs <- logs_raw %>%
+   filter(`Type name`=="algae heights") %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 chlogs <- logs_raw %>% 
    filter(`Type name`=="coral health") %>% 
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=",")) 
 
 # Fish transects
-# fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv"),
-#                     col_types = cols(`Site name` = col_character(),
-#                                      Proofed = col_logical(),
-#                                     Name = col_character(),
-#                                     `Oc cc`= col_character(),
-#                                     `Common name` = col_character(),
-#                                     `Scientific name`= col_character(),
-#                                     `Date completed`=col_date(),
-#                                      .default=col_double()))
-# fts <- fts_raw %>%
-#    select(`Fish transect`, Proofed,`Site name`, Name, `Date completed`, Rep) %>%
-#    unique() %>%
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv"),
+                    col_types = cols(`Site name` = col_character(),
+                                     Proofed = col_logical(),
+                                    Name = col_character(),
+                                    `Oc cc`= col_character(),
+                                    `Common name` = col_character(),
+                                    `Scientific name`= col_character(),
+                                    `Date completed`=col_date(format="%m/%d/%Y"),
+                                     .default=col_double()))
+fts <- fts_raw %>%
+   select(`Fish transect`, Proofed,`Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 # Diademas (for checking against transects)
-# das_raw <- read_csv(paste0("data/data",dd,"/Diadema_all_",downdate,".csv"),
-#                     col_types = cols(`Site name` = col_character(),
-#                                     Name = col_character(),
-#                                     `Date completed`=col_date(),
-#                                      .default=col_double()))
-# das <- das_raw %>%
-#    select(`Fish transect`, `Site name`, Name, `Date completed`, Rep) %>%
-#    unique() %>%
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+das_raw <- read_csv(paste0("data/data",dd,"/Diadema_all_",downdate,".csv"),
+                    col_types = cols(`Site name` = col_character(),
+                                    Name = col_character(),
+                                    `Date completed`=col_date(),
+                                     .default=col_double()))
+das <- das_raw %>%
+   select(`Fish transect`, `Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
 # Fish rovers
-# frs_raw <- read_csv(paste0("data/data",dd,"/FishRovers_all_",downdate,".csv"),
-#                     col_types = cols(Proofed = col_logical(),
-#                                      `Site name`= col_character(),
-#                                      `Date completed`=col_date(),
-#                                      Name=col_character(),
-#                                      Rep=col_double(),
-#                                      `Oc cc`=col_character(),
-#                                      Notes=col_character(),
-#                                      `Common name`=col_character(),
-#                                      `Scientific name`=col_character(),
-#                                      `Abundance index`=col_double()))
-# frs <- frs_raw %>%
-#    select(`Fish rover`,Proofed,`Site name`, 
-#           Name, `Date completed`, Rep) %>%
-#    unique() %>%
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+frs_raw <- read_csv(paste0("data/data",dd,"/FishRovers_all_",downdate,".csv"),
+                    col_types = cols(Proofed = col_logical(),
+                                     `Site name`= col_character(),
+                                     `Date completed`=col_date(format="%m/%d/%Y"),
+                                     Name=col_character(),
+                                     Rep=col_double(),
+                                     `Oc cc`=col_character(),
+                                     Notes=col_character(),
+                                     `Common name`=col_character(),
+                                     `Scientific name`=col_character(),
+                                     `Abundance index`=col_double()))
+frs <- frs_raw %>%
+   select(`Fish rover`,Proofed,`Site name`,
+          Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
 
 # Algae heights
-# ahs_raw <- read_csv(paste0("data/data",dd,"/AlgaeHeights_all_",downdate,".csv"))
-# ahs <- ahs_raw %>%
-#    mutate(Proofed = as.logical(Proofed), `Date completed` = as.Date(`Date completed`), Rep = as.double(Rep)) %>% 
-#    select(`Algae height`,Proofed,`Site name`, Name, `Date completed`, Rep) %>%
-#    unique() %>%
-#    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
+ahs_raw <- read_csv(paste0("data/data",dd,"/AlgaeHeights_all_",downdate,".csv"))
+ahs <- ahs_raw %>%
+   mutate(Proofed = as.logical(Proofed), `Date completed` = as.Date(`Date completed`), Rep = as.double(Rep)) %>%
+   select(`Algae height`,Proofed,`Site name`, Name, `Date completed`, Rep) %>%
+   unique() %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
 # Coral healths
 chs_raw <- read_csv(paste0("data/data",dd,"/CoralHealth_all_",downdate,".csv"))
@@ -105,19 +105,17 @@ chs <- chs_raw %>%
                      sep=","))
 
 # all together now
-# done <- fts %>% 
-#    mutate(`Fish transect`=NULL, `Type name`="fish transect") %>% 
-#    bind_rows(mutate(frs, `Fish rover`=NULL,`Type name`="fish rover"), 
-#              mutate(ahs,`Algae height`=NULL,`Type name`="algae height"),
-#              mutate(chs,`Coral health`=NULL,`Type name`="coral health"))
-done <- chs %>% 
-   mutate(`Coral health`=NULL,`Type name`="coral health")
+done <- fts %>%
+   mutate(`Fish transect`=NULL, `Type name`="fish transect") %>%
+   bind_rows(mutate(frs, `Fish rover`=NULL,`Type name`="fish rover"),
+             mutate(ahs,`Algae height`=NULL,`Type name`="algae height"),
+             mutate(chs,`Coral health`=NULL,`Type name`="coral health"))
 ```
 
 # Entry Progress
 
-### 2025 Post-Bleaching (PBL)
-Post-bleaching samplings only do coral health.
+### 2025 Annual
+
 
 ```{r}
 # % done w fieldwork (33 sites excluding GBF * 24 units per site)
@@ -126,7 +124,7 @@ donefw <- logs_raw %>%
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
 missedunits <- 0
-perdonefw <- round(nrow(donefw) / ((33*6)-missedunits) * 100)
+perdonefw <- round(nrow(donefw) / ((33*24)-missedunits) * 100)
 # % done w entry
 donelist <- done %>% 
    select(`Site name`, `Type name`, Rep) %>% 
@@ -134,7 +132,7 @@ donelist <- done %>%
 perdone <- round(nrow(donelist) / nrow(donefw) * 100)
 ```
 
-We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We didn't miss any units!
+We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We didn't miss any units yet.
 
 
 Here is the number of surveys each person has entered:
@@ -150,41 +148,39 @@ done %>%
 
 
 ## Proofing progress
-
+DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
 ```{r}
-# DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
-totenter <- nrow(done)
-totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
+# 
+# totenter <- nrow(done)
+# totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
 ```
 
-Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
-Here is what each person has left to proof:
+
 
 ```{r}
-done %>% 
-   filter(!Proofed) %>% 
-   select(Name, `Site name`, `Type name`, Rep) %>% 
-   group_by(Name, `Type name`) %>% 
-   summarize(n=length(Rep), .groups="drop") %>% 
-   pivot_wider(names_from = `Type name`, values_from = n) %>% 
-   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
-   arrange(desc(Total)) %>% kable()
+# Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+# Here is what each person has left to proof:
+# done %>% 
+#    filter(!Proofed) %>% 
+#    select(Name, `Site name`, `Type name`, Rep) %>% 
+#    group_by(Name, `Type name`) %>% 
+#    summarize(n=length(Rep), .groups="drop") %>% 
+#    pivot_wider(names_from = `Type name`, values_from = n) %>% 
+#    mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
+#    arrange(desc(Total)) %>% kable()
 ```
 
 
 # Remaining Data Entry
 
 ```{r}
-# notran <- ftlogs[!(ftlogs$ID %in% fts$ID),]
-# norov <- frlogs[!(frlogs$ID %in% frs$ID),]
-# nohts <- ahlogs[!(ahlogs$ID %in% ahs$ID),]
+notran <- ftlogs[!(ftlogs$ID %in% fts$ID),]
+norov <- frlogs[!(frlogs$ID %in% frs$ID),]
+nohts <- ahlogs[!(ahlogs$ID %in% ahs$ID),]
 nochs <- chlogs[!(chlogs$ID %in% chs$ID),]
 
-# todo <- notran %>%
-#    bind_rows(norov, nohts, nochs) %>%
-#    select(Name, `Site name`, `Date completed`, `Type name`, Rep) %>%
-#    arrange(Name, `Site name`, `Date completed`, `Type name`, Rep)
-todo <- nochs %>%
+todo <- notran %>%
+   bind_rows(norov, nohts, nochs) %>%
    select(Name, `Site name`, `Date completed`, `Type name`, Rep) %>%
    arrange(Name, `Site name`, `Date completed`, `Type name`, Rep)
 ```
@@ -211,9 +207,9 @@ todo %>%
 
 # QAQC
 ### Check for mismatched entries
-
-```{r, eval = FALSE}
-#Are there any fish transects that don't match a boatlog entry?
+Are there any fish transects that don't match a boatlog entry?
+```{r}
+#
 fterror <- fts %>% 
    filter(!(ID %in% ftlogs$ID))
 if(nrow(fterror)>0){
@@ -224,9 +220,9 @@ if(nrow(fterror)>0){
 ```
 
 
-
-```{r, eval = FALSE}
-#Are there any fish rovers that don't match a boatlog entry?
+Are there any fish rovers that don't match a boatlog entry?
+```{r}
+#
 frerror <- frs %>% 
    filter(!(ID %in% frlogs$ID))
 if(nrow(frerror)>0){
@@ -237,9 +233,9 @@ if(nrow(frerror)>0){
 ```
 
 
-
-```{r, eval=FALSE}
-#Are there any algae heights that don't match a boatlog entry?
+Are there any algae heights that don't match a boatlog entry?
+```{r}
+#
 aherror <- ahs %>% 
    filter(!(ID %in% ahlogs$ID))
 if(nrow(aherror)>0){
@@ -264,10 +260,10 @@ if(nrow(cherror)>0){
 
 ### Check for duplicates
 
+Are there any duplicated fish transect boatlogs?
 
-
-```{r, eval=FALSE}
-#Are there any duplicated fish transect boatlogs?
+```{r}
+#
 ftlog_dups <- ftlogs[duplicated(ftlogs$ID),]
 if(nrow(ftlog_dups)>0){
    ftlog_dups %>% select(-ID) %>% kable()
@@ -276,10 +272,10 @@ if(nrow(ftlog_dups)>0){
 }
 ```
 
+Are there any duplicated fish transect entries?
 
-
-```{r, eval=FALSE}
-#Are there any duplicated fish transect entries?
+```{r}
+#
 ft_dups <- fts[duplicated(fts$ID),]
 if(nrow(ft_dups)>0){
    ft_dups %>% select(-ID) %>% kable()
@@ -288,10 +284,10 @@ if(nrow(ft_dups)>0){
 }
 ```
 
+Are there any duplicated fish rover boatlogs?
 
-
-```{r, eval=FALSE}
-#Are there any duplicated fish rover boatlogs?
+```{r}
+#
 frlog_dups <- frlogs[duplicated(frlogs$ID),]
 if(nrow(frlog_dups)>0){
    frlog_dups %>% select(-ID) %>% kable()
@@ -300,10 +296,10 @@ if(nrow(frlog_dups)>0){
 }
 ```
 
+Are there any duplicated fish rover entries?
 
-
-```{r, eval=FALSE}
-#Are there any duplicated fish rover entries?
+```{r}
+#
 fr_dups <- frs[duplicated(frs$ID),]
 if(nrow(fr_dups)>0){
    fr_dups %>% select(-ID) %>% kable()
@@ -325,9 +321,10 @@ if(nrow(ch_dups)>0){
 }
 ```
 
+Are there any duplicated algae height entries?
 
-```{r, eval=FALSE}
-#Are there any duplicated algae height entries?
+```{r}
+#
 ah_dups <- ahs[duplicated(ahs$ID),]
 if(nrow(ah_dups)>0){
    ah_dups %>% select(-ID) %>% kable()
@@ -336,11 +333,12 @@ if(nrow(ah_dups)>0){
 }
 ```
 
+### Check Diadema
+Are any fish transects missing Diadema? This could be an entry mistake, or the diver forgot to size them or forgot to look. The diver should clarify what went wrong.
 
-
-```{r, eval=FALSE}
-# ### Check Diadema
-# Are any fish transects missing Diadema? This could be an entry mistake, or the diver forgot to size them or forgot to look. The diver should clarify what went wrong.
+```{r}
+# 
+# 
 diamiss <- fts %>% 
    filter(!(ID %in% das$ID))
 if(nrow(diamiss)>0){
@@ -368,7 +366,6 @@ if(nrow(belterror)>0){
 
 Are there any belt transects that have been entered but do not have both belt and intercept? The ones below are missing.
 
-**CKR T1 intercepts were not starred, so all corals were entered as belt.**
 
 ```{r}
 chtodo <- todo %>% 
