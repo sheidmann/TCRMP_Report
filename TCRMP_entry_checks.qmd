@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2025-09-05"
+date: "2025-09-09"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -18,7 +18,7 @@ library(DT)
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-09-05"
+downdate <- "2025-09-09"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -27,8 +27,7 @@ beltlist <- read_csv("data/beltlist.csv") %>%
           ID2 = paste(`Site name`, Rep, Method, sep = ","))
 
 # Boatlogs
-logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"),
-                     col_types = cols(`Date completed` = col_date(format="%m/%d/%Y")))
+logs_raw <- read_csv(paste0("data/data",dd,"/Boatlogs_",downdate,".csv"))
 ftlogs <- logs_raw %>%
    filter(`Type name`=="fish transect") %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
@@ -50,7 +49,7 @@ fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv")
                                     `Oc cc`= col_character(),
                                     `Common name` = col_character(),
                                     `Scientific name`= col_character(),
-                                    `Date completed`=col_date(format="%m/%d/%Y"),
+                                    `Date completed`=col_date(),
                                      .default=col_double()))
 fts <- fts_raw %>%
    select(`Fish transect`, Proofed,`Site name`, Name, `Date completed`, Rep) %>%
