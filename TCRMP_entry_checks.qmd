@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2025-10-21"
+date: "2025-10-27"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -18,7 +18,7 @@ library(DT)
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = F)
 
-downdate <- "2025-10-21"
+downdate <- "2025-10-27"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -147,26 +147,27 @@ done %>%
 
 
 ## Proofing progress
-DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
+
 ```{r}
-# 
-# totenter <- nrow(done)
-# totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
+# DO NOT proof yet. If you check the box, I will uncheck it for you before requesting proofing and you’ll have to do it again. We want some time separation between entry and proofing to reduce errors.
+totenter <- nrow(done)
+totproof <- filter(done, Proofed==TRUE) %>% nrow(.)
 ```
 
-
+Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
+Here is what each person has left to proof:
 
 ```{r}
-# Out of `r totenter` surveys entered, `r totproof` have been proofed (`r round(totproof/totenter*100)`%).
-# Here is what each person has left to proof:
-# done %>% 
-#    filter(!Proofed) %>% 
-#    select(Name, `Site name`, `Type name`, Rep) %>% 
-#    group_by(Name, `Type name`) %>% 
-#    summarize(n=length(Rep), .groups="drop") %>% 
-#    pivot_wider(names_from = `Type name`, values_from = n) %>% 
-#    mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>% 
-#    arrange(desc(Total)) %>% kable()
+# 
+# 
+done %>%
+   filter(!Proofed) %>%
+   select(Name, `Site name`, `Type name`, Rep) %>%
+   group_by(Name, `Type name`) %>%
+   summarize(n=length(Rep), .groups="drop") %>%
+   pivot_wider(names_from = `Type name`, values_from = n) %>%
+   mutate(Total = rowSums(select(.,-Name), na.rm=TRUE)) %>%
+   arrange(desc(Total)) %>% kable()
 ```
 
 
