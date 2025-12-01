@@ -122,7 +122,7 @@ done <- fts %>%
 donefw <- logs_raw %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
-missedunits <- 0
+missedunits <- 2
 perdonefw <- round(nrow(donefw) / ((33*24)-missedunits) * 100)
 # % done w entry
 donelist <- done %>% 
@@ -131,7 +131,7 @@ donelist <- done %>%
 perdone <- round(nrow(donelist) / nrow(donefw) * 100)
 ```
 
-We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We didn't miss any units yet.
+We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We missed an algae height each at SRD and GRP.
 
 
 Here is the number of surveys each person has entered:
