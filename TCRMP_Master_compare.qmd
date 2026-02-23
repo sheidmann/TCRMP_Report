@@ -1,0 +1,404 @@
+---
+title: "TCRMP Master consolidation"
+author: "Sarah Heidmann"
+format: html
+editor: visual
+date: "2026-2-23"
+toc: true
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse, quietly = TRUE)
+library(readxl)
+library(knitr)
+library(DT)
+library(rfishbase)
+library(writexl)
+
+options(knitr.kable.NA = '')
+knitr::opts_chunk$set(echo = F)
+
+```
+
+## Initial Summary
+
+This is what Sarah knows upon starting this project in Fall 2025.
+
+There are several "master" copies of the TCRMP fish data, and we don't know how similar they are, or which is the "most correct".
+
+1.  "Old Fish"- an Excel file of uncertain provenance. We don't know how recently it's been updated, but the R package relies on it. *"SMITH LAB TEAM FOLDER/TCRMP/TCRMP_MasterFiles/Old Master Files/Old_Fish_NEEDforCODE.xlsx"*
+2.  Package .rda files- the R package also relies on these. We also don't know when they were updated. *"/Users/sarahheidmann/UVI Dropbox/SMITH LAB TEAM FOLDER/TCRMP/TCRMP_Administrative/analysis/tcrmp.analysis.zip/data/"*
+3.  "Master Fish Census"- the Excel file which we had been using as our working "master" before realizing these other copies existed. Sarah had been updating this one with the most recent data but not the others. It is possible that Nicole and maybe Rossie had been updating the other files from this one but we are not sure. *"SMITH LAB TEAM FOLDER/TCRMP/TCRMP_MasterFiles/TCRMP_Master_Fish_Census_Mar2025.xlsx"*, copied locally on 29 Oct 2025.
+
+The goal of this script is to determine which is the most correct, and consolidate all the data as much as possible. The true "master" will replace #3 above, live in that folder with periodic backups, and the R package will draw directly from there.
+
+Later update: Sarah found some helpful notes from Nicole inside the R package (*SMITH LAB TEAM FOLDER/TCRMP/TCRMP_Administrative/analysis/tcrmp.analysis.zip/DataObjectUpdate.Rmd)*. Nicole found a lot of inconsistencies in the old data but didn't have time to track down and fix them all. The context she provided is pasted where it is relevant below.
+
+## 1. Old Fish
+
+```{r}
+old <- read_excel("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/Old_Fish_NEEDforCODE.xlsx") %>% 
+   mutate(Year=as.integer(Year), SampleYear=as.integer(SampleYear),
+          Transect=as.integer(Transect))
+```
+
+*From Nicole: this is the old master file .rda from the package when Rossie came in. I was told that Rossie made a lot of changes and fixed some flags so I've kept the old file in the package and then just added in the years instead of rewriting with a new masterfile each time. I downloaded off the package and saved it as its own excel file. I only saved the abundance because we've automated the biomass to use off of abundance in the next few lines. This dataset only goes through 2021.*
+
+This dataset goes for samplings `r range(as.numeric(old$SampleYear))[1]` through `r range(as.numeric(old$SampleYear))[2]`.
+
+## 2. Package .rda files
+
+```{r}
+load("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/tcrmp_fish_abun.rda")
+load("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/tcrmp_fish_biom.rda")
+load("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/tcrmp_fish.rda")
+tcrmp_fish <- tcrmp_fishes # hack to separate them
+load("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/tcrmp_fishes.rda")
+```
+
+It appears that these are the base data files to which each year's new data are added. However, they don't contain any size data!!
+
+These files are:
+
+-   tcrmp_fish_abun.rda (modified Aug 2022): `r range(as.numeric(tcrmp_fish_abun$SampleYear))[1]` through `r range(as.numeric(tcrmp_fish_abun$SampleYear))[2]`.
+
+-   tcrmp_fish_biom.rda (modified Aug 2022): `r range(as.numeric(tcrmp_fish_biom$SampleYear))[1]` through `r range(as.numeric(tcrmp_fish_biom$SampleYear))[2]`.
+
+-   tcrmp_fish.rda (modified Dec 2023): `r range(as.numeric(tcrmp_fish$SampleYear))[1]` through `r range(as.numeric(tcrmp_fish$SampleYear))[2]`.
+
+-   tcrmp_fishes.rda (modified March 2025): `r range(as.numeric(tcrmp_fishes$SampleYear))[1]` through `r range(as.numeric(tcrmp_fishes$SampleYear))[2]`.
+
+For some reason, tcrmp_fish reads in as tcrmp_fishes, but is different from tcrmp_fishes. Given the differing dates, could it simply include the 2024 data?
+
+## 3. Master Fish Census
+
+```{r, warning=FALSE}
+# sheets are: 1) MetaData, 2) SiteMetadata, 3) FishMetadata, 
+#           4) FishCountRaw, 5) FishBiomassRaw
+work <- read_excel("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/TCRMP_Master_Fish_Census_Mar2025.xlsx", sheet = "FishCountRaw",
+                   col_types = c("text","text","text","numeric",
+                                 "text","numeric","text",
+                                 "text","text","text",
+                                 rep("numeric",18))) %>% 
+   mutate(SampleDate=as.Date(SampleDate, format="%m/%d/%y"),
+          SampleYear=as.numeric(SampleYear))
+```
+
+This dataset goes for samplings `r range(as.numeric(work$SampleYear))[1]` through `r range(as.numeric(work$SampleYear))[2]`.
+
+This is the only dataset that includes sizes! So we need to make sure it is correct, and create the other formats by summarizing this one. In the future, the R package should read directly from this file so that any additional QAQC is incorporated.
+
+One transect has NA, so we need to figure out where that fish goes.
+
+*From Nicole: there are a list of 145 instances in which the abundance total does not equal what the individual totaled should be.*
+
+## Plain Text Guess at What's Going On
+
+When Rossie left, the process was that she would take each year's data in a Excel files, combine it with previous data from a .rda file, and save the updated version of the .rda to the package to work with.
+
+Nicole combined abundance and biomass into a single file, fish. At some point this got changed to fishes, possibly accidentally because of some quirks with using load().
+
+She noticed that the fish .rda file did not match the Dropbox master file from 2003-2021, and for the sake of time and consistency with past reports, she kept the package data in the form of the Old Fish excel file. Each year she would combine Old Fish (2003-2021), Master Fish (2022-2024), and the csv of new data to create her dataset to work with.
+
+Importantly, the .rdas do not include size data as far as I can tell. Only the master file does. Even more reason to use that as our master. Just check the totals match the various other files.
+
+## What I Want the Process to Look Like When I'm Done
+
+Before starting, the TCRMP person backs up the data in a .rda in the package by year, like a time machine. Maybe each year is stored separately so they can easily be combined if the master gets corrupted? But also we need to be able to easily fix mistakes that we find, so it should really be in one place only. Or maybe I just change mistakes in both places for a while until we call it good. Or have the package notify the user when the data is different from the previous data. Maybe Lauren has insight on how this should work.
+
+The package will draw directly from the master excel in Dropbox to get all the data.
+
+## Compare the files
+
+### Fish.rda vs fishes.rda
+
+I'm hoping that Fishes.rda is fish.rda + 2024 data.
+
+```{r}
+#names(tcrmp_fish)
+#names(tcrmp_fishes)
+nrow(tcrmp_fish)
+#nrow(tcrmp_fishes)
+nrow(filter(tcrmp_fishes, SampleYear<2023)) # so close!
+```
+
+The headings are very close; fish has Year as well as SampleYear. Both contain abundance and biomass. When filtering out 2024 data, the number of rows is different by just 12.
+
+```{r}
+fish_sum <- tcrmp_fish %>% 
+   group_by(SampleYear, Period, Location, 
+            Transect=as.numeric(Transect)) %>% 
+   summarize(fish = length(ScientificName), .groups="drop")
+fishes_sum <- tcrmp_fishes %>% 
+   group_by(SampleYear, Period, Location, 
+            Transect=as.numeric(Transect)) %>% 
+   summarize(fishes = length(ScientificName), .groups="drop")
+fish_sum_comp <- full_join(fish_sum, fishes_sum, by= c("SampleYear","Period","Location","Transect")) %>% 
+   mutate(Diff = (fish != fishes))
+filter(fish_sum_comp, Diff==TRUE) %>%
+   datatable()
+# filter(tcrmp_fish, SampleYear==2022 & Location=="Castle" & Transect==4 & Metric =="Abundance")
+# filter(tcrmp_fishes, SampleYear==2022 & Location=="Castle" & Transect==4 & Metric =="Abundance")
+```
+
+3 transects in 2022 have 4 more rows in tcrmp_fish.rda than they do in tcrmp_fishes.rda. At Castle, a longspine squirrelfish was duplicated 4 extra times, at Mutton there were multiple French grunts, and at Salt River, multiple coneys. They were all Shaun's transects... coincidence?
+
+To fix: in tcrmp_fishes.rda, at CST 4 delete duplicate longspine squirrelfish, at MTS 7 add together 2 french grunts, at SRW 4 change coney with 2 at 11-20 to an orangespotted filefish. Do same fixes in master file. Delete tcrmp_fish.rda and package references to it.
+
+### Abun.rda and biom.rda
+
+I think these are duplicated data to fishes.rda through 2021, just separating the metrics.
+
+```{r}
+# names(tcrmp_fish_abun)
+# names(tcrmp_fish_biom)
+# names(tcrmp_fishes)
+# nrow(tcrmp_fish_abun)
+# nrow(tcrmp_fish_biom)
+# nrow(filter(tcrmp_fishes, SampleYear<2022)) # again, so close!
+```
+
+The names and rows are identical between abun and biom. Fishes just has the addition of "Metric" and "Total" instead of "SppTotal". The number of rows is again, close! Abun+biom is 652 more than fishes.
+
+```{r}
+abunbio <- tcrmp_fish_abun %>% 
+   add_column(Metric="Abundance") %>% 
+   bind_rows(add_column(tcrmp_fish_biom, Metric="Biomass")) #%>% 
+   #mutate(ID=paste(Location,SampleYear,Period,Transect,ScientificName,Metric))
+
+abunbiodups <- filter(abunbio, 
+                      duplicated(abunbio)==TRUE) %>% 
+   select(Location, SampleYear, Transect, CommonName, Metric) 
+fishesdups <- filter(tcrmp_fishes, 
+                     duplicated(tcrmp_fishes)==TRUE) %>% 
+   select(Location, SampleYear, Transect, CommonName, Metric)
+# fishes is longer than abunbio. it has a few biomass duplicates while abunbio has none. two of them were among the errors noted above.
+# Which are not overlapping?
+setdiff(fishesdups, abunbiodups) %>% datatable()
+
+# THIS IS WHERE I AM. LOTS OF SPECIES ARE DUPLICATED AND THAT MAKES COMPARING DIFFICULT. 
+# If there's a pattern or shortcut I want to know, but be careful of spending too much time on this. May just want to add them all together. Consider looking at scans and/or raw website data from some recent ones to see what may have happened.
+# The above table is not too large so consider looking at them all.
+# Look at the rows in the table above in the master file and see if any have been fixed. What about the other duplicates?
+
+# FOR EXAMPLE
+# filter(abunbio, Location=="Eagle Ray" & SampleYear=="2003" & Transect=="2"& Metric=="Abundance") #%>% View()
+# filter(tcrmp_fishes, Location=="Eagle Ray" & SampleYear=="2003" & Transect=="2" & Metric=="Abundance") #%>% View()
+# # These CAN PULL look to be duplicates...
+# filter(work, Location=="Eagle Ray" & SampleYear=="2003" & Transect=="2") #%>% View()
+# # ... but the master file shows them as different sizes
+
+
+```
+
+The rdas have many instances of multiple rows of the same species within transects, with different abundances. This makes comparing across datasets difficult.
+
+If there's no larger pattern I'm guessing we should add them together since we don't have scans for many to help check. Would these totals match the master?
+
+### Compare old_fish and master
+
+```{r}
+# old vs work
+work %>% 
+   select(Location, SampleYear,Transect,CommonName,Total=SppTotal) %>% 
+   filter(SampleYear<2021) %>% 
+   setdiff(., select(filter(old,Metric=="Abundance"), Location, SampleYear, Transect, CommonName, Total)) %>% 
+              datatable()
+```
+
+It looks like there were some merging errors in 2020. There are transects where a species was split across two rows in data entry, and the master contains each of the rows individually as well as them combined. Also, a lot of the species totals don't match what you get when you sum the size columns.
+
+A lot of these are date issues too, mostly with STX sites 2009-2010 and CRB FSB MGN 2012-2013 when transects for were split across several months into the new year, and were classified as different sample years. Rossie figured out the STX sites and fixed them in OldFish but not the STTJ ones, which I corrected. GBF had some funky transect numbers 2012-2014 that I fixed.
+
+Start with these two files. Make them match so in the future we can use only the master. Use their differences to drill down into errors, changing them in the master, remembering that old fish probably has the accurate numbers.
+
+On second thought, in the interest of time, these mistakes may be an ongoing project. The most important thing is to get the package working so we can do the 2025 data. It may be best to leave it how it is, and/or do it simultaneously.
+
+Are the only differences in sum errors, duplications, and species names? Let's unduplicate them both and see what happens.
+
+```{r}
+oldsum <- old %>% 
+   filter(Metric=="Abundance") %>% 
+   group_by(Location, SampleYear, Transect, CommonName) %>% 
+   summarize(Total = sum(Total), .groups="drop")
+# nrow(old)
+# [1] 206776
+# > nrow(oldsum)
+# [1] 98923
+# Wow that's a lot of duplications!
+work %>% 
+   filter(SampleYear<2021) %>% 
+   group_by(Location, SampleYear, Transect, CommonName) %>% 
+   summarize(Total = sum(SppTotal), .groups="drop") %>% 
+   setdiff(., oldsum) %>% 
+              datatable()
+```
+
+That list is a lot shorter.
+
+## How to Fix It
+
+For the sake of time, I'm going to focus on the differences between Old Fish and the Master. I'm pretty sure that the .rdas are created and overwritten when running DataObjectUpdate.rmd, although I won't know for sure until we test the process with the 2025 data. We can archive the .rdas just in case.
+
+-   Use the table above to investigate the differences between Old Fish and Master. Datasheets are the source of truth, and in lieu of those, use best judgement, knowing that Old Fish is probably more correct. Make changes manually in the Excel files.
+
+-   Add duplicate species together in the master. Check that all the totals add up the same to make sure I didn't make a mistake. Also compare these totals to Old Fish and the .rdas.
+
+-   Re-merge the trophic groups using the classifications in the metadata tab. (The old data has inconsistent classification).
+
+-   Add updated biomass calculation coefficients to the metadata tab. Use these to recalculate biomass tab in the master.
+
+-   Change the package to refer to the new master. Replace any use of load() with attach() \[and detach()\] in the package since it will warn before overwriting (<https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/load>).
+
+```{r}
+# The summarizing takes a while so only run if needed.
+# But we want to use it for checks below so we have to include it.
+# Here is where you make the changes above and export as Feb 2026
+
+# sheets are: 1) MetaData, 2) SiteMetadata, 3) FishMetadata, 
+#           4) FishCountRaw, 5) FishBiomassRaw
+fixed <- read_excel("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/TCRMP_Master_Fish_Census_Jan2026.xlsx", sheet = "FishCountRaw",
+                   col_types = c("text","text","text","numeric",
+                                 "text","numeric","text",
+                                 "text","text","text",
+                                 rep("numeric",18))) %>% 
+   mutate(SampleDate=as.Date(SampleDate, format="%m/%d/%y"),
+          SampleYear=as.numeric(SampleYear))
+
+# Add duplicated species together
+fixed_sum <- fixed %>% 
+   # Group by all identifying variables
+   group_by(Location, SampleDate, SampleYear, SampleMonth, Period, 
+            Transect, Observer, ScientificName, CommonName) %>% 
+   # sum all size columns including total
+   summarize(across(`0-5`:SppTotal, ~sum(.x, na.rm = TRUE)), .groups = 'drop') %>% 
+   # Sort the result
+   arrange(SampleYear, Period, Location, Transect, CommonName)
+
+
+# Merge trophic groups
+fishmeta <- read_excel("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/TCRMP_Master_Fish_Census_Jan2026.xlsx", sheet = "FishMetadata")
+new_master <- fixed_sum %>% 
+   left_join(select(fishmeta, ScientificName, TrophicGroup=TrophicLevel), by = "ScientificName") %>% 
+   relocate(TrophicGroup, .after=CommonName)
+
+# Use the below to compare totals.
+# fixed %>% 
+#    select(`0-5`:SppTotal) %>% 
+#    colSums(., na.rm=TRUE)
+# fixed_sum %>% 
+#    select(`0-5`:SppTotal) %>% 
+#    colSums(., na.rm=TRUE)
+# Go me!
+
+# Export the new abundance sheet
+# write_xlsx(new_master, "outputs/MasterFishAbundance_20260217.xlsx")
+
+# Calculate biomass
+# First get updated values from FishBase
+ab_tab <- length_weight(fishmeta$ScientificName)
+# These didn't work for some reason; string contains null byte?
+#ab_refs <- references(ab_tab$DataRef)
+#ab_exp <- left_join(ab_tab,ab_refs, by=c("DataRef"="RefNo"))
+
+ab_means <- ab_tab %>% 
+   group_by(Species) %>% 
+   summarize(a_mean=round(mean(a),4),
+             b_mean=round(mean(b),4),
+             a_sd = round(sd(a),4),
+             b_sd = round(sd(b),4),
+             num_sources=length(a), .groups="drop")
+#write_csv(ab_means,"outputs/fishbase_abmeans_20260217.csv", na="")
+
+# Merge with metadata
+fishmeta_ab <- fishmeta %>% 
+   left_join(select(ab_means, ScientificName=Species, a_mean, b_mean), by="ScientificName")
+# Fill in NAs from old numbers
+oldbio <- read_excel("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/biomass/FishBiomassVariables.xlsx")
+oldbio_ab <- fishmeta_ab %>% 
+   filter(is.na(a_mean)) %>% 
+   left_join(select(oldbio, ScientificName, a, b), by="ScientificName") %>% 
+   filter(!is.na(a)) %>% 
+   select(ScientificName, a_mean = a, b_mean = b)
+fishmeta_exp <- rows_patch(fishmeta_ab, oldbio_ab, by="ScientificName")
+# Export the new metadata sheet, copy and paste into master Feb2026
+#write_xlsx(fishmeta_exp, "outputs/MasterFishMetadata_20260217.xlsx")
+# Read in metadatasheet direct since calculated some means for unknown species
+#fishmeta_exp <- read_excel("/Users/sarahheidmann/Documents/RStudioProjects/TCRMP_Report/data/masters/TCRMP_Master_Fish_Census_Feb2026.xlsx", sheet = "FishMetadata")
+
+# Recalculate biomass with new a/b numbers
+# Adapted from Nicole's script in the TCRMP R package called calc_bomass.R
+biomass_combined <- left_join(new_master, select(fishmeta_exp, ScientificName, 
+                                                 a=a_mean, b=b_mean), by = "ScientificName")
+
+biomass <- biomass_combined %>%
+  #Then apply the formula, where biomass = a * length ^b. Because these are length bins, the average for each bin is applied. For >150cm, 150 is applied.
+  mutate(
+    `0-5` = `0-5` * a * 2.5^b,
+    `6-10` = `6-10` * a * 8^b,
+    `11-20` = `11-20` * a * 15.5^b,
+    `21-30` = `21-30` * a * 25.5^b,
+    `31-40` = `31-40` * a * 35.5^b,
+    `41-50` = `41-50` * a * 45.5^b,
+    `51-60` = `51-60` * a * 55.5^b,
+    `61-70` = `61-70` * a * 65.5^b,
+    `71-80` = `71-80` * a * 75.5^b,
+    `81-90` = `81-90` * a * 85.5^b,
+    `91-100` = `91-100` * a * 95.5^b,
+    `101-110` = `101-110` * a * 105.5^b,
+    `111-120` = `111-120` * a * 115.5^b,
+    `121-130` = `121-130` * a * 125.5^b,
+    `131-140` = `131-140` * a * 135.5^b,
+    `141-150` = `141-150` * a * 145.5^b,
+    `>150` = `>150` * a * 150^b,
+    SppTotal = rowSums(across(`0-5`:`>150`), na.rm=T)) %>% #Sum across all rows to get a biomass per species in each transect
+  select(!c(a,b)) #remove the a and b columns to create masterfile formatting
+
+#IF there are instances where there are no biomass values for a particular species in the reference dataframe, this will spit out a list of those flagged species
+(NA_species <- unique(biomass_combined %>% filter(is.na(biomass_combined$a)) %>% select(ScientificName, CommonName, TrophicGroup)))
+#NA_species
+
+
+# Export the new biomass sheet
+# write_xlsx(biomass, "outputs/MasterFishBiomass_20260217.xlsx")
+```
+
+## After Fixing
+
+How much did we change? Let's take a look.
+
+First, how did abundances change? Let's subtract the new total by year and site from the old total.
+
+```{r}
+work_comp <- work %>% 
+   filter(SampleYear<2021) %>% 
+   group_by(Location, SampleYear) %>% 
+   summarize(TotalOld = sum(SppTotal), .groups="drop")
+fixed_comp <- fixed_sum %>% 
+   filter(SampleYear<2021) %>% 
+   group_by(Location, SampleYear) %>% 
+   summarize(TotalNew = sum(SppTotal), .groups="drop")
+left_join(fixed_comp, work_comp, by=c("Location", "SampleYear")) %>% 
+   mutate(diff = TotalOld - TotalNew) %>% 
+   filter(diff!=0) %>% arrange(desc(diff)) %>% 
+   datatable()
+```
+
+How many trophic group classifications changed? Now each species only has one classification, but before:
+
+```{r}
+fixed %>% 
+   group_by(CommonName, TrophicGroup) %>% 
+   summarize(n = length(TrophicGroup), .groups="drop") %>% 
+   pivot_wider(id_cols = CommonName, names_from = TrophicGroup, values_from = n) %>% 
+   left_join(select(fishmeta, CommonName, NewClass=TrophicLevel), by="CommonName") %>% 
+   datatable()
+```
+
+## Conclusion
+
+We now have a QAQC'ed master, "*SMITH LAB TEAM FOLDER/TCRMP/TCRMP_MasterFiles/TCRMP_Master_Fish_Census_Feb2026.xlsx”.* Erin plotted the report graphs to make sure the data is reasonable and in line with old reports, which it is. We will revise the R package to point to this new master directly and avoid confusing multiple masters in the future. All other files will be archived.
+
+Yay! **🎉**
