@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Sarah Heidmann">
+
+<title>TCRMP 2025 Fish QAQC</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="TCRMP_2025_Fish_QAQC_files/libs/clipboard/clipboard.min.js"></script>
+<script src="TCRMP_2025_Fish_QAQC_files/libs/quarto-html/quarto.js"></script>
+<script src="TCRMP_2025_Fish_QAQC_files/libs/quarto-html/popper.min.js"></script>
+<script src="TCRMP_2025_Fish_QAQC_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="TCRMP_2025_Fish_QAQC_files/libs/quarto-html/anchor.min.js"></script>
+<link href="TCRMP_2025_Fish_QAQC_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="TCRMP_2025_Fish_QAQC_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="TCRMP_2025_Fish_QAQC_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="TCRMP_2025_Fish_QAQC_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="TCRMP_2025_Fish_QAQC_files/libs/bootstrap/bootstrap-973236bd072d72a04ee9cd82dcc9cb29.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="TCRMP_2025_Fish_QAQC_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="TCRMP_2025_Fish_QAQC_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="TCRMP_2025_Fish_QAQC_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="TCRMP_2025_Fish_QAQC_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="TCRMP_2025_Fish_QAQC_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="TCRMP_2025_Fish_QAQC_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="TCRMP_2025_Fish_QAQC_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="TCRMP_2025_Fish_QAQC_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="TCRMP_2025_Fish_QAQC_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="TCRMP_2025_Fish_QAQC_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">2026-03-30</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
+  <li><a href="#date-ranges" id="toc-date-ranges" class="nav-link" data-scroll-target="#date-ranges">Date ranges</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  </ul></li>
+  <li><a href="#abundance" id="toc-abundance" class="nav-link" data-scroll-target="#abundance">Abundance</a>
+  <ul class="collapse">
+  <li><a href="#transect-abundance" id="toc-transect-abundance" class="nav-link" data-scroll-target="#transect-abundance">Transect Abundance</a></li>
+  <li><a href="#rover-abundance" id="toc-rover-abundance" class="nav-link" data-scroll-target="#rover-abundance">Rover Abundance</a></li>
+  </ul></li>
+  <li><a href="#transect-sizing" id="toc-transect-sizing" class="nav-link" data-scroll-target="#transect-sizing">Transect Sizing</a></li>
+  <li><a href="#species-richness" id="toc-species-richness" class="nav-link" data-scroll-target="#species-richness">Species Richness</a>
+  <ul class="collapse">
+  <li><a href="#transects" id="toc-transects" class="nav-link" data-scroll-target="#transects">Transects</a></li>
+  <li><a href="#rovers" id="toc-rovers" class="nav-link" data-scroll-target="#rovers">Rovers</a></li>
+  </ul></li>
+  <li><a href="#rare-fish" id="toc-rare-fish" class="nav-link" data-scroll-target="#rare-fish">Rare Fish</a></li>
+  <li><a href="#diadema" id="toc-diadema" class="nav-link" data-scroll-target="#diadema">Diadema</a>
+  <ul class="collapse">
+  <li><a href="#overview-1" id="toc-overview-1" class="nav-link" data-scroll-target="#overview-1">Overview</a></li>
+  <li><a href="#diadema-abundance" id="toc-diadema-abundance" class="nav-link" data-scroll-target="#diadema-abundance">Diadema Abundance</a></li>
+  <li><a href="#diadema-sizing" id="toc-diadema-sizing" class="nav-link" data-scroll-target="#diadema-sizing">Diadema Sizing</a></li>
+  </ul></li>
+  <li><a href="#changes-made" id="toc-changes-made" class="nav-link" data-scroll-target="#changes-made">Changes Made</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TCRMP 2025 Fish QAQC</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sarah Heidmann </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section">2026-03-30</h3>
+<p>QAQC for TCRMP fish data for 2025. Suggestions for additions and improvement are welcomed.</p>
+<p>Luckily, the data entry system catches a lot of easy mistakes like mispellings. We just have to go through the mistakes it might not catch. When we catch some that are fixable, change online and export again, or if the online database has already been cleared, change directly in the data.</p>
+</section>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>How big are the datasets?</p>
+<p>Transects have 6652 transect-species. Rovers have 3176 rover-species.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 1. Do we have all the fish transects? We should have 9 transects each at 33 sites and maybe 1 at Ginsburg’s Fringe.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Transects</th>
+<th style="text-align: right;">Sites</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">33</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 2. Sites with less than 9 fish transects.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-dfe75f6b0acaf4dba5e3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-dfe75f6b0acaf4dba5e3">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Transects<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Transects","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 3. Do we have all the fish rovers? We should have 3 reps each at 33 sites and maybe 1 at Ginsburg’s Fringe.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Rovers</th>
+<th style="text-align: right;">Sites</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">33</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5222796eb904e4be2abd" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5222796eb904e4be2abd">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Rovers<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Rovers","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<section id="date-ranges" class="level2">
+<h2 class="anchored" data-anchor-id="date-ranges">Date ranges</h2>
+<p>Fish transects took place between dates: 2025-08-28, 2025-11-22</p>
+<p>Diademas took place between dates: 2025-08-28, 2025-11-22</p>
+<p>Fish rovers took place between dates: 2025-08-28, 2025-11-22</p>
+</section>
+<section id="notes" class="level2">
+<h2 class="anchored" data-anchor-id="notes">Notes</h2>
+<p>Are there any notes we should know about?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "SWP \r\nno changes"                                                                                                                                                                                                                                             
+ [2] "SWP\r\nno change"                                                                                                                                                                                                                                               
+ [3] "SWP\r\nNo change"                                                                                                                                                                                                                                               
+ [4] "SWP No changes"                                                                                                                                                                                                                                                 
+ [5] "SWP\r\nchanged white grunt from 5 to 1"                                                                                                                                                                                                                         
+ [6] "SWP \r\nMoved caesar grunt over one bin"                                                                                                                                                                                                                        
+ [7] "SWP \r\nmoved schoolmaster over one bin \r\n"                                                                                                                                                                                                                   
+ [8] "added bluestriped lizard (2) -ALS"                                                                                                                                                                                                                              
+ [9] "brown chromis removed 100 from 0-5cm and 12 from 6-10cm and put 100 on 6-10 and 12 on 11-20, added 1 (21-30cm) striped parrotfish -ALS"                                                                                                                         
+[10] "proofed 02/23/26 ALS"                                                                                                                                                                                                                                           
+[11] "Queen triggerfish (45), proofed 02/23/26 ALS"                                                                                                                                                                                                                   
+[12] "changed striped parrotfish from 21 to 20 -ALS"                                                                                                                                                                                                                  
+[13] "white grunt changed it from 13 to 12 in (21-30cm), creole wrasse changed 11-20cm from 15 to 6 -ALS"                                                                                                                                                             
+[14] "changed brown chromis from 50 to 30 (6-10cm), bicolor changed it from 3 (6-10cm) to 3 (0-5cm), gray angelfish changed (21-30cm) from 1 to 2, princess parrotfish added 1 (6-10cm) and 3 (11-20cm) (it was written twice on sheet, combined them) -ALS"          
+[15] "changed 6-10cm blue chromis from 23 to 28, brown chromis (6-10cm) changed it from 42 to 63 -ALS"                                                                                                                                                                
+[16] "Nassau 42 cm, \r\nAdded 5 (11-20cm) tomtate, squirrelfish changed 11-20cm from 1 to 3, brown chromis added 1 for 6-10cm, removed indigo hamlet there was no tick mark on sheet -ALS"                                                                            
+[17] "YF grouper (42cm) proofed 02/23/26 ALS"                                                                                                                                                                                                                         
+[18] "I think tallies in wrong bin for bar jack and tomtate.. first transect back and slightly narced? \r\n\r\nProofed 10/29/25 ALG\r\n\r\nlongspine changed from 2 in 11-20cm to 1 in 6-10cm and 1 in 11-20cm, stoplight parrotfish changed it from 2 to 1 in 0-5cm,"
+[19] "red hind (38cm), mutton snapper (45cm) proofed 02/23/26 ALS"                                                                                                                                                                                                    
+[20] "mutton snap (47cm), Yellowfin grouper (35cm), proofed 02/23/26 ALS"                                                                                                                                                                                             
+[21] "I think the Gray Angel tallies are in BHW line - ALG \r\nchanged blue chromis from 25 to 26 (0-5cm) -ALS"                                                                                                                                                       
+[22] "barracude (82cm)\r\nmutton snapper (65cm)\r\nchanged blue chromis from 25 to 15 (6-10cm), bluehead wrasse changed it from 4 to 5 (0-5cm) -ALS"                                                                                                                  
+[23] "french angel (38 and 41cm) go rid of mahogany (11-20cm) 1, tomtate moved the 2 from 11-20cm to 6-10cm, added french angel 1 in 31-40cm -ALS"                                                                                                                    
+[24] "barracude (76cm)\r\nchanged blue chromis from 41 to 51 (6-10cm) -ALS"                                                                                                                                                                                           
+[25] "SWP changed DR fish to Ocean surgeonfish"                                                                                                                                                                                                                       
+[26] "SWP no change"                                                                                                                                                                                                                                                  
+[27] "SWP changed Bicolor Damsel to Brown Chromis"                                                                                                                                                                                                                    
+[28] "Proofed 10/29/25 ALG \r\nSWP no change"                                                                                                                                                                                                                         
+[29] "Proofed 10/29/25 ALG\r\nSWP no change"                                                                                                                                                                                                                          
+[30] "SWP added sergeant majors"                                                                                                                                                                                                                                      
+[31] "Proofed 10/29/25 ALG, squirrelfish changed 1 from 11-20 to 21-30cm -ALS"                                                                                                                                                                                        
+[32] "Red hind 48 cm\r\nProofed 10/29/25 ALG, \r\nproofed 02/23/26 ALS"                                                                                                                                                                                               
+[33] "Queen triggerfish (41, 46), proofed 02/23/26 ALS"                                                                                                                                                                                                               
+[34] "dog snapper - 43 cm, gray snapper changed 21-30cm from 52 to 53 -ALS"                                                                                                                                                                                           
+[35] "changed bicolor damsel from 32 to 30 (6-10cm), changed 110 sennets from 11-20cm to 21-30cm, YT snapper changed it from 1 to 2 (21-30cm) -ALS"                                                                                                                   
+[36] "BH wrasse changed from 50 to 60 in 0-5cm, removed indigo hamlet (there was no tick marks on sheet), added 1 YH wrasse in the 11-20cm -ALS"                                                                                                                      
+[37] "Proofed 10/29/25 ALG, proofed 02/23/26 ALS"                                                                                                                                                                                                                     
+[38] "Proofed 10/29/25 ALG, changed bluehead wrasse from 28 to 27 (0-5cm) -ALS"                                                                                                                                                                                       
+[39] "Queen triggerfish (41, 46) proofed 02/23/26 ALS"                                                                                                                                                                                                                
+[40] "Queen trigger (42, 45), proofed 02/23/26 ALS"                                                                                                                                                                                                                   
+[41] "blue chromis (0-5cm) changed it from 14 to 15, bicolor damsel changed it from 35 to 55 (0-5cm) -ALS"                                                                                                                                                            
+[42] "dog snapper 42cm, added 2 (21-30cm) squirrel fish, removed french grunt (there were no ticks on the data sheet) -ALS"                                                                                                                                           
+[43] "added 1 stoplight (31-40cm) -ALS"                                                                                                                                                                                                                               
+[44] "Nassau - 48 cm \r\nRed hind - 50 cm \r\nCubera - 65 and 70 cm \r\nLionfish - 32 cm \r\nProofed 10/29/25, \r\nlionfish added 1 in the (0-5cm), blue chromis changed (0-5cm) from 30 to 24 -ALS"                                                                  
+[45] "cubera 50 cm \r\nchanged cubera from 51-60 to 41-50cm -ALS"                                                                                                                                                                                                     
+[46] "cubera snapper 52, 64 cm \r\nproofed 02/23/26 ALS"                                                                                                                                                                                                              
+[47] "cubera snapper (150cm)\r\nnassau grouper (60cm)\r\nremoved porkfish, striped parrot (6-10cm) changed it from 14 to 9, (11-20cm) changed it from 17 to 15, (21-30cm) -ALS"                                                                                       
+[48] "cubera snapper (130, 150, 140cm) \r\nyellowfin grouper - 60cm\r\nnassau grouper - 45 cm\r\nred band parrot added 1 for 21-30cm -ALS"                                                                                                                            
+[49] "Proofed 10/29/25 ALG \r\nProofed 01/24/2026 GAC"                                                                                                                                                                                                                
+[50] "Proofed 10/29/25 ALG \r\nDeleted 1 Rebband PF in 0-5cm 01/24/2026 GAC"                                                                                                                                                                                          
+[51] "Proofed 01/24/2026 GAC"                                                                                                                                                                                                                                         
+[52] "added 1 4eye in 0-5cm; changed 1 gray snapper in 6-10cm to 1 in 11-20cm 01/24/2026 GAC"                                                                                                                                                                         
+[53] "changed 3 redband pf in 11-20cm to 4; added yt pf, bluestriped liz, and lf damsel 01/24/2026 GAC"                                                                                                                                                               
+[54] "changed yt snap from 1 in 11-20cm to 1 in 21-30cm 01/24/2026 GAC"                                                                                                                                                                                               
+[55] "Red hind = 48 cm \r\nProofed 10/29/25 ALG\r\nSWP no change"                                                                                                                                                                                                     
+[56] "Lionfish 35 cm \r\nProofed 10/29/25 ALG\r\nSWP no change"                                                                                                                                                                                                       
+[57] "Proofed 10/29/25\r\nSWP no change"                                                                                                                                                                                                                              
+[58] "SWP No change"                                                                                                                                                                                                                                                  
+[59] "SWP \r\nMoved blue and brown chromes back one box"                                                                                                                                                                                                              
+[60] "Proofed 10/29/25 ALG, moved 1 redband from 21-30cm to 31-40cm, added 1 to 31-40cm french grunt, added 1 to 21-30 for graysby -ALS"                                                                                                                              
+[61] "Proofed 10/29/25 ALG, \r\nmoved 5 from 0-5cm to 6-10cm, moved 2 from 6-10cm to 11-20cm for cocoa damsel -ALS"                                                                                                                                                   
+[62] "Proofed 10/29/25 ALG\r\nChanged bluestriped lizardfish from 21-30cm -&gt; 41cm-50cm 1/24/2026 GAC"                                                                                                                                                                 
+[63] "Proofed 10/29/25 ALG \r\nProofed 01/24/26 GAC"                                                                                                                                                                                                                  
+[64] "Proofed 10/29/25 ALG \r\nChanged RB Parrot from 21-30cm -&gt; 31-40cm 01/24/2026 GAC"                                                                                                                                                                              
+[65] "1/2 more nassau outside of transect, Pillar coral found and ACER colony \r\nChanged 18 slippery dick at 6-10cm to 5 at 6-10cm and 2 at 11-20cm; changed 10 sgt majors in 0-5cm to 10 in 6-10cm 01/24/2026 GAC"                                                  
+[66] "Proofed 01/25/2026 GAC"                                                                                                                                                                                                                                         
+[67] "Red hind (28, 29, 32). Queen Triggerfish (32)\r\nProofed 01/25/2026 GAC"                                                                                                                                                                                        
+[68] "Proofed 10/31/25\r\nProofed 01/25/2026 GAC"                                                                                                                                                                                                                     
+[69] "tiger grouper = yellowfin grouper (50cm) \r\ngrunt = white grunt\r\nProofed 10/31/25\r\nProofed 01/25/2026 GAC\r\n"                                                                                                                                             
+[70] "Changed 3 spot dam from 3 in 6-10cm and 4 in 11-20cm to 1 in 6-10cm 01/24/2026 and deleted 3 BHW in 6-10cm and 13 in 11-20cm GAC"                                                                                                                               
+[71] "Graysby (23, 24)\r\nChanged Bar Ham from 3 in 11-20cm to 2 01/24/2026 GAC"                                                                                                                                                                                      
+[72] "Proofed 10/30/25\r\nProofed 01/24/2026 GAC"                                                                                                                                                                                                                     
+[73] "Proofed 10/30/25 ALG\r\nProofed 01/24/2026 GAC"                                                                                                                                                                                                                 
+[74] "Proofed 01/24/2025 GAC"                                                                                                                                                                                                                                         
+[75] "Proofed 10/31/25"                                                                                                                                                                                                                                               
+[76] "red hind = 55 cm \r\nhogfish = 35 cm \r\nlionfish = 25 cm \r\nProofed 11/3/25 ALG\r\nSWP no change"                                                                                                                                                             
+[77] "changed blue chromis 6-10cm from 6 to 18 -ALS"                                                                                                                                                                                                                  
+[78] "got rid of 1 in 6-10cm for schoolmaster -ALS"                                                                                                                                                                                                                   
+[79] "Proofed 11/3/25 ALG,\r\nstriped parrotfish changed it from 13 to 12 for 6-10cm -ALS"                                                                                                                                                                            
+[80] "lionfish - 35 and 30 cm (5 not in transect) \r\nProofed 11/3/25, changed 91 to 131 0-5cm blue chromis -ALS"                                                                                                                                                     
+[81] "added french grunt 1 (11-20cm) -ALS"                                                                                                                                                                                                                            
+[82] "cero 48cm, stoplight 2 changed it from 11-20cm to 21-30cm -ALS"                                                                                                                                                                                                 
+[83] "changed 2 french gr in 11-20cm to 1; and 3 3spot in 11-20cm to 1 01/25/2026 GAC"                                                                                                                                                                                
+[84] "lionfish (28)\r\nchanged longsnout butfl to reef butfl 01/25/2026 GAC"                                                                                                                                                                                          
+[85] "changed 3 rb pf to 2 in 21-30cm"                                                                                                                                                                                                                                
+[86] "changed BHW from 2 in 0-5cm, 6 in 6-10cm, 2 in 11-20cm to 1 in 0-5cm and 3 in 6-10cm and deleted the 11-20cm 01/25/2026 GAC"                                                                                                                                    
+[87] "cs"                                                                                                                                                                                                                                                             
+[88] "CLG Proof - 2/19/2026"                                                                                                                                                                                                                                          
+[89] "CLG Proof - 2/19/2026\r\nNurse Shark (140)"                                                                                                                                                                                                                     
+[90] "cs\r\nmoved the 10 for grunt spx from 6-10 to 0-5cm"                                                                                                                                                                                                            
+[91] "CLG Proof - 2/18/2026"                                                                                                                                                                                                                                          
+[92] "barracuda (61)\r\nCLG Proof - 2/18/2026"                                                                                                                                                                                                                        </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "SWP\r\nyellowbelly hamlet changed from 1 to 2"                                                                                                  
+ [2] "SWP \r\nadded trumpet fish for 1\r\nadded yellowtail snapper for 3 \r\nadded grays by for 2"                                                    
+ [3] "SWP \r\nno change"                                                                                                                              
+ [4] "proofed 02/23/26 ALS"                                                                                                                           
+ [5] "added doctorfish 2, changed spanish grunt from 1 to 2, added shy hamlet 2, changed yellowtail hamlet from 1 to 2, added sharpnose puffer 1 -ALS"
+ [6] "Proofed ALG 10/29/25\r\nproofed 02/23/26 ALS"                                                                                                   
+ [7] "fairy basslet changed it from 1 to 2, added blue striped grunt 1 -ALS"                                                                          
+ [8] "SWP no change"                                                                                                                                  
+ [9] "Red hind 55 cm \r\nSWP added fairy basslet-2\r\n"                                                                                               
+[10] "removed spanish grunt (no tick marks near it) -ALS"                                                                                             
+[11] "Proofed 10/29/25 ALG, proofed 02/23/26 ALS"                                                                                                     
+[12] "nassau size 55 &amp; 38, changed sunshine fish from 2 to 3 -ALS"                                                                                    
+[13] "Nassau (35), Cubera (105) &amp; (90), proofed 02/23/26 ALS"                                                                                         
+[14] "Red hind - 48cm\r\nNassaur - 54 and 45 cm \r\nCubera - 76cm \r\nProofed 10/29/25 ALG \r\nproofed 02/23/26 ALS"                                  
+[15] "Proofed 01/25/2026 GAC"                                                                                                                         
+[16] "SWP added squirrel fish\r\n"                                                                                                                    
+[17] "one 35 cm Nassau \r\nSWP no change"                                                                                                             
+[18] "added greenblotch parrot (3), added butter hamlet (1) -ALS"                                                                                     
+[19] "4 Nassau spotted throughout dive\r\ndeleted 3 eyebar goby 01/25/2026 GAC"                                                                       
+[20] "Proofed 01/25/2025 GAC"                                                                                                                         
+[21] "added 1 queen trigger 01/25/2026 GAC"                                                                                                           
+[22] "tiger = yellowfin (48 cm)\r\nProofed 10/31/25 ALG\r\nProofed 01/25/2026 GAC"                                                                    
+[23] "added 1 graysby and 3 french grunt 01/25/2026 GAC"                                                                                              
+[24] "lionfish - 35 and 20 cm \r\nnassau - 55 cm; big boy\r\nProofed 11/3/25 ALG\r\nSWP no change"                                                    
+[25] "sennets = rainbow runner -- oops \r\nblack jack = horse eye jack oops again \r\nProofed 11/3/25 ALG, proofed 02/23/26 ALS"                      
+[26] "added 2 queen trigger, 1 orangespotted file, and 1 bar jack 01/25/2026 GAC"                                                                     
+[27] "cs"                                                                                                                                             
+[28] "Nassau (28)"                                                                                                                                    
+[29] "CLG Proof - 2/18/2026"                                                                                                                          
+[30] "CLG Proofed - 2/18/2026"                                                                                                                        
+[31] "Nassau - 35 cm \r\nCLG Proof - 2/18/2026"                                                                                                       
+[32] "Nassau (31)"                                                                                                                                    </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="abundance" class="level1">
+<h1>Abundance</h1>
+<p>An observation is flagged if the number of fish observed is greater than the maximum number guideline.</p>
+<section id="transect-abundance" class="level2">
+<h2 class="anchored" data-anchor-id="transect-abundance">Transect Abundance</h2>
+<p>There were 2.9% of transect species flagged on abundance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 5. Observations from fish transects flagged on high abundance.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-abc7a09ee44c99913e8f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-abc7a09ee44c99913e8f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193"],["Buck Island STT","Buck Island STT","Buck Island STT","Buck Island STT","Buck Island STT","Buck Island STT","Buck Island STT","Buck Island STT","Buck Island STT","Flat Cay","Flat Cay","Flat Cay","Flat Cay","South Water","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Seahorse Cottage Shoal","St James","St James","St James","St James","St James","St James","St James","Grammanik Tiger FSA","Grammanik Tiger FSA","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Coral Bay","Fish Bay","Fish Bay","Fish Bay","Brewers Bay","Brewers Bay","Brewers Bay","Brewers Bay","Brewers Bay","Brewers Bay","Brewers Bay","College Shoal East","College Shoal East","College Shoal East","College Shoal East","College Shoal East","College Shoal East","College Shoal East","College Shoal East","College Shoal East","College Shoal East","Grammanik Tiger FSA","Grammanik Tiger FSA","Botany Bay","Botany Bay","Botany Bay","Botany Bay","Botany Bay","Botany Bay","Botany Bay","Botany Bay","Botany Bay","Magens Bay","Magens Bay","Magens Bay","Magens Bay","Magens Bay","Magens Bay","Magens Bay","Savana","Savana","Savana","Savana","Savana","Savana","Savana","Savana","Savana","Savana","Meri Shoal","Meri Shoal","Meri Shoal","Black Point","Black Point","Black Point","Black Point","Black Point","Black Point","Brewers Bay","Brewers Bay","College Shoal East","College Shoal East","South Capella","South Capella","South Capella","South Capella","Buck Island STX","Buck Island STX","Buck Island STX Deep","Buck Island STX Deep","Buck Island STX Deep","Buck Island STX Deep","Jacks Bay","Lang Bank Red Hind FSA","Lang Bank Red Hind FSA","Lang Bank Red Hind FSA","Lang Bank Red Hind FSA","Lang Bank Red Hind FSA","Lang Bank Red Hind FSA","Lang Bank Red Hind FSA","Eagle Ray","Eagle Ray","Eagle Ray","Eagle Ray","Salt River Deep","Salt River Deep","Salt River Deep","Salt River West","Salt River West","Salt River West","Salt River West","Salt River West","Salt River West","Salt River West","Salt River West","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Kings Corner","Mutton Snapper FSA","Mutton Snapper FSA","Mutton Snapper FSA","Sprat Hole","Sprat Hole","Sprat Hole","Sprat Hole","Sprat Hole","Sprat Hole","Sprat Hole","Sprat Hole","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Great Pond","Cane Bay","Cane Bay","Cane Bay","Cane Bay","Cane Bay","Cane Bay","Cane Bay","Cane Bay","Cane Bay Deep"],[5,6,6,6,7,8,8,9,9,2,3,5,9,4,1,2,3,4,5,6,7,7,7,5,7,7,7,6,6,6,6,6,8,9,6,7,1,1,1,2,2,2,4,5,7,8,8,9,9,2,8,9,1,1,4,5,6,6,6,1,3,3,3,3,4,4,5,6,6,8,9,4,5,6,6,6,6,8,8,9,4,4,5,6,8,8,9,4,5,5,6,6,7,7,8,9,9,1,2,3,1,1,2,4,5,9,7,9,7,8,1,4,6,7,3,3,3,4,4,9,1,3,3,4,6,7,7,7,1,3,7,7,6,7,9,1,2,2,4,4,5,6,7,2,3,5,7,8,8,8,8,9,9,9,9,9,2,8,9,1,1,2,4,5,6,6,6,1,1,1,1,2,3,3,3,3,3,4,4,4,4,5,6,6,1,2,5,6,6,6,7,8,6],["PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","HOLLANDER_ERIN","SHELBY_ADELINE","QUETEL_JASON","ARRINGTON_BRAD","SHELBY_ADELINE","GRETTA_ABIGAIL","GRETTA_ABIGAIL","DADE_LINDSAY","DADE_LINDSAY","MAXIN_STEFANIE","HOLLANDER_ERIN","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","DADE_LINDSAY","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","PARR_SPENCER","HOLLANDER_ERIN","ONEILL_GREG","ONEILL_GREG","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","GRETTA_ABIGAIL","SHELBY_ADELINE","ONEILL_GREG","ONEILL_GREG","ONEILL_GREG","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","ONEILL_GREG","ONEILL_GREG","ONEILL_GREG","ONEILL_GREG","SHELBY_ADELINE","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","GRETTA_ABIGAIL","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","KADISON_SHAUN","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","STROBEL_DAVIS","STROBEL_DAVIS","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","SHELBY_ADELINE","SHELBY_ADELINE","SHELBY_ADELINE","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","SHELBY_ADELINE","GRETTA_ABIGAIL","SHELBY_ADELINE","SHELBY_ADELINE","GRETTA_ABIGAIL","HOLLANDER_ERIN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","DADE_LINDSAY","DADE_LINDSAY","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","QUETEL_JASON","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","DADE_LINDSAY","KADISON_SHAUN","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","QUETEL_JASON","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","HOLLANDER_ERIN","HOLLANDER_ERIN","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","QUETEL_JASON","QUETEL_JASON","KADISON_SHAUN","DADE_LINDSAY","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","KADISON_SHAUN","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","QUETEL_JASON","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","KADISON_SHAUN","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","KADISON_SHAUN","KADISON_SHAUN","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL"],["Chromis multilineata","Chromis cyanea","Chromis multilineata","Scarus taeniopterus","Chromis multilineata","Holocentrus rufus","Halichoeres garnoti","Chromis cyanea","Chromis multilineata","Chromis multilineata","Holacanthus tricolor","Chromis multilineata","Holocentrus rufus","Stegastes partitus","Sparisoma rubripinne","Stegastes variabilis","Sparisoma rubripinne","Stegastes adustus","Sparisoma rubripinne","Stegastes diencaeus","Stegastes adustus","Thalassoma bifasciatum","Microspathodon chrysurus","Sphyraena picudilla","Stegastes partitus","Halichoeres garnoti","Scarus taeniopterus","Balistes vetula","Anisotremus surinamensis","Halichoeres garnoti","Lutjanus griseus","Pseudupeneus maculatus","Epinephelus striatus","Balistes vetula","Coryphopterus personatus","Chromis cyanea","Scarus iseri","Pseudupeneus maculatus","Haemulon sp.","Scarus iseri","Stegastes planifrons","Haemulon macrostomum","Scarus iseri","Scarus iseri","Stegastes planifrons","Stegastes planifrons","Scarus iseri","Stegastes planifrons","Scarus iseri","Pseudupeneus maculatus","Scarus iseri","Pseudupeneus maculatus","Sparisoma aurofrenatum","Scarus iseri","Stegastes diencaeus","Scarus iseri","Stegastes planifrons","Scarus iseri","Holocentrus rufus","Balistes vetula","Canthidermis sufflamen","Scarus taeniopterus","Clepticus parrae","Cephalopholis cruentata","Canthidermis sufflamen","Clepticus parrae","Canthidermis sufflamen","Canthidermis sufflamen","Clepticus parrae","Lutjanus cyanopterus","Lutjanus cyanopterus","Stegastes adustus","Stegastes adustus","Stegastes leucostictus","Haemulon chrysargyreum","Stegastes adustus","Chromis multilineata","Chromis cyanea","Scarus iseri","Scarus iseri","Stegastes adustus","Stegastes variabilis","Stegastes adustus","Stegastes adustus","Scarus iseri","Odontoscion dentex","Scarus iseri","Stegastes adustus","Halichoeres garnoti","Stegastes adustus","Chromis multilineata","Thalassoma bifasciatum","Caranx ruber","Trachinotus goodei","Gramma loreto","Epinephelus striatus","Gramma loreto","Scarus iseri","Stegastes partitus","Scarus iseri","Stegastes diencaeus","Scarus iseri","Scarus iseri","Scarus iseri","Scarus iseri","Scarus iseri","Scarus iseri","Stegastes diencaeus","Scarus taeniopterus","Scarus taeniopterus","Haemulon vittatum","Chromis cyanea","Elagatis bipinnulata","Clepticus parrae","Halichoeres garnoti","Scarus iseri","Clepticus parrae","Stegastes partitus","Chromis cyanea","Chromis cyanea","Stegastes partitus","Scarus iseri","Scarus taeniopterus","Clepticus parrae","Lutjanus mahogoni","Thalassoma bifasciatum","Stegastes partitus","Clepticus parrae","Myripristis jacobus","Myripristis jacobus","Thalassoma bifasciatum","Haemulon macrostomum","Gramma loreto","Gramma loreto","Gramma loreto","Acanthurus coeruleus","Clepticus parrae","Stegastes partitus","Stegastes partitus","Chromis multilineata","Stegastes partitus","Stegastes partitus","Stegastes partitus","Stegastes partitus","Myripristis jacobus","Stegastes partitus","Stegastes partitus","Myripristis jacobus","Chromis multilineata","Chromis cyanea","Stegastes partitus","Myripristis jacobus","Chromis multilineata","Chromis cyanea","Stegastes partitus","Chaetodipterus faber","Stegastes partitus","Stegastes partitus","Stegastes partitus","Stegastes partitus","Gramma loreto","Stegastes partitus","Chromis cyanea","Chromis cyanea","Stegastes partitus","Chromis cyanea","Gramma loreto","Halichoeres bivittatus","Thalassoma bifasciatum","Stegastes adustus","Microspathodon chrysurus","Halichoeres bivittatus","Thalassoma bifasciatum","Halichoeres bivittatus","Stegastes planifrons","Halichoeres maculipinna","Stegastes adustus","Thalassoma bifasciatum","Stegastes adustus","Halichoeres bivittatus","Halichoeres maculipinna","Thalassoma bifasciatum","Thalassoma bifasciatum","Acanthurus bahianus","Chromis cyanea","Chromis cyanea","Chromis cyanea","Stegastes diencaeus","Chromis cyanea","Chromis multilineata","Clepticus parrae","Chromis cyanea","Chromis cyanea"],["brown chromis","blue chromis","brown chromis","princess parrotfish","brown chromis","longspine squirrelfish","yellowhead wrasse","blue chromis","brown chromis","brown chromis","rock beauty","brown chromis","longspine squirrelfish","bicolor damselfish","yellowtail parrotfish","cocoa damselfish","yellowtail parrotfish","dusky damselfish","yellowtail parrotfish","longfin damselfish","dusky damselfish","bluehead wrasse","yellowtail damselfish","southern sennet","bicolor damselfish","yellowhead wrasse","princess parrotfish","queen triggerfish","black margate","yellowhead wrasse","gray snapper","spotted goatfish","Nassau grouper","queen triggerfish","masked goby","blue chromis","striped parrotfish","spotted goatfish","grunt species","striped parrotfish","threespot damselfish","Spanish grunt","striped parrotfish","striped parrotfish","threespot damselfish","threespot damselfish","striped parrotfish","threespot damselfish","striped parrotfish","spotted goatfish","striped parrotfish","spotted goatfish","redband parrotfish","striped parrotfish","longfin damselfish","striped parrotfish","threespot damselfish","striped parrotfish","longspine squirrelfish","queen triggerfish","ocean triggerfish","princess parrotfish","creole wrasse","graysby","ocean triggerfish","creole wrasse","ocean triggerfish","ocean triggerfish","creole wrasse","cubera snapper","cubera snapper","dusky damselfish","dusky damselfish","beaugregory","smallmouth grunt","dusky damselfish","brown chromis","blue chromis","striped parrotfish","striped parrotfish","dusky damselfish","cocoa damselfish","dusky damselfish","dusky damselfish","striped parrotfish","reef croaker","striped parrotfish","dusky damselfish","yellowhead wrasse","dusky damselfish","brown chromis","bluehead wrasse","bar jack","palometa","fairy basslet","Nassau grouper","fairy basslet","striped parrotfish","bicolor damselfish","striped parrotfish","longfin damselfish","striped parrotfish","striped parrotfish","striped parrotfish","striped parrotfish","striped parrotfish","striped parrotfish","longfin damselfish","princess parrotfish","princess parrotfish","boga","blue chromis","rainbow runner","creole wrasse","yellowhead wrasse","striped parrotfish","creole wrasse","bicolor damselfish","blue chromis","blue chromis","bicolor damselfish","striped parrotfish","princess parrotfish","creole wrasse","mahogany snapper","bluehead wrasse","bicolor damselfish","creole wrasse","blackbar soldierfish","blackbar soldierfish","bluehead wrasse","Spanish grunt","fairy basslet","fairy basslet","fairy basslet","blue tang","creole wrasse","bicolor damselfish","bicolor damselfish","brown chromis","bicolor damselfish","bicolor damselfish","bicolor damselfish","bicolor damselfish","blackbar soldierfish","bicolor damselfish","bicolor damselfish","blackbar soldierfish","brown chromis","blue chromis","bicolor damselfish","blackbar soldierfish","brown chromis","blue chromis","bicolor damselfish","Atlantic spadefish","bicolor damselfish","bicolor damselfish","bicolor damselfish","bicolor damselfish","fairy basslet","bicolor damselfish","blue chromis","blue chromis","bicolor damselfish","blue chromis","fairy basslet","slippery dick","bluehead wrasse","dusky damselfish","yellowtail damselfish","slippery dick","bluehead wrasse","slippery dick","threespot damselfish","clown wrasse","dusky damselfish","bluehead wrasse","dusky damselfish","slippery dick","clown wrasse","bluehead wrasse","bluehead wrasse","ocean surgeonfish","blue chromis","blue chromis","blue chromis","longfin damselfish","blue chromis","brown chromis","creole wrasse","blue chromis","blue chromis"],[120,121,140,31,105,19,33,125,105,112,13,201,36,90,20,16,15,21,38,11,90,120,13,110,85,56,26,15,7,27,270,25,3,17,2000,132,64,23,400,173,26,22,70,66,29,78,104,28,80,25,76,30,40,88,15,83,163,69,16,28,70,80,402,12,120,1213,81,45,280,66,13,26,20,25,60,25,143,280,65,75,19,21,43,30,71,13,67,16,35,16,140,180,140,30,24,3,21,101,90,124,11,79,72,78,72,71,104,12,26,31,400,168,150,400,28,157,250,110,320,102,86,64,32,800,40,119,74,300,41,50,133,20,40,54,29,85,800,115,77,152,77,83,73,122,29,80,78,58,175,164,102,52,213,169,197,35,140,145,87,79,28,79,108,150,120,150,23,51,121,35,14,62,270,127,40,58,39,116,40,165,36,293,124,94,165,295,113,18,125,117,480,105,101],[100,100,100,25,100,10,25,100,100,100,10,100,10,70,10,15,10,15,10,10,15,110,10,20,70,25,25,10,5,25,100,10,2,10,500,100,60,10,250,60,25,10,60,60,25,25,60,25,60,10,60,10,25,60,10,60,25,60,10,10,30,25,200,5,30,200,30,30,200,5,5,15,15,10,50,15,100,100,60,60,15,15,15,15,60,10,60,15,25,15,100,110,100,25,20,2,20,60,70,60,10,60,60,60,60,60,60,10,25,25,200,100,100,200,25,60,200,70,100,100,70,60,25,200,15,110,70,200,20,20,110,10,20,20,20,50,200,70,70,100,70,70,70,70,20,70,70,20,100,100,70,20,100,100,70,30,70,70,70,70,20,70,100,100,70,100,20,50,110,15,10,50,110,50,25,25,15,110,15,50,25,110,110,50,100,100,100,10,100,100,200,100,100],[20,21,40,6,5,9,8,25,5,12,3,101,26,20,10,1,5,6,28,1,75,10,3,90,15,31,1,5,2,2,170,15,1,7,1500,32,4,13,150,113,1,12,10,6,4,53,44,3,20,15,16,20,15,28,5,23,138,9,6,18,40,55,202,7,90,1013,51,15,80,61,8,11,5,15,10,10,43,180,5,15,4,6,28,15,11,3,7,1,10,1,40,70,40,5,4,1,1,41,20,64,1,19,12,18,12,11,44,2,1,6,200,68,50,200,3,97,50,40,220,2,16,4,7,600,25,9,4,100,21,30,23,10,20,34,9,35,600,45,7,52,7,13,3,52,9,10,8,38,75,64,32,32,113,69,127,5,70,75,17,9,8,9,8,50,50,50,3,1,11,20,4,12,160,77,15,33,24,6,25,115,11,183,14,44,65,195,13,8,25,17,280,5,1],[0.2,0.2,0.4,0.2,0,0.9,0.3,0.2,0,0.1,0.3,1,2.6,0.3,1,0.1,0.5,0.4,2.8,0.1,5,0.1,0.3,4.5,0.2,1.2,0,0.5,0.4,0.1,1.7,1.5,0.5,0.7,3,0.3,0.1,1.3,0.6,1.9,0,1.2,0.2,0.1,0.2,2.1,0.7,0.1,0.3,1.5,0.3,2,0.6,0.5,0.5,0.4,5.5,0.1,0.6,1.8,1.3,2.2,1,1.4,3,5.1,1.7,0.5,0.4,12.2,1.6,0.7,0.3,1.5,0.2,0.7,0.4,1.8,0.1,0.2,0.3,0.4,1.9,1,0.2,0.3,0.1,0.1,0.4,0.1,0.4,0.6,0.4,0.2,0.2,0.5,0,0.7,0.3,1.1,0.1,0.3,0.2,0.3,0.2,0.2,0.7,0.2,0,0.2,1,0.7,0.5,1,0.1,1.6,0.2,0.6,2.2,0,0.2,0.1,0.3,3,1.7,0.1,0.1,0.5,1,1.5,0.2,1,1,1.7,0.4,0.7,3,0.6,0.1,0.5,0.1,0.2,0,0.7,0.4,0.1,0.1,1.9,0.8,0.6,0.5,1.6,1.1,0.7,1.8,0.2,1,1.1,0.2,0.1,0.4,0.1,0.1,0.5,0.7,0.5,0.1,0,0.1,1.3,0.4,0.2,1.5,1.5,0.6,1.3,1.6,0.1,1.7,2.3,0.4,1.7,0.1,0.9,0.7,2,0.1,0.8,0.2,0.2,1.4,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>Scientific name<\/th>\n      <th>Common name<\/th>\n      <th>Total<\/th>\n      <th>MaxNum<\/th>\n      <th>Diff<\/th>\n      <th>RelDiff<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,6,7,8,9]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Rep","targets":2},{"name":"Name","targets":3},{"name":"Scientific name","targets":4},{"name":"Common name","targets":5},{"name":"Total","targets":6},{"name":"MaxNum","targets":7},{"name":"Diff","targets":8},{"name":"RelDiff","targets":9}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 6. Fish species that were most frequently flagged on abundance in transects. We might want to change the max number on these.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-a21da92af3bc9c9a419f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a21da92af3bc9c9a419f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44"],["striped parrotfish","bicolor damselfish","blue chromis","dusky damselfish","brown chromis","bluehead wrasse","creole wrasse","fairy basslet","princess parrotfish","threespot damselfish","blackbar soldierfish","longfin damselfish","yellowhead wrasse","ocean triggerfish","slippery dick","spotted goatfish","longspine squirrelfish","queen triggerfish","yellowtail parrotfish","Nassau grouper","Spanish grunt","clown wrasse","cocoa damselfish","cubera snapper","yellowtail damselfish","Atlantic spadefish","bar jack","beaugregory","black margate","blue tang","boga","gray snapper","graysby","grunt species","mahogany snapper","masked goby","ocean surgeonfish","palometa","rainbow runner","redband parrotfish","reef croaker","rock beauty","smallmouth grunt","southern sennet"],[60,70,100,15,100,110,200,20,25,25,20,10,25,30,50,10,10,10,10,2,10,25,15,5,10,30,100,10,5,50,200,100,5,250,15,500,50,25,100,25,10,10,50,20],[24,22,18,13,12,9,9,7,6,6,5,5,5,4,4,4,3,3,3,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Common name<\/th>\n      <th>MaxNum<\/th>\n      <th>Flags<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Common name","targets":1},{"name":"MaxNum","targets":2},{"name":"Flags","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 7. Divers who were most frequently flagged on high abundance in transects. They might be overestimating counts.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-8d2279d7e268bedc4286" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8d2279d7e268bedc4286">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11"],["PARR_SPENCER","KADISON_SHAUN","MAXIN_STEFANIE","STROBEL_DAVIS","ONEILL_GREG","HOLLANDER_ERIN","DADE_LINDSAY","GRETTA_ABIGAIL","SHELBY_ADELINE","QUETEL_JASON","ARRINGTON_BRAD"],[24,64,11,2,9,19,19,28,10,6,1],[340,1151,195,36,183,602,1038,1284,658,415,750],[7,6,6,6,5,3,2,2,2,1,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Name<\/th>\n      <th>Flags<\/th>\n      <th>Observations<\/th>\n      <th>PercentFlagged<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Name","targets":1},{"name":"Flags","targets":2},{"name":"Observations","targets":3},{"name":"PercentFlagged","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="rover-abundance" class="level2">
+<h2 class="anchored" data-anchor-id="rover-abundance">Rover Abundance</h2>
+<p>Indices are converted to the low end of the count bin (1 = 1, 2 = 2, 3 = 10, 4 = 100, 5 = 1000) before comparing to maximum count guideline.</p>
+<p>There were 1.7% of rover species flagged on abundance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 8. Observations from fish rovers flagged on high abundance.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-c26fc1c6939e8e2965e5" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c26fc1c6939e8e2965e5">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53"],["Buck Island STT","Flat Cay","South Water","South Water","Coculus Rock","Coculus Rock","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Seahorse Cottage Shoal","St James","Grammanik Tiger FSA","Botany Bay","Botany Bay","Botany Bay","Magens Bay","Magens Bay","Savana","Meri Shoal","Meri Shoal","Black Point","College Shoal East","College Shoal East","College Shoal East","South Capella","South Capella","Buck Island STX","Buck Island STX","Buck Island STX Deep","Jacks Bay","Jacks Bay","Jacks Bay","Eagle Ray","Salt River West","Salt River West","Salt River West","Salt River West","Kings Corner","Kings Corner","Kings Corner","Mutton Snapper FSA","Mutton Snapper FSA","Sprat Hole","Sprat Hole","Sprat Hole","Castle","Castle","Castle","Great Pond","Great Pond","Great Pond","Lang Bank EEMP","Lang Bank EEMP","Cane Bay"],[3,1,1,3,1,2,1,2,2,2,3,1,1,1,1,1,1,3,3,1,1,2,2,1,2,1,2,2,1,2,2,1,1,1,2,3,1,2,2,2,3,1,2,3,2,2,2,1,1,3,1,3,2],["PARR_SPENCER","QUETEL_JASON","QUETEL_JASON","DADE_LINDSAY","PARR_SPENCER","HOLLANDER_ERIN","HOLLANDER_ERIN","SHELBY_ADELINE","SHELBY_ADELINE","HOLLANDER_ERIN","GRETTA_ABIGAIL","STROBEL_DAVIS","STROBEL_DAVIS","STROBEL_DAVIS","STROBEL_DAVIS","STROBEL_DAVIS","STROBEL_DAVIS","SHELBY_ADELINE","SHELBY_ADELINE","SHELBY_ADELINE","GRETTA_ABIGAIL","SHELBY_ADELINE","SHELBY_ADELINE","SHELBY_ADELINE","GRETTA_ABIGAIL","SMITH_TYLER","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","GRETTA_ABIGAIL","GRETTA_ABIGAIL","DADE_LINDSAY","SHELBY_ADELINE","SHELBY_ADELINE","QUETEL_JASON","KADISON_SHAUN","DADE_LINDSAY","HOLLANDER_ERIN","HOLLANDER_ERIN","DADE_LINDSAY","GRETTA_ABIGAIL","GRETTA_ABIGAIL","QUETEL_JASON","KADISON_SHAUN","SHELBY_ADELINE","SHELBY_ADELINE","SHELBY_ADELINE","DADE_LINDSAY","DADE_LINDSAY","HOLLANDER_ERIN","QUETEL_JASON","KADISON_SHAUN","DADE_LINDSAY"],["Halichoeres garnoti","Cephalopholis cruentata","Stegastes partitus","Stegastes partitus","Stegastes adustus","Halichoeres bivittatus","Stegastes partitus","Acanthurus coeruleus","Stegastes partitus","Stegastes partitus","Cephalopholis cruentata","Halichoeres radiatus","Cephalopholis fulva","Cephalopholis cruentata","Hypoplectrus puella","Hypoplectrus chlorurus","Halichoeres radiatus","Stegastes partitus","Scarus iseri","Scarus iseri","Stegastes partitus","Stegastes partitus","Scarus taeniopterus","Stegastes partitus","Stegastes partitus","Scarus vetula","Stegastes partitus","Stegastes partitus","Halichoeres bivittatus","Stegastes partitus","Halichoeres bivittatus","Stegastes partitus","Stegastes partitus","Cephalopholis fulva","Stegastes partitus","Bodianus rufus","Stegastes partitus","Myripristis jacobus","Stegastes partitus","Stegastes partitus","Stegastes partitus","Stegastes partitus","Stegastes partitus","Scarus iseri","Acanthurus bahianus","Stegastes partitus","Scarus iseri","Stegastes partitus","Stegastes adustus","Halichoeres radiatus","Melichthys niger","Scarus iseri","Scarus taeniopterus"],["yellowhead wrasse","graysby","bicolor damselfish","bicolor damselfish","dusky damselfish","slippery dick","bicolor damselfish","blue tang","bicolor damselfish","bicolor damselfish","graysby","puddingwife","coney","graysby","barred hamlet","yellowtail hamlet","puddingwife","bicolor damselfish","striped parrotfish","striped parrotfish","bicolor damselfish","bicolor damselfish","princess parrotfish","bicolor damselfish","bicolor damselfish","queen parrotfish","bicolor damselfish","bicolor damselfish","slippery dick","bicolor damselfish","slippery dick","bicolor damselfish","bicolor damselfish","coney","bicolor damselfish","Spanish hogfish","bicolor damselfish","blackbar soldierfish","bicolor damselfish","bicolor damselfish","bicolor damselfish","bicolor damselfish","bicolor damselfish","striped parrotfish","ocean surgeonfish","bicolor damselfish","striped parrotfish","bicolor damselfish","dusky damselfish","puddingwife","black durgon","striped parrotfish","princess parrotfish"],[4,3,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,4,3,4,4,4,4,4,4,4,4,4,4,4,4,4,3,4,4,4],[25,5,70,70,15,50,70,50,70,70,5,5,5,5,5,5,5,70,60,60,70,70,25,70,70,10,70,70,50,70,50,70,70,5,70,5,70,20,70,70,70,70,70,60,50,70,60,70,15,5,50,60,25],[75,5,30,30,85,50,30,50,30,30,5,5,5,5,5,5,5,30,40,40,30,30,75,30,30,90,30,30,50,30,50,30,30,5,30,5,30,80,30,30,30,30,30,40,50,30,40,30,85,5,50,40,75],[3,1,0.4,0.4,5.7,1,0.4,1,0.4,0.4,1,1,1,1,1,1,1,0.4,0.7,0.7,0.4,0.4,3,0.4,0.4,9,0.4,0.4,1,0.4,1,0.4,0.4,1,0.4,1,0.4,4,0.4,0.4,0.4,0.4,0.4,0.7,1,0.4,0.7,0.4,5.7,1,1,0.7,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>Scientific name<\/th>\n      <th>Common name<\/th>\n      <th>Abundance index<\/th>\n      <th>MaxNum<\/th>\n      <th>Diff<\/th>\n      <th>RelDiff<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,6,7,8,9]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Rep","targets":2},{"name":"Name","targets":3},{"name":"Scientific name","targets":4},{"name":"Common name","targets":5},{"name":"Abundance index","targets":6},{"name":"MaxNum","targets":7},{"name":"Diff","targets":8},{"name":"RelDiff","targets":9}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 9. Fish species that were most frequently flagged on abundance in rovers. We might want to change the max number on these.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-57a1d62613f25c0ad8c4" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-57a1d62613f25c0ad8c4">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],["bicolor damselfish","striped parrotfish","graysby","puddingwife","slippery dick","coney","dusky damselfish","princess parrotfish","Spanish hogfish","barred hamlet","black durgon","blackbar soldierfish","blue tang","ocean surgeonfish","queen parrotfish","yellowhead wrasse","yellowtail hamlet"],[70,60,5,5,50,5,15,25,5,5,50,20,50,50,10,25,5],[24,5,3,3,3,2,2,2,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Common name<\/th>\n      <th>MaxNum<\/th>\n      <th>Flags<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Common name","targets":1},{"name":"MaxNum","targets":2},{"name":"Flags","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 10. Divers who were most frequently flagged on high abundance in rovers. They might be overestimating counts.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ad150313c2fe79d49d7d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ad150313c2fe79d49d7d">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9"],["STROBEL_DAVIS","SHELBY_ADELINE","PARR_SPENCER","DADE_LINDSAY","GRETTA_ABIGAIL","HOLLANDER_ERIN","QUETEL_JASON","KADISON_SHAUN","SMITH_TYLER"],[6,13,2,7,7,9,5,3,1],[121,316,74,455,291,492,244,366,88],[5,4,3,2,2,2,2,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Name<\/th>\n      <th>Flags<\/th>\n      <th>Observations<\/th>\n      <th>PercentFlagged<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Name","targets":1},{"name":"Flags","targets":2},{"name":"Observations","targets":3},{"name":"PercentFlagged","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="transect-sizing" class="level1">
+<h1>Transect Sizing</h1>
+<p>We use size bins to estimate fish lengths, and we have a maximum and minimum size guideline for each species. An observation is flagged if the small end of the bin is larger than the max size for the species, or the large end of the bin is smaller than the min size for the species.</p>
+<p>There were 0.5% of transect observations flagged on size.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 11. Observations from fish transects flagged on small or large size.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-970b34f8b915d21ea492" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-970b34f8b915d21ea492">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49"],["Buck Island STT","Buck Island STT","Flat Cay","Flat Cay","Hind Bank East FSA","Hind Bank East FSA","South Water","Coculus Rock","Coculus Rock","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Seahorse Cottage Shoal","St James","St James","St James","St James","Grammanik Tiger FSA","Grammanik Tiger FSA","Brewers Bay","Brewers Bay","Botany Bay","Magens Bay","Magens Bay","Magens Bay","Magens Bay","Savana","Savana","Meri Shoal","Brewers Bay","College Shoal East","South Capella","South Capella","South Capella","Buck Island STX","Buck Island STX","Buck Island STX Deep","Jacks Bay","Jacks Bay","Lang Bank Red Hind FSA","Eagle Ray","Salt River Deep","Salt River Deep","Mutton Snapper FSA","Sprat Hole","Castle","Castle","Cane Bay Deep"],[1,3,3,4,6,7,7,5,8,3,5,6,6,7,1,4,5,6,7,7,2,4,1,2,2,2,4,1,3,6,9,8,2,3,4,7,8,5,2,4,9,6,8,9,5,5,3,4,2],["HOLLANDER_ERIN","HOLLANDER_ERIN","SHELBY_ADELINE","SHELBY_ADELINE","ARRINGTON_BRAD","ARRINGTON_BRAD","DADE_LINDSAY","MAXIN_STEFANIE","SHELBY_ADELINE","SHELBY_ADELINE","DADE_LINDSAY","MAXIN_STEFANIE","MAXIN_STEFANIE","PARR_SPENCER","GRETTA_ABIGAIL","SHELBY_ADELINE","SHELBY_ADELINE","MAXIN_STEFANIE","ONEILL_GREG","ONEILL_GREG","ONEILL_GREG","SHELBY_ADELINE","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","GRETTA_ABIGAIL","PARR_SPENCER","GRETTA_ABIGAIL","GRETTA_ABIGAIL","SHELBY_ADELINE","SHELBY_ADELINE","SHELBY_ADELINE","SHELBY_ADELINE","GRETTA_ABIGAIL","GRETTA_ABIGAIL","ARRINGTON_BRAD","ARRINGTON_BRAD","ARRINGTON_BRAD","DADE_LINDSAY","QUETEL_JASON","SHELBY_ADELINE","ARRINGTON_BRAD","QUETEL_JASON","QUETEL_JASON","ARRINGTON_BRAD","KADISON_SHAUN","SHELBY_ADELINE","SHELBY_ADELINE","DADE_LINDSAY"],["goldentail moray","graysby","reef squirrelfish","bicolor damselfish","longsnout butterflyfish","longsnout butterflyfish","bicolor damselfish","yellowhead wrasse","redband parrotfish","bicolor damselfish","yellowhead wrasse","longjaw squirrelfish","gray snapper","redband parrotfish","harlequin bass","bicolor damselfish","harlequin bass","French grunt","blackbar soldierfish","bicolor damselfish","striped parrotfish","beaugregory","harlequin bass","redband parrotfish","French grunt","graysby","redband parrotfish","bluestriped lizardfish","redband parrotfish","bicolor damselfish","beaugregory","bicolor damselfish","bicolor damselfish","beaugregory","bicolor damselfish","white margate","blackear wrasse","yellowtail parrotfish","yellowhead wrasse","mahogany snapper","harlequin bass","harlequin bass","dog snapper","Nassau grouper","harlequin bass","yellowhead wrasse","harlequin bass","bicolor damselfish","bantam bass"],["61-70","0-5","21-30","11-20","11-20","11-20","11-20","21-30","31-40","11-20","21-30","21-30","71-80","31-40","11-20","11-20","11-20","31-40","31-40","11-20","31-40","11-20","11-20","31-40","31-40","31-40","31-40","41-50","31-40","11-20","11-20","11-20","11-20","11-20","11-20","11-20","21-30","0-5","21-30","6-10","11-20","11-20","11-20","11-20","11-20","21-30","11-20","11-20","6-10"],[2,1,1,2,1,1,5,1,1,1,1,1,1,1,1,1,1,1,2,10,1,4,2,1,1,1,1,1,1,2,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,2,2,1,4],[20,8,5,2,2,2,2,2,2,2,2,5,10,2,3,2,3,3,5,2,2,2,3,2,3,8,2,2,2,2,2,2,2,2,2,25,2,10,2,15,3,3,30,30,3,2,3,2,1],[60,30,14,10,9,9,10,20,28,10,20,18,60,28,10,10,10,30,22,10,25,10,10,28,30,30,28,25,28,10,10,10,10,10,10,69,20,46,20,38,10,10,91,122,10,20,10,10,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>Common name<\/th>\n      <th>SizeBin<\/th>\n      <th>Count<\/th>\n      <th>MinSize<\/th>\n      <th>MaxSize<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,6,7,8]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Rep","targets":2},{"name":"Name","targets":3},{"name":"Common name","targets":4},{"name":"SizeBin","targets":5},{"name":"Count","targets":6},{"name":"MinSize","targets":7},{"name":"MaxSize","targets":8}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 12. Fish species that were most frequently flagged on size in transects. We might want to change the size guidelines on these.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-7f60c667e89d2776cadf" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-7f60c667e89d2776cadf">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["bicolor damselfish","harlequin bass","redband parrotfish","yellowhead wrasse","beaugregory","French grunt","longsnout butterflyfish","Nassau grouper","bantam bass","blackbar soldierfish","blackear wrasse","bluestriped lizardfish","dog snapper","goldentail moray","gray snapper","graysby","graysby","longjaw squirrelfish","mahogany snapper","reef squirrelfish","striped parrotfish","white margate","yellowtail parrotfish"],["11-20","11-20","31-40","21-30","11-20","31-40","11-20","11-20","6-10","31-40","21-30","41-50","11-20","61-70","71-80","0-5","31-40","21-30","6-10","21-30","31-40","11-20","0-5"],[2,3,2,2,2,3,2,30,1,5,2,2,30,20,10,8,8,5,15,5,2,25,10],[10,10,28,20,10,30,9,122,4,22,20,25,91,60,60,30,30,18,38,14,25,69,46],[10,7,5,4,3,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Common name<\/th>\n      <th>SizeBin<\/th>\n      <th>MinSize<\/th>\n      <th>MaxSize<\/th>\n      <th>Flags<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Common name","targets":1},{"name":"SizeBin","targets":2},{"name":"MinSize","targets":3},{"name":"MaxSize","targets":4},{"name":"Flags","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 13. Divers who were most frequently flagged on sizes in transects. They might be under- or over-sizing.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ff985de98a950dc2429b" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ff985de98a950dc2429b">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["MAXIN_STEFANIE","ONEILL_GREG","SHELBY_ADELINE","ARRINGTON_BRAD","GRETTA_ABIGAIL","PARR_SPENCER","QUETEL_JASON","DADE_LINDSAY","HOLLANDER_ERIN","KADISON_SHAUN"],[4,3,14,7,9,2,3,4,2,1],[195,183,658,750,1284,340,415,1038,602,1151],[2,2,2,1,1,1,1,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Name<\/th>\n      <th>Flags<\/th>\n      <th>Observations<\/th>\n      <th>PercentFlagged<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Name","targets":1},{"name":"Flags","targets":2},{"name":"Observations","targets":3},{"name":"PercentFlagged","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TCRMP_2025_Fish_QAQC_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure 1. A closer look at each diver’s overall distribution of observed sizes. Look for trends in under- or over-sizing.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="species-richness" class="level1">
+<h1>Species Richness</h1>
+<section id="transects" class="level2">
+<h2 class="anchored" data-anchor-id="transects">Transects</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 14. Summary statistics for number of fish species seen on transects for each diver. Check if they need to learn more ID or may be inflating transect size.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e7a13f4b2ea4622ef2db" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e7a13f4b2ea4622ef2db">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11"],["ARRINGTON_BRAD","DADE_LINDSAY","GRETTA_ABIGAIL","HOLLANDER_ERIN","KADISON_SHAUN","MAXIN_STEFANIE","ONEILL_GREG","PARR_SPENCER","QUETEL_JASON","SHELBY_ADELINE","STROBEL_DAVIS"],[42,40,54,24,58,6,9,13,18,32,1],[17.86,25.95,23.78,25.08,19.84,32.5,20.33,26.15,23.06,20.56,36],[4.39,4.21,4.79,4.83,4.63,2.59,3.74,3.8,5.16,4.48,null],[8,17,14,17,8,29,14,21,14,12,36],[28,34,35,35,31,36,27,31,33,30,36]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Name<\/th>\n      <th>n<\/th>\n      <th>mean<\/th>\n      <th>sd<\/th>\n      <th>min<\/th>\n      <th>max<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Name","targets":1},{"name":"n","targets":2},{"name":"mean","targets":3},{"name":"sd","targets":4},{"name":"min","targets":5},{"name":"max","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="rovers" class="level2">
+<h2 class="anchored" data-anchor-id="rovers">Rovers</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 15. Summary statistics for number of fish species seen on rovers for each diver. Check if they need to learn more ID.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ceceb2f4d18f9a4b8d26" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ceceb2f4d18f9a4b8d26">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["ARRINGTON_BRAD","COLEMAN_GILLIAN","DADE_LINDSAY","DLUTKOWSKI_EMMA","GEBHARD_MADCHEN","GRETTA_ABIGAIL","HOLLANDER_ERIN","KADISON_SHAUN","MAXIN_STEFANIE","PARR_SPENCER","QUETEL_JASON","SHELBY_ADELINE","SMITH_TYLER","STROBEL_DAVIS","SWAN_ALLY"],[10,3,12,6,3,10,14,12,1,2,7,11,2,3,3],[29.4,24.67,37.92,26.17,27.33,29.1,35.14,30.5,40,37,34.86,28.73,44,40.33,27.33],[4.67,2.08,6.84,7.83,4.93,3.25,3.35,9.52,null,7.07,6.28,6.07,8.49,5.77,5.03],[21,23,26,15,24,25,31,19,40,32,24,19,38,37,22],[36,27,49,35,33,34,42,51,40,42,43,37,50,47,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Name<\/th>\n      <th>n<\/th>\n      <th>mean<\/th>\n      <th>sd<\/th>\n      <th>min<\/th>\n      <th>max<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Name","targets":1},{"name":"n","targets":2},{"name":"mean","targets":3},{"name":"sd","targets":4},{"name":"min","targets":5},{"name":"max","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="rare-fish" class="level1">
+<h1>Rare Fish</h1>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 16. Fish species with the fewest number of observations (bottom 50). Check for mistaken identity.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-a194859a3c4986ba87aa" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a194859a3c4986ba87aa">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50"],["bandtail puffer","cleaning goby","green razorfish","king mackerel","neon goby","peppermint bass","permit","remora","rosy blenny","saddled blenny","striped burrfish","tan hamlet","blue hamlet","goldentail moray","hamlet species","high-hat","hybrid hamlet","trunkfish","white margate","whitespotted filefish","dusky jawfish","dusky squirrelfish","peacock flounder","porcupinefish","spotted eagle ray","bantam bass","chalk bass","cottonwick","jackknife-fish","southern stingray","spotted trunkfish","yellowfin grouper","Caribbean reef shark","redlip blenny","sand tilefish","surgeonfish species","nurse shark","rainbow wrasse","spotfin butterflyfish","dog snapper","hogfish","honeycomb cowfish","mutton snapper","saucereye porgy","sand diver","reef squirrelfish","sargassum triggerfish","yellow jack","yellowhead jawfish","bluestriped lizardfish"],[1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,6,6,6,7,7,7,7,7,8,9,9,9,9,10],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Common name<\/th>\n      <th>TotalNum<\/th>\n      <th>Rank<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Common name","targets":1},{"name":"TotalNum","targets":2},{"name":"Rank","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 17. Identifying information on fish in previous table to help check for mistaken identity.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-13f13fb2c463d8c777a8" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-13f13fb2c463d8c777a8">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141"],["Botany Bay","Lang Bank EEMP","Coculus Rock","Grammanik Tiger FSA","Magens Bay","Kings Corner","Mutton Snapper FSA","Meri Shoal","Great Pond","Coculus Rock","Lang Bank Red Hind FSA","Magens Bay","Botany Bay","Buck Island STT","Flat Cay","Buck Island STX","College Shoal East","South Capella","Black Point","Sprat Hole","Flat Cay","Buck Island STX","Botany Bay","Salt River West","Cane Bay","Flat Cay","Grammanik Tiger FSA","Coculus Rock","Salt River West","Sprat Hole","Flat Cay","Sprat Hole","Cane Bay","Buck Island STT","Coculus Rock","Great Pond","Cane Bay Deep","Hind Bank East FSA","Buck Island STX","Flat Cay","Jacks Bay","Kings Corner","Flat Cay","St James","Kings Corner","Castle","Buck Island STT","College Shoal East","Sprat Hole","Sprat Hole","Hind Bank East FSA","Hind Bank East FSA","Grammanik Tiger FSA","Meri Shoal","Buck Island STT","South Water","Buck Island STX","Cane Bay Deep","Cane Bay Deep","Coculus Rock","Great Pond","Great Pond","Great Pond","Eagle Ray","Great Pond","Great Pond","Lang Bank EEMP","Jacks Bay","Buck Island STT","College Shoal East","Botany Bay","Jacks Bay","Eagle Ray","Mutton Snapper FSA","Fish Bay","Magens Bay","Magens Bay","Magens Bay","Hind Bank East FSA","Jacks Bay","Lang Bank Red Hind FSA","Salt River West","Salt River West","Seahorse Cottage Shoal","St James","Brewers Bay","Brewers Bay","Brewers Bay","Salt River Deep","Buck Island STT","Hind Bank East FSA","Hind Bank East FSA","Coral Bay","Meri Shoal","South Capella","Buck Island STX","Salt River West","Kings Corner","Sprat Hole","Lang Bank EEMP","Lang Bank EEMP","Cane Bay Deep","Hind Bank East FSA","Hind Bank East FSA","Hind Bank East FSA","Hind Bank East FSA","Sprat Hole","Castle","Hind Bank East FSA","Hind Bank East FSA","Coculus Rock","Coculus Rock","Savana","South Capella","Hind Bank East FSA","Savana","South Capella","Buck Island STX Deep","Lang Bank Red Hind FSA","Eagle Ray","Kings Corner","Great Pond","Flat Cay","Hind Bank East FSA","Mutton Snapper FSA","Great Pond","Lang Bank Red Hind FSA","Lang Bank EEMP","Lang Bank EEMP","Lang Bank EEMP","Buck Island STT","Botany Bay","Lang Bank EEMP","Lang Bank EEMP","Flat Cay","Flat Cay","Flat Cay","Hind Bank East FSA","Fish Bay","Savana","Savana"],["GRETTA_ABIGAIL","DADE_LINDSAY","HOLLANDER_ERIN","KADISON_SHAUN","GRETTA_ABIGAIL","HOLLANDER_ERIN","KADISON_SHAUN","SHELBY_ADELINE","KADISON_SHAUN","MAXIN_STEFANIE","QUETEL_JASON","GRETTA_ABIGAIL","GRETTA_ABIGAIL","HOLLANDER_ERIN","QUETEL_JASON","DADE_LINDSAY","GRETTA_ABIGAIL","HOLLANDER_ERIN","SHELBY_ADELINE","GRETTA_ABIGAIL","ARRINGTON_BRAD","ARRINGTON_BRAD","PARR_SPENCER","QUETEL_JASON","ARRINGTON_BRAD","HOLLANDER_ERIN","ONEILL_GREG","MAXIN_STEFANIE","DADE_LINDSAY","ARRINGTON_BRAD","HOLLANDER_ERIN","KADISON_SHAUN","KADISON_SHAUN","MAXIN_STEFANIE","HOLLANDER_ERIN","DADE_LINDSAY","DADE_LINDSAY","GRETTA_ABIGAIL","KADISON_SHAUN","ARRINGTON_BRAD","QUETEL_JASON","DADE_LINDSAY","DADE_LINDSAY","MAXIN_STEFANIE","KADISON_SHAUN","ARRINGTON_BRAD","MAXIN_STEFANIE","HOLLANDER_ERIN","GRETTA_ABIGAIL","KADISON_SHAUN","HOLLANDER_ERIN","QUETEL_JASON","ONEILL_GREG","GRETTA_ABIGAIL","HOLLANDER_ERIN","HOLLANDER_ERIN","ARRINGTON_BRAD","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","GRETTA_ABIGAIL","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","QUETEL_JASON","HOLLANDER_ERIN","HOLLANDER_ERIN","GRETTA_ABIGAIL","QUETEL_JASON","DADE_LINDSAY","ARRINGTON_BRAD","ONEILL_GREG","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","QUETEL_JASON","QUETEL_JASON","QUETEL_JASON","HOLLANDER_ERIN","QUETEL_JASON","DADE_LINDSAY","DADE_LINDSAY","ONEILL_GREG","GRETTA_ABIGAIL","KADISON_SHAUN","QUETEL_JASON","PARR_SPENCER","QUETEL_JASON","DADE_LINDSAY","ONEILL_GREG","KADISON_SHAUN","KADISON_SHAUN","ARRINGTON_BRAD","DADE_LINDSAY","DADE_LINDSAY","ARRINGTON_BRAD","ARRINGTON_BRAD","SHELBY_ADELINE","DADE_LINDSAY","HOLLANDER_ERIN","QUETEL_JASON","QUETEL_JASON","ARRINGTON_BRAD","KADISON_SHAUN","SHELBY_ADELINE","SHELBY_ADELINE","DADE_LINDSAY","GRETTA_ABIGAIL","GRETTA_ABIGAIL","KADISON_SHAUN","SHELBY_ADELINE","ARRINGTON_BRAD","KADISON_SHAUN","SHELBY_ADELINE","SHELBY_ADELINE","ARRINGTON_BRAD","GRETTA_ABIGAIL","KADISON_SHAUN","DADE_LINDSAY","SHELBY_ADELINE","HOLLANDER_ERIN","GRETTA_ABIGAIL","DADE_LINDSAY","KADISON_SHAUN","SHELBY_ADELINE","DADE_LINDSAY","DADE_LINDSAY","MAXIN_STEFANIE","KADISON_SHAUN","KADISON_SHAUN","DADE_LINDSAY","HOLLANDER_ERIN","QUETEL_JASON","GRETTA_ABIGAIL","GRETTA_ABIGAIL","ONEILL_GREG","GRETTA_ABIGAIL","STROBEL_DAVIS"],[3,7,6,9,3,8,2,6,4,5,5,2,3,1,5,6,7,5,2,2,9,7,6,8,4,1,6,5,6,8,1,6,9,7,6,2,2,3,3,9,4,7,6,6,4,5,9,9,2,6,1,5,7,9,1,2,9,1,2,4,1,2,5,1,1,2,7,4,2,6,2,4,2,7,7,4,5,6,4,5,6,4,8,4,7,2,3,5,8,6,5,9,7,1,9,7,7,7,9,2,6,1,1,4,5,7,6,3,2,8,1,2,6,2,6,8,1,1,2,9,4,1,3,1,9,1,3,6,8,9,7,8,5,7,1,5,7,3,7,1,9],["bandtail puffer","cleaning goby","green razorfish","king mackerel","neon goby","peppermint bass","permit","remora","rosy blenny","saddled blenny","striped burrfish","tan hamlet","blue hamlet","goldentail moray","hamlet species","hamlet species","high-hat","high-hat","hybrid hamlet","trunkfish","white margate","white margate","whitespotted filefish","whitespotted filefish","dusky jawfish","dusky squirrelfish","dusky squirrelfish","peacock flounder","peacock flounder","peacock flounder","porcupinefish","porcupinefish","porcupinefish","spotted eagle ray","spotted eagle ray","spotted eagle ray","bantam bass","chalk bass","chalk bass","cottonwick","jackknife-fish","jackknife-fish","southern stingray","southern stingray","southern stingray","southern stingray","spotted trunkfish","spotted trunkfish","spotted trunkfish","spotted trunkfish","yellowfin grouper","yellowfin grouper","yellowfin grouper","yellowfin grouper","Caribbean reef shark","Caribbean reef shark","Caribbean reef shark","Caribbean reef shark","Caribbean reef shark","redlip blenny","redlip blenny","redlip blenny","redlip blenny","sand tilefish","sand tilefish","sand tilefish","sand tilefish","surgeonfish species","nurse shark","nurse shark","nurse shark","nurse shark","nurse shark","nurse shark","rainbow wrasse","rainbow wrasse","rainbow wrasse","rainbow wrasse","spotfin butterflyfish","spotfin butterflyfish","spotfin butterflyfish","spotfin butterflyfish","spotfin butterflyfish","dog snapper","dog snapper","dog snapper","dog snapper","dog snapper","dog snapper","hogfish","hogfish","hogfish","hogfish","hogfish","hogfish","honeycomb cowfish","honeycomb cowfish","honeycomb cowfish","honeycomb cowfish","honeycomb cowfish","honeycomb cowfish","honeycomb cowfish","mutton snapper","mutton snapper","mutton snapper","mutton snapper","mutton snapper","mutton snapper","saucereye porgy","saucereye porgy","saucereye porgy","saucereye porgy","saucereye porgy","saucereye porgy","sand diver","sand diver","sand diver","sand diver","sand diver","sand diver","sand diver","sand diver","reef squirrelfish","reef squirrelfish","reef squirrelfish","reef squirrelfish","sargassum triggerfish","sargassum triggerfish","sargassum triggerfish","sargassum triggerfish","yellow jack","yellow jack","yellow jack","yellowhead jawfish","bluestriped lizardfish","bluestriped lizardfish","bluestriped lizardfish","bluestriped lizardfish","bluestriped lizardfish","bluestriped lizardfish","bluestriped lizardfish"],["Sphoeroides spengleri","Elacatinus genie","Xyrichtys splendens","Scomberomorus cavalla","Elacatinus oceanops","Liopropoma rubre","Trachinotus blochii","Remora remora","Malacoctenus macropus","Malacoctenus triangulatus","Chilomycterus schoepfii","Hypoplectrus randallorum","Hypoplectrus gemma","Gymnothorax miliaris","Hypoplectrus sp.","Hypoplectrus sp.","Pareques acuminatus","Pareques acuminatus","Hypoplectrus hybrid","Lactophrys trigonus","Haemulon album","Haemulon album","Cantherhines macrocerus","Cantherhines macrocerus","Opistognathus whitehursti","Sargocentron vexillarium","Sargocentron vexillarium","Bothus lunatus","Bothus lunatus","Bothus lunatus","Diodon hystrix","Diodon hystrix","Diodon hystrix","Aetobatus narinari","Aetobatus narinari","Aetobatus narinari","Parasphyraenops incisus","Serranus tortugarum","Serranus tortugarum","Haemulon melanurum","Equetus lanceolatus","Equetus lanceolatus","Hypanus americanus","Hypanus americanus","Hypanus americanus","Hypanus americanus","Lactophrys bicaudalis","Lactophrys bicaudalis","Lactophrys bicaudalis","Lactophrys bicaudalis","Mycteroperca venenosa","Mycteroperca venenosa","Mycteroperca venenosa","Mycteroperca venenosa","Carcharhinus perezii","Carcharhinus perezii","Carcharhinus perezii","Carcharhinus perezii","Carcharhinus perezii","Ophioblennius macclurei","Ophioblennius macclurei","Ophioblennius macclurei","Ophioblennius macclurei","Malacanthus plumieri","Malacanthus plumieri","Malacanthus plumieri","Malacanthus plumieri","Acanthurus sp.","Ginglymostoma cirratum","Ginglymostoma cirratum","Ginglymostoma cirratum","Ginglymostoma cirratum","Ginglymostoma cirratum","Ginglymostoma cirratum","Halichoeres pictus","Halichoeres pictus","Halichoeres pictus","Halichoeres pictus","Chaetodon ocellatus","Chaetodon ocellatus","Chaetodon ocellatus","Chaetodon ocellatus","Chaetodon ocellatus","Lutjanus jocu","Lutjanus jocu","Lutjanus jocu","Lutjanus jocu","Lutjanus jocu","Lutjanus jocu","Lachnolaimus maximus","Lachnolaimus maximus","Lachnolaimus maximus","Lachnolaimus maximus","Lachnolaimus maximus","Lachnolaimus maximus","Acanthostracion polygonius","Acanthostracion polygonius","Acanthostracion polygonius","Acanthostracion polygonius","Acanthostracion polygonius","Acanthostracion polygonius","Acanthostracion polygonius","Lutjanus analis","Lutjanus analis","Lutjanus analis","Lutjanus analis","Lutjanus analis","Lutjanus analis","Calamus calamus","Calamus calamus","Calamus calamus","Calamus calamus","Calamus calamus","Calamus calamus","Synodus intermedius","Synodus intermedius","Synodus intermedius","Synodus intermedius","Synodus intermedius","Synodus intermedius","Synodus intermedius","Synodus intermedius","Sargocentron coruscum","Sargocentron coruscum","Sargocentron coruscum","Sargocentron coruscum","Xanthichthys ringens","Xanthichthys ringens","Xanthichthys ringens","Xanthichthys ringens","Carangoides bartholomaei","Carangoides bartholomaei","Carangoides bartholomaei","Opistognathus aurifrons","Synodus saurus","Synodus saurus","Synodus saurus","Synodus saurus","Synodus saurus","Synodus saurus","Synodus saurus"],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,15,16,16,17,18,19,19,20,20,21,22,22,23,23,23,24,24,24,25,25,25,26,27,27,28,29,29,30,30,30,30,31,31,31,31,32,32,32,32,33,33,33,33,33,34,34,34,34,35,35,35,35,36,37,37,37,37,37,37,38,38,38,38,39,39,39,39,39,40,40,40,40,40,40,41,41,41,41,41,41,42,42,42,42,42,42,42,43,43,43,43,43,43,44,44,44,44,44,44,45,45,45,45,45,45,45,45,46,46,46,46,47,47,47,47,48,48,48,49,50,50,50,50,50,50,50]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Name<\/th>\n      <th>Rep<\/th>\n      <th>Common name<\/th>\n      <th>Scientific name<\/th>\n      <th>Rank<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Name","targets":2},{"name":"Rep","targets":3},{"name":"Common name","targets":4},{"name":"Scientific name","targets":5},{"name":"Rank","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 18. Nassau grouper seen on transects.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-35be96fe5e9ec8df5b9d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-35be96fe5e9ec8df5b9d">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22"],["Buck Island STT","College Shoal East","College Shoal East","Fish Bay","Flat Cay","Flat Cay","Flat Cay","Grammanik Tiger FSA","Grammanik Tiger FSA","Grammanik Tiger FSA","Grammanik Tiger FSA","Kings Corner","Kings Corner","Kings Corner","Mutton Snapper FSA","Salt River Deep","Salt River Deep","Savana","Savana","Savana","St James","St James"],[7,4,6,1,3,6,9,1,5,6,7,3,7,9,7,1,9,1,2,9,6,8],["MAXIN_STEFANIE","KADISON_SHAUN","HOLLANDER_ERIN","KADISON_SHAUN","SHELBY_ADELINE","DADE_LINDSAY","ARRINGTON_BRAD","GRETTA_ABIGAIL","DADE_LINDSAY","ONEILL_GREG","ONEILL_GREG","QUETEL_JASON","DADE_LINDSAY","HOLLANDER_ERIN","ARRINGTON_BRAD","ARRINGTON_BRAD","QUETEL_JASON","GRETTA_ABIGAIL","GRETTA_ABIGAIL","STROBEL_DAVIS","MAXIN_STEFANIE","PARR_SPENCER"],[1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,3,1,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Rep","targets":2},{"name":"Name","targets":3},{"name":"n","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 19. Nassau grouper seen on rovers.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-845925ee50cadefd3df9" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-845925ee50cadefd3df9">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],["Grammanik Tiger FSA","Grammanik Tiger FSA","Savana","Kings Corner","Flat Cay","Flat Cay","Hind Bank East FSA","Grammanik Tiger FSA","Botany Bay","Savana","College Shoal East","Jacks Bay","Eagle Ray","Mutton Snapper FSA","Castle","Lang Bank EEMP","Cane Bay Deep","Cane Bay Deep"],[1,3,1,2,1,3,3,2,1,2,1,3,1,3,2,1,1,2],["HOLLANDER_ERIN","GRETTA_ABIGAIL","STROBEL_DAVIS","HOLLANDER_ERIN","QUETEL_JASON","DADE_LINDSAY","HOLLANDER_ERIN","SHELBY_ADELINE","STROBEL_DAVIS","DLUTKOWSKI_EMMA","GRETTA_ABIGAIL","SMITH_TYLER","DADE_LINDSAY","GRETTA_ABIGAIL","SHELBY_ADELINE","QUETEL_JASON","QUETEL_JASON","DADE_LINDSAY"],[2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>Abundance index<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Rep","targets":2},{"name":"Name","targets":3},{"name":"Abundance index","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 20. Sharks seen on transects.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5d421120253dde637605" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5d421120253dde637605">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5"],["Caribbean reef shark","Caribbean reef shark","Caribbean reef shark","Caribbean reef shark","Caribbean reef shark"],["Buck Island STT","Buck Island STX","Cane Bay Deep","Cane Bay Deep","South Water"],[1,9,1,2,2],["HOLLANDER_ERIN","ARRINGTON_BRAD","DADE_LINDSAY","DADE_LINDSAY","HOLLANDER_ERIN"],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Common name<\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Common name","targets":1},{"name":"Site name","targets":2},{"name":"Rep","targets":3},{"name":"Name","targets":4},{"name":"n","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 21. Sharks seen on rovers.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-bf9fad6476d219d09217" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-bf9fad6476d219d09217">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4"],["Caribbean reef shark","Caribbean reef shark","Caribbean reef shark","Caribbean reef shark"],["Buck Island STT","South Water","Castle","Cane Bay Deep"],[2,2,3,3],["KADISON_SHAUN","ARRINGTON_BRAD","DADE_LINDSAY","ARRINGTON_BRAD"],[1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Common name<\/th>\n      <th>Site name<\/th>\n      <th>Rep<\/th>\n      <th>Name<\/th>\n      <th>Abundance index<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Common name","targets":1},{"name":"Site name","targets":2},{"name":"Rep","targets":3},{"name":"Name","targets":4},{"name":"Abundance index","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="diadema" class="level1">
+<h1>Diadema</h1>
+<section id="overview-1" class="level2">
+<h2 class="anchored" data-anchor-id="overview-1">Overview</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 22. Do we have all the Diadema transects? We should have 9 transects each at 33 sites and maybe 1 at Ginsburg’s Fringe.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Transects</th>
+<th style="text-align: right;">Sites</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">26</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 23. Sites with fewer than 9 Diadema transects.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-3c2dd29bf3a998cc00aa" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-3c2dd29bf3a998cc00aa">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7"],["Brewers Bay","Buck Island STX","Coculus Rock","Great Pond","Kings Corner","South Water","Flat Cay"],[7,7,7,7,7,7,8]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Transects<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Transects","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="diadema-abundance" class="level2">
+<h2 class="anchored" data-anchor-id="diadema-abundance">Diadema Abundance</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 24. Summary statistics for number of Diadema seen on transects at each site. Most sites usually have none.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-75b49a4c73ea7da4bf0d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-75b49a4c73ea7da4bf0d">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33"],["Coculus Rock","Coral Bay","Fish Bay","Seahorse Cottage Shoal","Great Pond","Buck Island STT","Magens Bay","Salt River West","South Capella","Black Point","Botany Bay","Brewers Bay","Buck Island STX","Buck Island STX Deep","Cane Bay","Cane Bay Deep","Castle","College Shoal East","Eagle Ray","Flat Cay","Grammanik Tiger FSA","Hind Bank East FSA","Jacks Bay","Kings Corner","Lang Bank EEMP","Lang Bank Red Hind FSA","Meri Shoal","Mutton Snapper FSA","Salt River Deep","Savana","South Water","Sprat Hole","St James"],[7,9,9,9,7,9,9,9,9,9,9,7,7,9,9,9,9,9,9,8,9,9,9,7,9,9,9,9,9,9,7,9,9],[8.57,0.33,0.22,0.22,0.14,0.11,0.11,0.11,0.11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[12,0.71,0.67,0.67,0.38,0.33,0.33,0.33,0.33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[29,2,2,2,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>n<\/th>\n      <th>mean<\/th>\n      <th>sd<\/th>\n      <th>min<\/th>\n      <th>max<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"n","targets":2},{"name":"mean","targets":3},{"name":"sd","targets":4},{"name":"min","targets":5},{"name":"max","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="diadema-sizing" class="level2">
+<h2 class="anchored" data-anchor-id="diadema-sizing">Diadema Sizing</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 25. Diadema with a test size estimated larger than 15 cm.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-31dd58168a57e402aba5" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-31dd58168a57e402aba5">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[],[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Fish transect<\/th>\n      <th>Site name<\/th>\n      <th>Date completed<\/th>\n      <th>Name<\/th>\n      <th>Rep<\/th>\n      <th>Notes<\/th>\n      <th>Test size cm<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Fish transect","targets":1},{"name":"Site name","targets":2},{"name":"Date completed","targets":3},{"name":"Name","targets":4},{"name":"Rep","targets":5},{"name":"Notes","targets":6},{"name":"Test size cm","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>There were 0 Diadema observed but not sized. These will be added into counts with a size of NA.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="TCRMP_2025_Fish_QAQC_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure 2. Size frequency distribution of observed and sized Diadema, colored by site.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 26. All Diadema observed.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-200cfa1770d0036c0aa3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-200cfa1770d0036c0aa3">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72"],["Buck Island STT","Coculus Rock","Coculus Rock","Seahorse Cottage Shoal","Seahorse Cottage Shoal","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coral Bay","South Capella","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coral Bay","Coral Bay","Great Pond","Salt River West","Fish Bay","Fish Bay","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Coculus Rock","Magens Bay"],["2025-08-28","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-12","2025-10-01","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-12","2025-09-12","2025-11-21","2025-11-19","2025-09-12","2025-09-12","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-05","2025-09-19"],["HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","HOLLANDER_ERIN","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","DADE_LINDSAY","KADISON_SHAUN","HOLLANDER_ERIN","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","MAXIN_STEFANIE","ONEILL_GREG","ONEILL_GREG","GRETTA_ABIGAIL","HOLLANDER_ERIN","ONEILL_GREG","ONEILL_GREG","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER","PARR_SPENCER"],[1,6,6,9,9,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,9,6,5,5,5,5,5,5,5,7,7,6,4,9,9,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,5],[2,8,4,7,6,9,9,10,2,10,10,8,8,9,10,12,7,8,7,7,10,9,9,11,3,8,8,10,9,2,8,9,6,3,10,7,4,4,6,6,6,7,7,5,5,2,1,11,5,5,7,2,2,5,5,8,8,4,5,9,7,6,9,7,8,2,5,8,7,8,10,11]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Site name<\/th>\n      <th>Date completed<\/th>\n      <th>Name<\/th>\n      <th>Rep<\/th>\n      <th>Test size cm<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Site name","targets":1},{"name":"Date completed","targets":2},{"name":"Name","targets":3},{"name":"Rep","targets":4},{"name":"Test size cm","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="changes-made" class="level1">
+<h1>Changes Made</h1>
+<ul>
+<li>Changed remora to sharksucker on Meri transect 6</li>
+<li>Changed baby spanish grunts to grunt species on Coral Bay transect 2</li>
+<li>Changed 31-40 cm french grunts at SSJ 6 and MGN 2 to 21-30 cm (FishBase max is 30 cm)</li>
+<li>Changed 11-20 cm longsnout butterflyfish to 6-10 cm (FishBase max is 10 cm)</li>
+<li>Changed 21-30 cm reef squirrelfish to 11-20 cm (FishBase max is 15 cm)</li>
+<li>Changed 31-40 cm redband parrotfish to 21-30 cm (FishBase max is 28 cm)</li>
+<li>Changed 31-40 cm blackbar soldierfish to 21-30 cm (FishBase max is 25 cm)</li>
+<li>Changed 31-40 cm striped parrotfish to 21-30 cm</li>
+<li>Changed white margate at Buck STX transect 7 to grunt species</li>
+<li>Changed blue hamlet to black hamlet at Botany transect 3</li>
+<li>Determined missing Diadema transects were forgotten so no zeros were added.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
