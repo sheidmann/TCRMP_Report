@@ -3,7 +3,7 @@ title: "TCRMP Entry Checks"
 format: html
 editor: visual
 author: "Sarah Heidmann"
-date: "2026-04-16"
+date: "2026-09-28"
 editor_options: 
   chunk_output_type: inline
 ---
@@ -16,9 +16,9 @@ library(knitr)
 library(DT)
 
 options(knitr.kable.NA = '')
-knitr::opts_chunk$set(echo = F, eval=F)
+knitr::opts_chunk$set(echo = F)
 
-downdate <- "2026-03-02"
+downdate <- "2026-09-28"
 dd <- gsub("-","",downdate)
 
 # CH belt list
@@ -37,9 +37,9 @@ frlogs <- logs_raw %>%
 ahlogs <- logs_raw %>%
    filter(`Type name`=="algae heights") %>%
    mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
-chlogs <- logs_raw %>% 
-   filter(`Type name`=="coral health") %>% 
-   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=",")) 
+chlogs <- logs_raw %>%
+   filter(`Type name`=="coral health") %>%
+   mutate(ID = paste(`Site name`, Rep, Name, `Date completed`, sep=","))
 
 # Fish transects
 fts_raw <- read_csv(paste0("data/data",dd,"/FishTransects_all_",downdate,".csv"),
@@ -70,7 +70,7 @@ das <- das_raw %>%
 frs_raw <- read_csv(paste0("data/data",dd,"/FishRovers_all_",downdate,".csv"),
                     col_types = cols(Proofed = col_logical(),
                                      `Site name`= col_character(),
-                                     `Date completed`=col_date(format="%m/%d/%Y"),
+                                     `Date completed`=col_date(format="%Y-%m-%d"),
                                      Name=col_character(),
                                      Rep=col_double(),
                                      `Oc cc`=col_character(),
@@ -110,17 +110,6 @@ done <- fts %>%
              mutate(ahs,`Algae height`=NULL,`Type name`="algae height"),
              mutate(chs,`Coral health`=NULL,`Type name`="coral health"))
 ```
-```{=html}
-<div style="height: 200px;"></div>
-```
-# 2025 annual data entry is complete. {style="text-align: center;"}
-# Check back in 2026! {style="text-align: center;"}
-
-```{=html}
-<div style="height: 700px;"></div>
-```
-
-------------------------------------------------------------------------
 
 # Entry Progress
 
@@ -132,18 +121,13 @@ done <- fts %>%
 donefw <- logs_raw %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
-missedunits <- 2
+missedunits <- 0
 perdonefw <- round(nrow(donefw) / ((33*24)-missedunits) * 100)
 # % done w entry
 donelist <- done %>% 
    select(`Site name`, `Type name`, Rep) %>% 
    unique()
 perdone <- round(nrow(donelist) / nrow(donefw) * 100)
-```
-
-```{r, eval=T}
-perdonefw <- 0
-perdone <- 0
 ```
 
 We are `r perdonefw`% done with fieldwork, and `r perdone`% done with entry. We haven't missed any units yet.
